@@ -22,6 +22,7 @@
 	        		</div>
 	        	</div>
                 <div class="row margin-top-10">
+                    <input type='hidden' name='id' value='{{$data->id}}'>
                     <div class="col">
                         <label for="data-name">Nome</label>
                         <input type='text' class='form-control' name='name' value='{{$data->name}}'/>

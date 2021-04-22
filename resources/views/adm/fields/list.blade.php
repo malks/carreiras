@@ -8,7 +8,7 @@
 <input type='hidden' id='full-data' value='@php echo json_encode($data->toArray()['data']);@endphp'/>
 
 @section('content')
-	<form method='GET' action='/field/list' id='app'>
+	<form method='GET' action='/adm/fields' id='app'>
 		@csrf
 	    <div class="card" check-fields-list>
 	    	<div class='card-header'>
@@ -17,7 +17,7 @@
 	        <div class="card-body">
 	        	<div class='row'>
 	        		<div class="col-1">
-	        			<a class="btn btn-primary" id='new' href='/field/create'>Nova</a>
+	        			<a class="btn btn-primary" id='new' href='/adm/fields/create'>Nova</a>
 	        		</div>
 	        		<div class="col-1">
 	        			<button class="btn btn-secondary" id='edit' v-on:click='edit()' type='button' v-bind:disabled='canEdit'>Editar</button>
@@ -43,6 +43,9 @@
 			        			</tr>
 			        		</thead>
 			        		<tbody>
+								@if($data->total()<=0)
+									<tr><td colspan='3'>Nenhum registro encontrado</td></tr>
+								@endif
 								@foreach($data as $d)
 									<tr class='hoverable' v-on:click='addItem({{$d->id}})' > 
 										<td style='width:40px;' for='data-check-{{$d->id}}' class='checker'>

@@ -7,9 +7,37 @@ $(document).ready(function () {
 
     if ($('[check-fields-list]').length>0)
         fieldsList();
-
-    
+    if ($('[check-candidates-list]').length>0)
+        candidatesList();
+    if ($('[check-jobs-list]').length>0)
+        jobsList();
+    if ($('[check-units-list]').length>0)
+        unitsList();
 })
+
+function fieldsList(){
+    ajaxUrl=$('#app').attr('action');
+    startList();
+    $('#search').focus();
+}
+
+function candidatesList(){
+    ajaxUrl=$('#app').attr('action');
+    startList();
+    $('#search').focus();
+}
+
+function unitsList(){
+    ajaxUrl=$('#app').attr('action');
+    startList();
+    $('#search').focus();
+}
+
+function jobsList(){
+    ajaxUrl=$('#app').attr('action');
+    startList();
+    $('#search').focus();
+}
 
 function startList(){
     list = new Vue({
@@ -50,23 +78,20 @@ function startList(){
             destroy:function(){
                 let that=this;
                 form.append('ids',that.selectedIds);
-                $.ajax({
-                    url:ajaxUrl+'/destroy',
-                    type:'POST',
-                    processData: false,
-                    contentType: false,			    
-                    data:form,
-                    success:function(data){
-                        window.location.reload();
-                    }
-                });        
+                if(confirm('Você está certo disso?')){
+                    $.ajax({
+                        url:ajaxUrl+'/destroy',
+                        type:'POST',
+                        processData: false,
+                        contentType: false,			    
+                        data:form,
+                        success:function(data){
+                            window.location.reload();
+                        }
+                    });
+                }
+   
             },
         }
     })
-}
-
-
-function fieldsList(){
-    ajaxUrl="/adm/fields";
-    startList();
 }

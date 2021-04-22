@@ -41,10 +41,10 @@ $router->group(['middleware' => ['auth','role:admin']], function() {
     Route::get('/adm/candidates/create', 'AdmController@candidatesCreate')->name('candidates-create');
 
     Route::get('/adm/fields/edit/{id}', 'AdmController@fieldsEdit')->name('fields-edit');
-    Route::get('/adm/units/edit', 'AdmController@unitsEdit')->name('units-edit');
-    Route::get('/adm/jobs/edit', 'AdmController@jobsEdit')->name('jobs-edit');
-    Route::get('/adm/tags/edit', 'AdmController@tagsEdit')->name('tags-edit');
-    Route::get('/adm/candidates/edit', 'AdmController@candidatesEdit')->name('candidates-edit');
+    Route::get('/adm/units/edit/{id}', 'AdmController@unitsEdit')->name('units-edit');
+    Route::get('/adm/jobs/edit/{id}', 'AdmController@jobsEdit')->name('jobs-edit');
+    Route::get('/adm/tags/edit/{id}', 'AdmController@tagsEdit')->name('tags-edit');
+    Route::get('/adm/candidates/edit/{id}', 'AdmController@candidatesEdit')->name('candidates-edit');
 
     Route::post('/adm/fields/destroy', 'AdmController@fieldsDestroy')->name('fields-destroy');
     Route::post('/adm/units/destroy', 'AdmController@unitsDestroy')->name('units-destroy');
