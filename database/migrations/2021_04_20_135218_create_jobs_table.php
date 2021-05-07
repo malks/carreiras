@@ -18,13 +18,12 @@ class CreateJobsTable extends Migration
             $table->integer('field_id');
             $table->integer('unit_id');
             $table->string('name');
-            $table->string('description');
-            $table->text('activities');
-            $table->text('required');
-            $table->text('desirable');
+            $table->string('description')->nullable();
+            $table->text('activities')->nullable();
+            $table->text('required')->nullable();
+            $table->text('desirable')->nullable();
             $table->integer('status');
-            $table->string('period');
-            $table->integer('special');
+            $table->string('period')->nullable();
             $table->timestamps();
         });
     }

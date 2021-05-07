@@ -1,10 +1,4 @@
 $(document).ready(function () {
-    fullData=JSON.parse($('#full-data').val());
-    selectedIds=Array();
-    ajaxUrl="";
-    form = new FormData();
-    form.append('_token',$('[name="_token"]').val());
-
     if ($('[check-fields-list]').length>0)
         fieldsList();
     if ($('[check-candidates-list]').length>0)
@@ -15,25 +9,37 @@ $(document).ready(function () {
         unitsList();
 })
 
+function startData(){
+    fullData=JSON.parse($('#full-data').val());
+    selectedIds=Array();
+    ajaxUrl="";
+    form = new FormData();
+    form.append('_token',$('[name="_token"]').val());
+}
+
 function fieldsList(){
+    startData();
     ajaxUrl=$('#app').attr('action');
     startList();
     $('#search').focus();
 }
 
 function candidatesList(){
+    startData();
     ajaxUrl=$('#app').attr('action');
     startList();
     $('#search').focus();
 }
 
 function unitsList(){
+    startData();
     ajaxUrl=$('#app').attr('action');
     startList();
     $('#search').focus();
 }
 
 function jobsList(){
+    startData();
     ajaxUrl=$('#app').attr('action');
     startList();
     $('#search').focus();

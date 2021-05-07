@@ -17,17 +17,16 @@ class CreateCandidatesTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('email');
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->string('name');
-            $table->string('cpf');
-            $table->string('address');
-            $table->string('city');
-            $table->string('state');
-            $table->string('country');
-            $table->string('zip',10);
-            $table->string('cv');
+            $table->string('cpf')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
+            $table->string('zip',10)->nullable();
+            $table->string('cv')->nullable();
             $table->datetime('dob')->nullable();
-            $table->integer('status');
             $table->timestamps();
         });
     }

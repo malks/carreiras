@@ -124,19 +124,39 @@ class AdmController extends Controller
     }
 
     public function jobsCreate (Request $request) {
-
+        $data=new Job;
+        return view('adm.jobs.edit')->with(
+            [
+                'data'=>$data,
+            ]
+        );
     }
 
     public function tagsCreate (Request $request) {
-
+        $data=new Tag;
+        return view('adm.tags.edit')->with(
+            [
+                'data'=>$data,
+            ]
+        );
     }
 
     public function candidatesCreate (Request $request) {
-
+        $data=new Candidate;
+        return view('adm.candidates.edit')->with(
+            [
+                'data'=>$data,
+            ]
+        );
     }
 
     public function usersCreate (Request $request) {
-
+        $data=new User;
+        return view('adm.users.edit')->with(
+            [
+                'data'=>$data,
+            ]
+        );
     }
 
     public function fieldsEdit ($id) {
