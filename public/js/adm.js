@@ -7,6 +7,8 @@ $(document).ready(function () {
         jobsList();
     if ($('[check-units-list]').length>0)
         unitsList();
+    if ($('[check-candidates-edit]').length>0)
+        editCandidate();
 })
 
 function startData(){
@@ -98,6 +100,29 @@ function startList(){
                 }
    
             },
+        }
+    })
+}
+
+function editCandidate(){
+    startEdit('editCandidate','candidate-data');
+}
+
+
+function startEdit(screenNameHelper='',firstTab=''){
+    edit = new Vue({
+        el:'#app',
+        data:{
+            screenName:screenNameHelper,
+            currentTab:firstTab,
+            alwaysTrue:true,
+        },
+        methods:{
+            isItMe:function (who) {
+                if (this.currentTab==who)
+                    return true;
+                return false;
+            }
         }
     })
 }
