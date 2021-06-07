@@ -1,0 +1,21 @@
+
+.logo-complement{
+    font-size: 28pt;
+    margin-left: -7px;
+    margin-top: 26px;
+    display: block;
+    float: right;
+    font-family: Lato, sans-serif;
+    letter-spacing: -1px;
+}
+.site-branding{
+    padding-bottom:5px;
+    margin-top: -10px;
+}
+.nav-back.fixed .logo-complement{
+    margin-top: 17px;
+    font-size:25pt;
+}
+.nav-back.fixed .site-branding{
+    margin-top: -5px;
+}
