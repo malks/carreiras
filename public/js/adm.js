@@ -172,14 +172,14 @@ function configurations(){
                 return "Salvar";
             },
             canEdit:function(){
-                if (selectedBanner!=null)
+                if (this.selectedBanner!=null)
                     return true;
                 return false;
             }
         },
         methods:{
             editBanner:function(){
-                console.log(selectedBanner);
+                console.log(this.selectedBanner);
             },
             activeBanner:function(id){
                 if (this.selectedBanner==id)
