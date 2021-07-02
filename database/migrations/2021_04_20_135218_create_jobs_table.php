@@ -24,6 +24,7 @@ class CreateJobsTable extends Migration
             $table->text('desirable')->nullable();
             $table->integer('status');
             $table->string('period')->nullable();
+            $table->string('picture')->nullable();
             $table->integer('home_highlights')->default(0);
             $table->integer('home_slider')->default(0);
             $table->timestamps();

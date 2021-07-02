@@ -16,5 +16,12 @@ class DatabaseSeeder extends Seeder
         $this->call(UnitSeeder::class);
         $this->call(JobSeeder::class);
         $this->call(CandidateSeeder::class);
+        $this->call(BannerSeeder::class);
+        $this->call(AboutusSeeder::class);
+        $this->call(OurNumbersSeeder::class);
+        $this->call(OurTeamSeeder::class);
+        $this->call(VideoSeeder::class);
+        $this->call(TagsSeeder::class);
+        $this->call(DeficienciesSeeder::class);
     }
 }

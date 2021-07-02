@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Candidate;
+use App\Banner;
+use App\AboutUs;
+use App\OurNumbers;
+use App\OurTeam;
 use App\Job;
 use App\Tag;
 use App\Unit;
@@ -13,7 +17,32 @@ class AdmController extends Controller
 {
 
     public function config(Request $request) {
+        $banners=Banner::get();
+        return view('adm.config')->with([
+            'banners'=>$banners,
+        ]);
+    }
 
+    public function bannersList (Request $request){
+        $banners=Banner::orderBy("order","asc")->orderBy('created_at','desc')->orderBy('active_to','desc')->orderBy('active_from','desc')->paginate();
+        return $banners;
+    }
+
+    public function saveBanners (Request $request){
+        $arr=$request->all();
+        unset($arr['_token']);
+        $banners=json_decode($arr['banners'],true);
+        foreach ($banners as $a){
+            $banner=Banner::where('id','=',$a['id'])->first();
+            unset($a['id']);
+
+            foreach ($a as $k=>$d){
+                $banner->{$k}=$d;
+            }
+
+            $banner->save();
+        }
+		return "";
     }
 
     public function fieldsList (Request $request){
@@ -30,7 +59,6 @@ class AdmController extends Controller
                 'search'=>$request->search,
             ]
         );
-
     }
 
     public function unitsList (Request $request){

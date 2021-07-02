@@ -13,19 +13,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 App::setLocale('ptbr');
+Route::get('/', 'LandingController@index')->name('home');
+Route::get('/login', 'LandingController@index')->name('login');
+Route::get('/logout', 'Auth\LoginController@logout');
 
-$router->group(['middleware' => ['auth','role:admin']], function() {
-    Route::get('/home', 'HomeController@index')->name('home');
+$router->group(['middleware' => ['auth']], function() {
+    Route::get('/profile', 'LandingController@profile');
+    Route::post('/save-profile', 'LandingController@saveProfile');
+    Route::post('/adm/banners-list', 'AdmController@bannersList');
+});
 
-    Route::get('/home', function() {
-        return view('home');
-    })->name('home')->middleware('auth');
+$router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
+    Route::get('/home', 'HomeController@index')->name('home-adm');
+
+    Route::post('/adm/save-banners', 'AdmController@saveBanners')->name('save-banners');
 
     Route::get('/adm/config', 'AdmController@config')->name('config');
     Route::get('/adm/fields', 'AdmController@fieldsList')->name('fields-list');

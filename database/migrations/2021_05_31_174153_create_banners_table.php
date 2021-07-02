@@ -17,7 +17,11 @@ class CreateBannersTable extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('title_big')->nullable();
+            $table->string('title_big_color')->nullable();
+            $table->string('title_big_outline')->default('');
             $table->string('title_small')->nullable();
+            $table->string('title_small_color')->nullable();
+            $table->string('title_small_outline')->default('');
             $table->string('cta')->nullable();
             $table->string('background')->nullable();
             $table->datetime('active_from')->nullable();

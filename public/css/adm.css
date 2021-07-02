@@ -32,3 +32,38 @@ input[type=checkbox]
 .nav-link{
   cursor:pointer;
 }
+
+#configurations label.label-form{
+  font-weight: 10!important;
+}
+
+.config-table >tbody >tr >td,.config-table >thead >tr >th {
+  padding-right: 30px!important;
+  border-top:none!important;
+  padding-left:0px!important;
+}
+
+.dropzone{
+  background:url(../img/updown.png) no-repeat;
+  background-position:center;
+  background-size:35px;
+}
+
+.dropzone:hover{
+  background-color: rgba(200,250,255,0.2) !important;
+}
+
+.dropzone .pull-left{
+  float:left!important;
+}
+
+.dropzone .pull-right{
+  float:right!important;
+}
+
+.dropzone.selected{
+  outline: black!important;
+  outline-style: auto!important;
+  outline-width: 5px!important;
+  z-index:1;
+}

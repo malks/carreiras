@@ -16,5 +16,12 @@ class UserSeeder extends Seeder
         DB::table('model_has_roles')->insert(['role_id'=>'1','model_type'=>'App\User','model_id'=>'1']);
         DB::table('permissions')->insert(['name'=>'access admin','guard_name'=>'web']);
         DB::table('role_has_permissions')->insert(['permission_id'=>'1','role_id'=>'1']);
+
+        DB::table('users')->insert(['name'=>'karl','email'=>'karl.mendes@nbwdigital.com.br','password'=>'$2y$10$dF48iufbs5V0rxczhsBP/OP4pWDVcuQwrEk1QxCSaHuQ0hq05PP5W']);
+        DB::table('roles')->insert(['name'=>'candidate','guard_name'=>'web']);
+        DB::table('model_has_roles')->insert(['role_id'=>'2','model_type'=>'App\User','model_id'=>'2']);
+        DB::table('permissions')->insert(['name'=>'profile','guard_name'=>'web']);
+        DB::table('role_has_permissions')->insert(['permission_id'=>'2','role_id'=>'2']);
+
     }
 }

@@ -10,6 +10,9 @@ class CreateCandidatesTable extends Migration
      * Run the migrations.
      *
      * @return void
+     * 
+     * 
+     * 
      */
     public function up()
     {
@@ -35,6 +38,20 @@ class CreateCandidatesTable extends Migration
             $table->string('weight')->nullable();
             $table->string('height')->nullable();
             $table->string('spouse_name')->nullable();
+            $table->string('housing')->nullable();
+            $table->integer('children_amount')->nullable();
+            $table->string('children_age')->nullable();
+            $table->string('children_location')->nullable();
+            $table->string('father_name')->nullable();
+            $table->datetime('father_dob')->nullable();
+            $table->string('mother_name')->nullable();
+            $table->datetime('mother_dob')->nullable();            
+            $table->integer('foreigner')->nullable();
+            $table->datetime('arrival_date')->nullable();            
+            $table->string('foreign_register')->nullable();
+            $table->string('foreign_emitter')->nullable();
+            $table->string('visa_expiration')->nullable();
+            $table->string('cid')->nullable();
             $table->string('zip',10)->nullable();
             $table->string('cv')->nullable();
             $table->datetime('dob')->nullable();

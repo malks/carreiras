@@ -78,7 +78,7 @@
                         <div class="row">
                             <div class=" col-sm-12 col-lg">
                                 <label for="data-address-zip">CEP</label>
-                                <input type='text' class='form-control' name='address_zip' id='data-address-zip' value='{{$data->address_zip}}'/>
+                                <input type='text' class='form-control' name='zip' id='data-address-zip' value='{{$data->zip}}'/>
                             </div>
                             <div class=" col-sm-12 col-lg">
                                 <label for="data-address-state">Estado</label>
@@ -131,7 +131,7 @@
                             </div>
                             <div class=" col-sm-12 col-lg">
                                 <label for="data-civil-state">Estado Civil</label>
-                                <select name="civil-state" id="data-civil-state" class="form-control">
+                                <select name="civil_state" id="data-civil-state" class="form-control">
                                     <option value="married">Casado</option>
                                     <option value="single">Solteiro</option>
                                     <option value="stable">União Estável</option>
@@ -146,8 +146,8 @@
                                 </select>
                             </div>
                             <div class=" col-sm-12 col-lg">
-                                <label for="data-gender">Casa</label>
-                                <select name="gender" id="data-gender" class="form-control">
+                                <label for="data-housing">Casa</label>
+                                <select name="housing" id="data-housing" class="form-control">
                                     <option value="owned">Própria</option>
                                     <option value="rented">Alugada</option>
                                     <option value="allowed">Cedida por parentes/amigos</option>

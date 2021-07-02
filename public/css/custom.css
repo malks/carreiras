@@ -1,3 +1,7 @@
+@font-face {
+    font-family:"dancing-script";
+    src: url("../fonts/DancingScript-VariableFont_wght.ttf") format("truetype");
+}
 
 .logo-complement{
     font-size: 28pt;
@@ -18,4 +22,124 @@
 }
 .nav-back.fixed .site-branding{
     margin-top: -5px;
+}
+
+.text-top.outline-dark-white {
+    -webkit-text-stroke-width:1px;
+    -webkit-text-stroke-color:#ccc;
+}
+
+.text-top.outline-dark-grey {
+    -webkit-text-stroke-width:1px;
+    -webkit-text-stroke-color:#666;
+}
+
+.text-top.outline-light-grey {
+    -webkit-text-stroke-width:1px;
+    -webkit-text-stroke-color:#999;
+}
+
+.text-mid.outline-dark-white {
+    -webkit-text-stroke-width:1px;
+    -webkit-text-stroke-color:#ccc;
+}
+
+.text-mid.outline-dark-grey {
+    -webkit-text-stroke-width:1px;
+    -webkit-text-stroke-color:#666;
+}
+
+.text-mid.outline-light-grey {
+    -webkit-text-stroke-width:1px;
+    -webkit-text-stroke-color:#999;
+}
+
+.quote-author {
+    font-family:"dancing-script";
+    font-size:20pt;
+}
+
+.secondary-testimonials{
+    text-align: center;
+    margin-top: 5px;
+    color: #6f6a5a;
+    font-weight: bold;
+    border-left:none;
+}
+
+.job-item{
+    font-size:24pt;
+}
+
+.btn-grey {
+    background-color:#999!important;
+    color:#fff!important;
+}
+.btn-grey > i{
+    color:#fff!important;
+}
+
+.btn-green {
+    background-color :forestgreen;
+    color:#fff!important;
+}
+
+#welcoLogin .btn{
+    height: 34px!important;
+}
+
+#welcoLogin .btn:not(#login,#register) {
+    width: 40px!important;
+    padding:0px!important;
+}
+
+#welcoLogin .btn#login, #welcoLogin .btn#register {
+    line-height: 13px;
+}
+
+a.btn{
+    line-height:10px!important;
+}
+
+.margin-left-30{
+    margin-left:30px;
+}
+
+.margin-top-10{
+    margin-top:10px;
+}
+.margin-top-20{
+  margin-top:20px;
+}
+.margin-top-30{
+  margin-top:30px;
+}
+.margin-top-40{
+  margin-top:40px;
+}
+.margin-top-50{
+  margin-top:50px;
+}
+
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(1.3); /* IE */
+  -moz-transform: scale(1.3); /* FF */
+  -webkit-transform: scale(1.3); /* Safari and Chrome */
+  -o-transform: scale(1.3); /* Opera */
+  transform: scale(1.3);
+}
+
+.hoverable:hover {
+    background-color: #eee;
+    cursor:pointer;
+}
+
+.nav-link{
+  cursor:pointer;
+}
+
+.nav-link.active {
+    background-color:#eee!important;
 }

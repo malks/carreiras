@@ -26,12 +26,13 @@
         <link href="{{ asset('css/hedone.css') }}" rel="stylesheet" type="text/css"/>
         <link href="{{ asset('css/colors.css') }}" rel="stylesheet" type="text/css"/>
         <link href="{{ asset('css/custom.css') }}" rel="stylesheet" type="text/css"/>
+        <link href="{{ asset('fonts/KaushanScript-Regular.ttf') }}" />
 
         <!--[if lte IE 9]>
         <link href="assets/css/animations-ie-fix.css" rel="stylesheet" type="text/css"/>
         <![endif]-->
     </head>
-	<body class="royal_preloader">	
+	<body class="royal_preloader" >	
 	
 		<!-- PRELOADER -->
 		<div id="royal_preloader"></div>
@@ -60,7 +61,7 @@
                                         </div>
                                         <!-- SITE LOGO -->
                                         <div class="site-branding">
-                                            <a href="index.html" >
+                                            <a href="/" >
                                                 <img src="{{ asset('/img/grupo-lunelli-colored.png') }}" alt="brand logo"/>
                                                 <span class='logo-complement'>
                                                     Carreiras
@@ -71,49 +72,56 @@
                                     <!-- PRIMARY MENU -->
                                     <div id="Hedone" class="hedone-menu-container">
                                         <div class="navbar-right">
-                                            <ul class="hedone-menu">
-                                                <li class="menu-item menu-item menu-item-has-children current-page-ancestor current-menu-ancestor current-menu-parent current-page-parent current_page_parent current_page_ancestor">
-                                                    <a href="#">Home</a>
-                                                    <ul class="sub-menu">
-                                                        <li class="menu-item">
-                                                            <a href="index.html">text effects on load</a>
-                                                        </li>
-                                                        <li class="menu-item current-menu-item">
-                                                            <a href="home-slider.html">home slider</a>
-                                                        </li>
-                                                        <li class="menu-item">
-                                                            <a href="home-video.html">home video</a>
-                                                        </li>
-                                                        <li class="menu-item">
-                                                            <a href="home-fullscreen.html">home fullscreen</a>
-                                                        </li>
-                                                        <li class="menu-item">
-                                                            <a href="agency.html">design agency-animated</a>
-                                                        </li>
-                                                        <li class="menu-item">
-                                                            <a href="one-page.html">one-page version</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="about.html">About</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="services.html">services</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="blog.html">blog</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="contact.html">contact</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="elements.html">elements</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="/login">login</a>
-                                                </li>
-                                            </ul>
+                                            @if(empty($logged_in))
+                                                <ul class="hedone-menu" id='welcoLogin'>
+                                                    <li class="menu-item">
+                                                        <a href="/jobs">Vagas</a>
+                                                    </li>
+                                                    <li class="menu-item">
+                                                        &nbsp
+                                                    </li>
+                                                    <li class="menu-item">
+                                                        &nbsp
+                                                    </li>
+
+                                                    <li class="menu-item">
+                                                        <form id='login-form' action='/login' method='post' >
+                                                            <div class="form-group">
+                                                                @csrf
+                                                                <input v-show='login_user_ok==0' type='text' v-on:keyup.enter="checkLogin" class='form-control' id='login-user' v-model='login_user' name='email' placeholder='usuario'/>
+                                                                <input v-show='login_user_ok==1' v-on:keyup.enter="goToLogin" type='password' class='form-control' id='login-pass' v-model='login_pass' name='password' placeholder='senha'/>
+                                                                @if($errors->has('email'))
+                                                                    <span style='color:#9b0303!important;position:absolute;width:220px;'>Credenciais não conferem.</span>
+                                                                @endif
+                                                            </div>
+                                                        </form>
+                                                    </li>
+                                                    <li class="menu-item" >
+                                                        <button v-if='login_user_ok & login_user.length>0' v-on:click="backToUsername()" type='button' class='btn btn-grey' id='back'><i class="fa fa-undo" style='font-size:11pt'></i></button>
+                                                        <button  v-if='login_user_ok==0'  v-on:click="checkLogin" type='button' class='btn btn-default' id='ok'>OK</button>
+                                                        <button  v-if='checkPass()' type='button' v-on:click="goToLogin" class='btn btn-default' id="login">login</button>
+                                                    </li>
+                                                    <li class="menu-item margin-left-30" >
+                                                        <a href='/register' class="btn btn-green"  id='register'>Registre-se</a>
+                                                    </li>
+                                                </ul>
+                                            @else 
+                                                <ul class="hedone-menu" id='welcoLogin'>
+                                                    <li class="menu-item">
+                                                        <a href="/jobs">Vagas</a>
+                                                    </li>
+                                                    <li class="menu-item">
+                                                        <a href="/profile">Perfil</a>
+                                                    </li>
+                                                    <li>
+                                                        <span class='small margin-left-30'>
+                                                            Bem Vindo, {{$logged_in->name}} (<a href="/logout" style='color:#9b0303;display:inline;padding:2px!important;'>Sair</a>)
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            
+                                            @endif
+
                                         </div>
                                     </div>
                                 </div>
@@ -125,561 +133,292 @@
         </header>
         <!-- HEADER END -->
 
-        <!-- HERO SECTION SLIDER-->
-        <div class="hero-slider">
-            <div class="owl-hero-slider owl-carousel owl-theme">
-                <div class="item">
-                    <div class="hero-image" style="background-image: url({{ asset('/img/slide-2.jpg') }});"></div>
-                    <div class="hero-slider-content">
-                        <div class="container">
-                            <div class="row">
-                                <div class="upSection animated slideOutUp">
-                                    <div class="text-top">great</div>
-                                    <div class="text-mid">strategy</div>
-                                    <div class="slider-line"></div>
-                                </div>
-                                <div class="downSection animated slideOutDown">
-                                    <div class="text-bottom">build great brands</div>
-                                    <a class="home-move-button" href="#about-home"></a>
-                                </div>
-                            </div>
-                        </div> 
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="hero-image" style="background-image: url({{ asset('/img/slide-1.jpg') }});"></div>
-                    <div class="hero-slider-content">
-                        <div class="container">
-                            <div class="row">
-                                <div class="upSection animated slideOutUp">
-                                    <div class="text-top">moving</div>
-                                    <div class="text-mid">boundaries</div>
-                                    <div class="slider-line"></div>
-                                </div>
-                                <div class="downSection animated slideOutDown">
-                                    <div class="text-bottom">into digital solution</div>
-                                    <a class="home-move-button" href="#about-home"></a>
-                                </div>
-                            </div>
-                        </div> 
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="hero-image" style="background-image: url({{ asset('/img/slide-3.jpg') }});"></div>
-                    <div class="hero-slider-content">
-                        <div class="container">
-                            <div class="row">
-                                <div class="upSection animated slideOutUp">
-                                    <div class="text-top">magic</div>
-                                    <div class="text-mid">& design</div>
-                                    <div class="slider-line"></div>
-                                </div>
-                                <div class="downSection animated slideOutDown">
-                                    <div class="text-bottom">to connect people</div>
-                                    <a class="home-move-button" href="#about-home"></a>
-                                </div>
-                            </div>
-                        </div> 
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ABOUT SECTION -->
-        <section id="about-home" class="padding-top-120px white-background">
-            <div class="container">
-                <div class="row">
-                    <div class="animatedParent animateOnce">
-                        <h3 class="head-h3">We're Hedone</h3>
-                        <p class="head-subtitle">creative agency</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="animatedParent animateOnce">
-                        <div class="col-sm-4">
-                            <img class="img-responsive animated fadeInUp delay-500" alt="about us" src="{{ asset('/img/about_1.jpg') }}">
-                        </div>
-                        <div class="col-sm-8">
-                            <blockquote class="quote">
-                                "We are a new creative studio. veritatis, eosquiso uam asperi oresipsum itaque dignissimos reprehen derit. non quos ratione ipsa facilisis. Vivamus dapibus rutrum mi ut aliquam. In hac habitasse platea dictumst. Integer sagittis neque a tortor tempor in porta sem vulputate."
-                            </blockquote>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- COUNTER SECTION -->
-        <div class="dark-background padding-top-bottom-60px keep-z-index">
-            <div class="container">
-                <div class="row">
-                    <div class="animatedParent animateOnce">
-                        <div class="col-sm-3">
-                            <div class="facts-number"><span class="counter" data-counter-val="374">374</span></div>
-                            <div class="facts-name">active users</div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="facts-number"><span class="counter" data-counter-val="179">179</span></div>
-                            <div class="facts-name">apps created</div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="facts-number"><span class="counter" data-counter-val="16420">16420</span></div>
-                            <div class="facts-name">lines of code</div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="facts-number"><span class="counter" data-counter-val="527">527</span></div>
-                            <div class="facts-name">coffee cups</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- OUR TEAM -->
-        <section class="padding-top-bottom-120px white-background">
-            <div class="container">
-                <div class="row">
-                    <div class="animatedParent animateOnce">
-                        <h3 class="head-h3">Our team</h3>
-                    </div>
-                    <div class="animatedParent animateOnce">
-                        <div class="col-sm-4 team-mem-wrap animated fadeInUp">
-                            <div class="hover-for-team-social">
-                                <ul>
-                                    <li>
-                                        <a href="#" class=""><i class="fa fa-facebook"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class=""><i class="fa fa-twitter"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class=""><i class="fa fa-linkedin"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <img class="img-responsive team-img" src="{{ asset('/img/mem_1.jpg') }}" alt="Alex Andrews">
-                            <div class="team-names">Alex Andrews</div>
-                            <div class="team-expert">founder</div>
-                        </div>
-                        <div class="col-sm-4 team-mem-wrap animated fadeInUp delay-250">
-                            <div class="hover-for-team-social">
-                                <ul>
-                                    <li>
-                                        <a href="#" class=""><i class="fa fa-facebook"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class=""><i class="fa fa-twitter"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class=""><i class="fa fa-linkedin"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <img class="img-responsive team-img" src="{{ asset('/img/mem_2.jpg') }}" alt="Marko Kulis">
-                            <div class="team-names">Marko Kulis</div>
-                            <div class="team-expert">art director</div>
-                        </div>
-                        <div class="col-sm-4 team-mem-wrap animated fadeInUp delay-500">
-                            <div class="hover-for-team-social">
-                                <ul>
-                                    <li>
-                                        <a href="#" class=""><i class="fa fa-facebook"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class=""><i class="fa fa-twitter"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class=""><i class="fa fa-linkedin"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <img class="img-responsive team-img" src="{{ asset('/img/mem_3.jpg') }}" alt="Frank Furious">
-                            <div class="team-names">Frank Furious</div>
-                            <div class="team-expert">developer</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- VIDEO BACKGROUND SECTION -->
-        <div class="padding-top-bottom-120px video-section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <a href="https://vimeo.com/153959792" class="lightbox-on-sep popup-video">
-                            <img src="{{ asset('/img/play-button.png') }}" class="play-button play-on-sep" alt="play button">
-                        </a>
-                    </div>
-                    <div class="animatedParent animateOnce">
-                        <div class="col-xs-12 sep-text">
-                            A typical day at the office
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- OUR SERVICES -->
-        <section class="padding-top-bottom-120px white-background animation-overflow">
-            <div class="container">
-                <div class="row">
-                    <div class="animatedParent animateOnce">
-                        <h3 class="head-h3 animated">Our services</h3>
-                        <p class="head-subtitle">we do magic</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="animatedParent animateOnce">
-                        <div class="col-sm-4 animated fadeInUp">
-                            <div class="service-wrap">
-                                <div class="service-icon">
-                                    <i class="fa fa-code"></i>
-                                </div>
-                                <div class="head-h6 services-head-h6">web design</div>
-                                <div class="text-center">Vestibulum rutrum, mi nec elementum vehicula. Non quos ratione ipsa facilisis.</div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 animated fadeInUp delay-250">
-                            <div class="service-wrap">
-                                <div class="service-icon">
-                                    <i class="fa fa-wordpress"></i>
-                                </div>
-                                <div class="head-h6 services-head-h6">branding</div>
-                                <div class="text-center">Non quos ratione ipsa facilisis. Vivamus dapibus rutrum mi ut aliquam.</div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 animated fadeInUp delay-500">
-                            <div class="service-wrap">
-                                <div class="service-icon">
-                                    <i class="fa fa-camera-retro"></i>
-                                </div>
-                                <div class="head-h6 services-head-h6">photography</div>
-                                <div class="text-center">Non quos ratione ipsa facilisis. Vivamus dapibus rutrum mi ut aliquam.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="animatedParent animateOnce">
-                        <div class="col-sm-4 animated fadeInUp">
-                            <div class="service-wrap">
-                                <div class="service-icon">
-                                    <i class="fa fa-gamepad"></i>
-                                </div>
-                                <div class="head-h6 services-head-h6">game design</div>
-                                <div class="text-center">Non quos ratione ipsa facilisis. Vivamus dapibus rutrum mi ut aliquam.</div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 animated fadeInUp delay-250">
-                            <div class="service-wrap">
-                                <div class="service-icon">
-                                    <i class="fa fa-tachometer"></i>
-                                </div>
-                                <div class="head-h6 services-head-h6">speed analysys</div>
-                                <div class="text-center">Non quos ratione ipsa facilisis. Vivamus dapibus rutrum mi ut aliquam.</div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 animated fadeInUp delay-500">
-                            <div class="service-wrap">
-                                <div class="service-icon">
-                                    <i class="fa fa-terminal"></i>
-                                </div>
-                                <div class="head-h6 services-head-h6">server scripting</div>
-                                <div class="text-center">Non quos ratione ipsa facilisis. Vivamus dapibus rutrum mi ut aliquam.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- BRANDING SLIDER -->
-        <div class="padding-top-bottom-60px dark-background">
-            <div class="container">
-                <div class="row">
-                    <div class="brand-slider owl-carousel owl-theme">
+        <div>
+            <!-- HERO SECTION SLIDER-->
+            <div class="hero-slider">
+                <div class="owl-hero-slider owl-carousel owl-theme">
+                    @foreach($banners as $banner)
                         <div class="item">
-                            <div class="brand-logo-holder">
-                                <img src="{{ asset('/img/white1.png') }}" alt="brand logo"/>
+                            <div class="hero-image" style="background-image: url({{ asset('/img/'.$banner->background) }});"></div>
+                            <div class="hero-slider-content">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="upSection animated slideOutUp">
+                                            <div class="text-top {{$banner->title_big_outline}}" style='color:{{$banner->title_big_color}};'>{{$banner->title_big}}</div>
+                                            <div class="text-mid  {{$banner->title_small_outline}}" style='color:{{$banner->title_small_color}};'>{{$banner->title_small}}</div>
+                                            <div class="slider-line"></div>
+                                        </div>
+                                        <div class="downSection animated slideOutDown">
+                                            <div class="text-bottom">{{$banner->cta}}</div>
+                                            <a class="home-move-button" href="#about-home"></a>
+                                        </div>
+                                    </div>
+                                </div> 
                             </div>
                         </div>
-                        <div class="item">
-                            <div class="brand-logo-holder">
-                                <img src="{{ asset('/img/white2.png') }}" alt="brand logo"/>
-                            </div>
-                        </div><div class="item">
-                            <div class="brand-logo-holder">
-                                <img src="{{ asset('/img/white3.png') }}" alt="brand logo"/>
-                            </div>
-                        </div><div class="item">
-                            <div class="brand-logo-holder">
-                                <img src="{{ asset('/img/white4.png') }}" alt="brand logo"/>
-                            </div>
-                        </div><div class="item">
-                            <div class="brand-logo-holder">
-                                <img src="{{ asset('/img/white5.png') }}" alt="brand logo"/>
-                            </div>
-                        </div><div class="item">
-                            <div class="brand-logo-holder">
-                                <img src="{{ asset('/img/white6.png') }}" alt="brand logo"/>
-                            </div>
-                        </div><div class="item">
-                            <div class="brand-logo-holder">
-                                <img src="{{ asset('/img/white1.png') }}" alt="brand logo"/>
-                            </div>
-                        </div><div class="item">
-                            <div class="brand-logo-holder">
-                                <img src="{{ asset('/img/white2.png') }}" alt="brand logo"/>
-                            </div>
-                        </div><div class="item">
-                            <div class="brand-logo-holder">
-                                <img src="{{ asset('/img/white3.png') }}" alt="brand logo"/>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
-        </div>
 
-        <!-- BLOG SECTION-->
-        <section class="padding-top-bottom-120px white-background animation-overflow">
-            <div class="container">
-                <div class="row">
-                    <div class="animatedParent animateOnce">
-                        <h3 class="head-h3">journal</h3>
-                        <p class="head-subtitle">latest news</p>
+
+            <!-- ABOUT SECTION -->
+            <section id="about-home" class="padding-top-120px white-background">
+                <div class="container">
+                    <div class="row">
+                        <div class="animatedParent animateOnce">
+                            <h3 class="head-h3">{{$about_us->title}}</h3>
+                            <p class="head-subtitle">{{$about_us->background_title}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="animatedParent animateOnce">
+                            <div class="col-sm-4">
+                                <img class="img-responsive animated fadeInUp' delay-500" alt="about us" src="{{ asset('/img/'.$about_us->testimonial_author_picture) }}">
+                            </div>
+                            <div class="col-sm-8">
+                                <blockquote>
+                                    {{$about_us->testimonial}}
+                                </blockquote>
+                                <span class='quote-author'>{{$about_us->testimonial_author}}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- BLOG LISTING THREE COLUMNS -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="blog-page-listing animatedParent animateOnce">
-                        <div class="col-sm-6 col-md-4">
-                            <article>
-                                <div class="blog-page-post-wrapp animated">
-                                    <img class="blog-page-post-img" src="{{ asset('/img/post-4.jpg') }}" alt="Standard Gallery Post"/>
-                                    <h2 class="blog-page-post-head-h2"><a href="standard-gallery-post.html">Standard Gallery Post</a></h2>
-                                    <ul class="blog_post_category">
-                                        <li><i class="fa fa-thumb-tack"></i></li>
-                                        <li><a href="#category">branding</a></li>
-                                        <li><a href="#category">design</a></li>
-                                        <li><a href="#category">art</a></li>
-                                    </ul>
-                                    <ul class="blog_post_tags">
-                                        <li><i class="fa fa-tags"></i></li>
-                                        <li><a href="#category">template</a></li>
-                                        <li><a href="#category">post formats</a></li>
-                                    </ul>
-                                    <div class="blog-page-post-content">
-                                        <p>Aliquam quis nunc quam. Maecenas feugiat dui venenatis dui convallis, a consectetur quam ornare.</p>
-                                    </div>
-                                    <div class="blog-page-post-author">
-                                        <a href="#author-link">Alex Andrews</a>
-                                    </div>
-                                    <div class="blog-page-post-date">
-                                        <a href="#published">March 7, 2016</a>
-                                    </div>
+            </section>
+
+            <!-- COUNTER SECTION -->
+            <div class="dark-background padding-top-bottom-60px keep-z-index">
+                <div class="container">
+                    <div class="row">
+                        <div class="animatedParent animateOnce">
+                            @foreach($our_numbers as $number)
+                                <div class="col-sm-{{12/$total_numbers}}">
+                                    <div class="facts-number"><span class="counter" data-counter-val="{{$number->number}}">{{$number->number}}</span></div>
+                                    <div class="facts-name">{{$number->title}}</div>
                                 </div>
-                            </article>
-                        </div>
-                        <div class="col-sm-6 col-md-4">
-                            <article>
-                                <div class="blog-page-post-wrapp animated">
-                                    <img class="blog-page-post-img" src="{{ asset('/img/post-2.jpg') }}" alt="Standard Video Post"/>
-                                    <h2 class="blog-page-post-head-h2"><a href="standard-video-post.html">Standard Video Post</a></h2>
-                                    <ul class="blog_post_category">
-                                        <li><i class="fa fa-thumb-tack"></i></li>
-                                        <li><a href="#category">branding</a></li>
-                                        <li><a href="#category">design</a></li>
-                                        <li><a href="#category">art</a></li>
-                                    </ul>
-                                    <ul class="blog_post_tags">
-                                        <li><i class="fa fa-tags"></i></li>
-                                        <li><a href="#category">template</a></li>
-                                        <li><a href="#category">post formats</a></li>
-                                    </ul>
-                                    <div class="blog-page-post-content">
-                                        <p>Aliquam quis nunc quam. Maecenas feugiat dui venenatis dui convallis, a consectetur quam ornare.</p>
-                                    </div>
-                                    <div class="blog-page-post-author">
-                                        <a href="#author-link">Frank Furius</a>
-                                    </div>
-                                    <div class="blog-page-post-date">
-                                        <a href="#published">March 7, 2016</a>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
-                        <div class="col-sm-6 col-md-4">
-                            <article>
-                                <div class="blog-page-post-wrapp animated">
-                                    <img class="blog-page-post-img" src="{{ asset('/img/post-1.jpg') }}" alt="Standard Image Post"/>
-                                    <h2 class="blog-page-post-head-h2"><a href="standard-image-post.html">Standard Image Post</a></h2>
-                                    <ul class="blog_post_category">
-                                        <li><i class="fa fa-thumb-tack"></i></li>
-                                        <li><a href="#category">branding</a></li>
-                                        <li><a href="#category">design</a></li>
-                                        <li><a href="#category">art</a></li>
-                                    </ul>
-                                    <ul class="blog_post_tags">
-                                        <li><i class="fa fa-tags"></i></li>
-                                        <li><a href="#category">template</a></li>
-                                        <li><a href="#category">post formats</a></li>
-                                    </ul>
-                                    <div class="blog-page-post-content">
-                                        <p>Aliquam quis nunc quam. Maecenas feugiat dui venenatis dui convallis, a consectetur quam ornare.</p>
-                                    </div>
-                                    <div class="blog-page-post-author">
-                                        <a href="#author-link">Marko Kulis</a>
-                                    </div>
-                                    <div class="blog-page-post-date">
-                                        <a href="#published">March 7, 2016</a>
-                                    </div>
-                                </div>
-                            </article>
+                            @endforeach 
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- BLOG LISTING FOUR COLUMNS -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="blog-page-listing animatedParent animateOnce">
-                        <div class="col-sm-6 col-md-3">
-                            <article>
-                                <div class="blog-page-post-wrapp animated">
-                                    <img class="blog-page-post-img" src="{{ asset('/img/post-5.jpg') }}" alt="Images & Quote Post"/>
-                                    <h2 class="blog-page-post-head-h2"><a href="images-and-quote-post.html">Images & Quote Post</a></h2>
-                                    <ul class="blog_post_category">
-                                        <li><i class="fa fa-thumb-tack"></i></li>
-                                        <li><a href="#category">branding</a></li>
-                                        <li><a href="#category">design</a></li>
-                                        <li><a href="#category">art</a></li>
-                                    </ul>
-                                    <ul class="blog_post_tags">
-                                        <li><i class="fa fa-tags"></i></li>
-                                        <li><a href="#category">template</a></li>
-                                        <li><a href="#category">post formats</a></li>
-                                    </ul>
-                                    <div class="blog-page-post-content">
-                                        <p>Aliquam quis nunc quam. Maecenas feugiat dui venenatis dui convallis, a consectetur quam ornare.</p>
-                                    </div>
-                                    <div class="blog-page-post-author">
-                                        <a href="#author-link">Alex Andrews</a>
-                                    </div>
-                                    <div class="blog-page-post-date">
-                                        <a href="#published">March 7, 2016</a>
-                                    </div>
-                                </div>
-                            </article>
+            <!-- OUR TEAM -->
+            <section class="padding-top-bottom-120px white-background">
+                <div class="container">
+                    <div class="row">
+                        <div class="animatedParent animateOnce">
+                            <h3 class="head-h3">Nosso Time</h3>
+                            <p class="head-subtitle">depoimentos</p>
                         </div>
-                        <div class="col-sm-6 col-md-3">
-                            <article>
-                                <div class="blog-page-post-wrapp animated">
-                                    <img class="blog-page-post-img" src="{{ asset('/img/post-6.jpg') }}" alt="Quote Post"/>
-                                    <h2 class="blog-page-post-head-h2"><a href="quote-post.html">Quote Post</a></h2>
-                                    <ul class="blog_post_category">
-                                        <li><i class="fa fa-thumb-tack"></i></li>
-                                        <li><a href="#category">branding</a></li>
-                                        <li><a href="#category">design</a></li>
-                                        <li><a href="#category">art</a></li>
-                                    </ul>
-                                    <ul class="blog_post_tags">
-                                        <li><i class="fa fa-tags"></i></li>
-                                        <li><a href="#category">template</a></li>
-                                        <li><a href="#category">post formats</a></li>
-                                    </ul>
-                                    <div class="blog-page-post-content">
-                                        <p>Aliquam quis nunc quam. Maecenas feugiat dui venenatis dui convallis, a consectetur quam ornare.</p>
+                        <div class="animatedParent animateOnce">
+                            @foreach($our_team as $member)
+                                <div class="col-sm-{{12/$our_team_count}} team-mem-wrap animated fadeInUp">
+                                    <div class="hover-for-team-social">
+                                        <ul>
+                                            @if(!empty($member->facebook_link))
+                                                <li>
+                                                    <a href="{{$member->twitter_link}}" class=""><i class="fa fa-facebook"></i></a>
+                                                </li>
+                                            @endif
+                                            @if(!empty($member->twitter_link))
+                                                <li>
+                                                    <a href="{{$member->twitter_link}}" class=""><i class="fa fa-twitter"></i></a>
+                                                </li>
+                                            @endif
+                                            @if(!empty($member->linkedin_link))
+                                                <li>
+                                                    <a href="{{$member->twitter_link}}" class=""><i class="fa fa-linkedin"></i></a>
+                                                </li>
+                                            @endif
+                                        </ul>
                                     </div>
-                                    <div class="blog-page-post-author">
-                                        <a href="#author-link">Frank Furius</a>
-                                    </div>
-                                    <div class="blog-page-post-date">
-                                        <a href="#published">March 7, 2016</a>
-                                    </div>
+                                    <img class="img-responsive team-img" src="{{ asset('/img/'.$member->picture) }}" alt="{{$member->name}}">
+                                    <blockquote class='secondary-testimonials'>
+                                        "{{$member->testimonial}}"
+                                    </blockquote>
+                                    <div class="team-names">{{$member->name}}</div>
+                                    <div class="team-expert">{{$member->job}}</div>
                                 </div>
-                            </article>
+                            @endforeach
                         </div>
-                        <div class="col-sm-6 col-md-3">
-                            <article>
-                                <div class="blog-page-post-wrapp animated">
-                                    <img class="blog-page-post-img" src="{{ asset('/img/post-7.jpg') }}" alt="Link Post"/>
-                                    <h2 class="blog-page-post-head-h2"><a href="link-post.html">Link Post</a></h2>
-                                    <ul class="blog_post_category">
-                                        <li><i class="fa fa-thumb-tack"></i></li>
-                                        <li><a href="#category">branding</a></li>
-                                        <li><a href="#category">design</a></li>
-                                        <li><a href="#category">art</a></li>
-                                    </ul>
-                                    <ul class="blog_post_tags">
-                                        <li><i class="fa fa-tags"></i></li>
-                                        <li><a href="#category">template</a></li>
-                                        <li><a href="#category">post formats</a></li>
-                                    </ul>
-                                    <div class="blog-page-post-content">
-                                        <p>Aliquam quis nunc quam. Maecenas feugiat dui venenatis dui convallis, a consectetur quam ornare.</p>
-                                    </div>
-                                    <div class="blog-page-post-author">
-                                        <a href="#author-link">Marko Kulis</a>
-                                    </div>
-                                    <div class="blog-page-post-date">
-                                        <a href="#published">March 7, 2016</a>
-                                    </div>
-                                </div>
-                            </article>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIDEO BACKGROUND SECTION -->
+            <div class="padding-top-bottom-120px video-section" style="background-image:url({{'/img/'.$video->face}})">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <a  class="lightbox-on-sep popup-video">
+                            </a>
                         </div>
-                        <div class="col-sm-6 col-md-3">
-                            <article>
-                                <div class="blog-page-post-wrapp animated">
-                                    <img class="blog-page-post-img" src="{{ asset('/img/post-8.jpg') }}" alt="Audio Post"/>
-                                    <h2 class="blog-page-post-head-h2"><a href="audio-post.html">Audio Post</a></h2>
-                                    <ul class="blog_post_category">
-                                        <li><i class="fa fa-thumb-tack"></i></li>
-                                        <li><a href="#category">branding</a></li>
-                                        <li><a href="#category">design</a></li>
-                                        <li><a href="#category">art</a></li>
-                                    </ul>
-                                    <ul class="blog_post_tags">
-                                        <li><i class="fa fa-tags"></i></li>
-                                        <li><a href="#category">template</a></li>
-                                        <li><a href="#category">post formats</a></li>
-                                    </ul>
-                                    <div class="blog-page-post-content">
-                                        <p>Aliquam quis nunc quam. Maecenas feugiat dui venenatis dui convallis, a consectetur quam ornare.</p>
-                                    </div>
-                                    <div class="blog-page-post-author">
-                                        <a href="#author-link">Marko Kulis</a>
-                                    </div>
-                                    <div class="blog-page-post-date">
-                                        <a href="#published">March 7, 2016</a>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
-                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
 
-        </section>
-        <!-- END BLOG SECTION -->
+            <!-- OUR SERVICES -->
+            <section class="padding-top-bottom-120px white-background animation-overflow">
+                <div class="container">
+                    <div class="row">
+                        <div class="animatedParent animateOnce">
+                            <h3 class="head-h3 animated">{{$video->title}}</h3>
+                            <p class="head-subtitle">{{$video->title_background}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <!--iframe id='ytplayer' height='600px' width='800px' src="{{$video->file.'?origin=local.lunellicarreiras.com.br&autoplay=1'}}" frameborder="0">
+                            </iframe-->
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <!-- SUBSCRIBE SECTION -->
-        <div class="padding-top-bottom-60px white-background">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <form id="subscribe-form" name="subscribe-form" method="post">
-                            <input id="subscribe-email" type="text" placeholder="subscribe (we hate spam)" name="email" required="required" class="subscribe-style">
-                            <button type="button" data-value="subscribe" data-wait="Please wait..." class="w-button subscribe-button">subscribe</button>
-                        </form>
-                        <div class="alert alert-success contact-form-done no-border-radius">
-                            <p>Thank you! Your submission has been received!</p>
+            <!-- BRANDING SLIDER -->
+            <div class="padding-top-bottom-60px dark-background">
+                <div class="container">
+                    <div class="row">
+                        <div class="brand-slider owl-carousel owl-theme">
+                            @foreach ($jobs as $job)
+                                @if($job->index==7)
+                                    @php break @endphp
+                                @endif
+                                @if ($job->home_slider==1)
+                                    <div class="item">
+                                        <div class="brand-logo-holder">
+                                            <span class='job-item'>
+                                                {{$job->name}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOG SECTION-->
+            <section class="padding-top-bottom-120px white-background animation-overflow">
+                <div class="container">
+                    <div class="row">
+                        <div class="animatedParent animateOnce">
+                            <h3 class="head-h3">Vagas</h3>
+                            <p class="head-subtitle">Em Aberto</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- BLOG LISTING THREE COLUMNS -->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="blog-page-listing animatedParent animateOnce">
+                            @php $count=0 @endphp
+                            @foreach ($jobs as $job)
+                                @if($count<3)
+                                <div class="col-sm-6 col-md-4">
+                                    <article>
+                                        <div class="blog-page-post-wrapp animated">
+                                            @if(!empty($job->picture))
+                                                <img class="blog-page-post-img" src="{{ asset('/img/'.$job->picture) }}" alt="{{$job->name}}"/>
+                                            @endif
+                                            <h2 class="blog-page-post-head-h2"><a href="standard-gallery-post.html">{{$job->name}}</a></h2>
+                                            <ul class="blog_post_category">
+                                                <li><i class="fa fa-thumb-tack"></i></li>
+                                                <li><a href="#category">{{$job->field->name}}</a></li>
+                                            </ul>
+                                            <ul class="blog_post_tags">
+                                                <li><i class="fa fa-tags"></i></li>
+                                                @foreach($job->tags as $tag)
+                                                    <li><a href="#category">{{$tag->name}}</a></li>
+                                                @endforeach
+                                            </ul>
+                                            <div class="blog-page-post-content">
+                                                <p>{{$job->description}}</p>
+                                            </div>
+                                            <!--div class="blog-page-post-author">
+                                                <a href="#author-link">Alex Andrews</a>
+                                            </div-->
+                                            <div class="blog-page-post-date">
+                                                <a href="#published">
+                                                    @if (!empty($job->created_at))
+                                                        {{date_format(DateTime::createFromFormat('Y-m-d H:i:s', $job->created_at),'m/Y')}}
+                                                    @endif
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                                @endif
+                                @php $count++ @endphp
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOG LISTING FOUR COLUMNS -->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="blog-page-listing animatedParent animateOnce">
+                            @php $count=0 @endphp
+                            @foreach ($jobs as $job)
+                                @if($count>=3 && $count<7)
+                                    <div class="col-sm-6 col-md-3">
+                                        <article>
+                                            <div class="blog-page-post-wrapp animated">
+                                                @if(!empty($job->picture))
+                                                    <img class="blog-page-post-img" src="{{ asset('/img/'.$job->picture) }}" alt="{{$job->name}}"/>
+                                                @endif
+                                                <h2 class="blog-page-post-head-h2"><a href="standard-gallery-post.html">{{$job->name}}</a></h2>
+                                                <ul class="blog_post_category">
+                                                    <li><i class="fa fa-thumb-tack"></i></li>
+                                                    <li><a href="#category">{{$job->field->name}}</a></li>
+                                                </ul>
+                                                <ul class="blog_post_tags">
+                                                    <li><i class="fa fa-tags"></i></li>
+                                                    @foreach($job->tags as $tag)
+                                                        <li><a href="#category">{{$tag->name}}</a></li>
+                                                    @endforeach
+                                                </ul>
+                                                <div class="blog-page-post-content">
+                                                    <p>{{$job->description}}</p>
+                                                </div>
+                                                <!--div class="blog-page-post-author">
+                                                    <a href="#author-link">Alex Andrews</a>
+                                                </div-->
+                                                <div class="blog-page-post-date">
+                                                    <a href="#published">
+                                                        @if (!empty($job->created_at))
+                                                            {{date_format(DateTime::createFromFormat('Y-m-d H:i:s', $job->created_at),'m/Y')}}
+                                                        @endif
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </div>
+                                @endif
+                                @php $count++ @endphp
+                            @endforeach
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+            <!-- END BLOG SECTION -->
+
+            <!-- SUBSCRIBE SECTION -->
+            <div class="padding-top-bottom-60px white-background">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form id="subscribe-form" name="subscribe-form" method="post">
+                                <input id="subscribe-email" type="text" placeholder="seu email aqui" name="email" required="required" class="subscribe-style">
+                                <button type="button" data-value="subscribe" data-wait="Aguarde..." class="w-button subscribe-button">Inscrever-se</button>
+                            </form>
+                            <div class="alert alert-success contact-form-done no-border-radius">
+                                <p>Obrigado! Inscrição recebida!</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -690,25 +429,23 @@
         <footer class="footer">
             <div class="container">
                 <div class="row">
-                    <div class="footer-logo">
-                        <img src="{{ asset('/img/logo-white.png') }}" alt="footer logo"/>
-                    </div>
+
                     <div class="footer-social-block">
-                        <a href="#" class="w-inline-block social-wrap">
-                            <i class="fa fa-twitter"></i>
+                        <a href="https://www.instagram.com/grupolunelli/" target='_blank' class="w-inline-block social-wrap">
+                            <i class="fa fa-instagram"></i>
                         </a>
-                        <a href="#" class="w-inline-block social-wrap">
+                        <a href="https://www.linkedin.com/company/grupo-lunelli" target='_blank' class="w-inline-block social-wrap">
                             <i class="fa fa-linkedin"></i>
                         </a>
-                        <a href="#" class="w-inline-block social-wrap">
+                        <a href="https://www.facebook.com/grupolunelli" target='_blank' class="w-inline-block social-wrap">
                             <i class="fa fa-facebook"></i>
                         </a>
-                        <a href="#" class="w-inline-block social-wrap">
+                        <a href="https://www.youtube.com/channel/UCPfbbICzMyJAgkC3iDtFlHA/featured"  target='_blank' class="w-inline-block social-wrap">
                             <i class="fa fa-youtube"></i>
                         </a>
                     </div>
                     <div class="footer-text">
-                        © We are <span class="footer-text-span">Hedone</span>. All rights reserved. 2017<br>Made by <span class="footer-text-span">IG Design</span> in Kraljevo, Serbia
+                        © <span class="footer-text-span">LunelliCarreiras</span>. 2021
                     </div>
                 </div>
             </div>
@@ -720,5 +457,7 @@
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('js/plugins.js') }}" type="text/javascript"></script>
         <script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+        <script src="{{ asset('js/welcome.js') }}" type="text/javascript"></script>
     </body>
 </html>

@@ -1,3 +1,10 @@
+let admConf=null;
+let fullData=null;
+let selectedIds=Array();
+let ajaxUrl="";
+let form = new FormData();
+
+
 $(document).ready(function () {
     if ($('[check-fields-list]').length>0)
         fieldsList();
@@ -9,13 +16,13 @@ $(document).ready(function () {
         unitsList();
     if ($('[check-candidates-edit]').length>0)
         editCandidate();
+    if ($('#configurations').length>0)
+        configurations();
 })
 
 function startData(){
     fullData=JSON.parse($('#full-data').val());
-    selectedIds=Array();
     ajaxUrl="";
-    form = new FormData();
     form.append('_token',$('[name="_token"]').val());
 }
 
@@ -48,7 +55,7 @@ function jobsList(){
 }
 
 function startList(){
-    list = new Vue({
+    let list = new Vue({
         el:'#app',
         data:{selectedIds:new Array()},
         computed:{
@@ -125,4 +132,122 @@ function startEdit(screenNameHelper='',firstTab=''){
             }
         }
     })
+}
+
+function dropper(it){
+    console.log(it);
+}
+
+function configurations(){
+    let form = new FormData();
+    form.append('_token',$('[name="_token"]').val());
+    
+    let bannerData=null;
+
+    $.ajax({
+        url:'/adm/banners-list',
+        type:"post",
+        processData: false,
+        contentType: false,
+        data:form,
+        success:function (data){
+            bannerData=data['data'];
+            admConf.banners=bannerData;
+        }
+    })
+
+
+    admConf = new Vue({
+        el:'#configurations',
+        data:{
+            banners:null,
+            movingBanner:null,
+            saving:false,
+            selectedBanner:null,
+        },
+        computed:{
+            savingText:function (){
+                if (this.saving)
+                    return "Salvando...";
+                return "Salvar";
+            },
+            canEdit:function(){
+                if (selectedBanner!=null)
+                    return true;
+                return false;
+            }
+        },
+        methods:{
+            editBanner:function(){
+                console.log(selectedBanner);
+            },
+            activeBanner:function(id){
+                if (this.selectedBanner==id)
+                    return true;
+                return false;
+            },
+            saveBanners:function (){
+                this.saving=true;
+                let that = this;
+                let form = new FormData();
+                form.append('_token',$('[name="_token"]').val());
+                form.append('banners', JSON.stringify(that.banners));
+                $.ajax({
+                    url:'/adm/save-banners',
+                    type:'POST',
+                    processData: false,
+                    contentType: false,            
+                    data:form,
+                    success:function(data){
+                        console.log(data);
+                        that.saving=false;
+                        let bannerIframe=document.getElementById('banner-iframe');
+                        bannerIframe.src=bannerIframe.src;
+                    }
+                })
+            },
+            dragOver:function (item) {
+                item.preventDefault();
+                //console.log(item);
+            },
+            dragMove:function (item) {
+                item.dataTransfer.setData("text", item.target.getAttribute('data-key'));
+                this.movingBanner=item.target;
+            },
+            dragEnd:function (item){
+                item.preventDefault();
+                // console.log(item);
+            },
+            dragDrop:function (item){
+                item.preventDefault();
+                let that = this;
+
+                if (item.target.className.indexOf("dropzone")!=-1){
+                    let movedKey = item.dataTransfer.getData("text");
+                    let tempBanner = this.banners[movedKey-1];
+                    this.banners.splice(movedKey-1,1);
+    
+                    let newbanners = Array();
+                    for (let i=0;i<that.banners.length;i++){
+                        if((i+1)==item.target.getAttribute('data-key'))
+                            newbanners.push(tempBanner);
+                        newbanners.push(that.banners[i]);
+                    }
+                    for (let i=0;i<newbanners.length;i++){
+                        newbanners[i].order=i+1;
+                    }
+                    this.banners = null;
+                    this.banners = newbanners;
+                    //Vue.set(admConf.banners,0,newbanners[0]);
+
+                    console.log(this.banners);    
+                }
+            }            
+        },
+        watch:{
+            selectedBanner:function(val){
+                console.log(val);
+            }
+        }
+    })    
 }

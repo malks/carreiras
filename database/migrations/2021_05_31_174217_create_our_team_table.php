@@ -18,6 +18,10 @@ class CreateOurTeamTable extends Migration
             $table->string('name')->nullable();
             $table->string('job')->nullable();
             $table->string('picture')->nullable();
+            $table->string('testimonial')->nullable();
+            $table->string('facebook_link')->nullable();
+            $table->string('twitter_link')->nullable();
+            $table->string('linkedin_link')->nullable();
             $table->datetime('active_from')->nullable();
             $table->datetime('active_to')->nullable();
             $table->timestamps();
