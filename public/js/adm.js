@@ -138,6 +138,10 @@ function dropper(it){
     console.log(it);
 }
 
+function closeBannerModal(){
+    $('#banner-modal').hide();
+}
+
 function configurations(){
     let form = new FormData();
     form.append('_token',$('[name="_token"]').val());
@@ -156,6 +160,25 @@ function configurations(){
         }
     })
 
+    $('#banner-modal [data-bs-dismiss]').click(function () {
+        $('#banner-modal').hide();
+    })
+
+    let defaultEditingBanner={
+        id:null,
+        name:'',
+        title_big:'',
+        title_big_color:'',
+        title_big_outline:'',
+        title_small:'',
+        title_small_color:'',
+        title_small_outline:'',
+        cta:'',
+        background:'',
+        active_from:'',
+        active_to:'',
+        order:''
+    };
 
     admConf = new Vue({
         el:'#configurations',
@@ -164,6 +187,7 @@ function configurations(){
             movingBanner:null,
             saving:false,
             selectedBanner:null,
+            editingBanner:{...defaultEditingBanner},
         },
         computed:{
             savingText:function (){
@@ -173,13 +197,29 @@ function configurations(){
             },
             canEdit:function(){
                 if (this.selectedBanner!=null)
-                    return true;
-                return false;
+                    return false;
+                return true;
             }
         },
         methods:{
-            editBanner:function(){
+            selectBanner:function(id){
+                this.selectedBanner=id;
                 console.log(this.selectedBanner);
+            },
+            resetEditingBanner: function (){
+                this.editingBanner={...defaultEditingBanner};
+                $('#banner-modal').hide();
+            },
+            editBanner:function(){
+                let that=this;
+                this.banners.filter(obj => {
+                    if( obj.id === that.selectedBanner){
+                        $('#banner-modal').show();
+                        console.log(obj);
+                        that.editingBanner={...obj};
+                    }
+                    return false;
+                });
             },
             activeBanner:function(id){
                 if (this.selectedBanner==id)
