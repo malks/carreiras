@@ -139,7 +139,7 @@
                 <div class="owl-hero-slider owl-carousel owl-theme">
                     @foreach($banners as $banner)
                         <div class="item">
-                            <div class="hero-image" style="background-image: url({{ asset('/img/'.$banner->background) }});"></div>
+                            <div class="hero-image" style="background-image: url({{ asset($banner->background) }});"></div>
                             <div class="hero-slider-content">
                                 <div class="container">
                                     <div class="row">

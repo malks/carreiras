@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Subscribed extends Model
+class Experience extends Model
 {
-    protected $table='subscribed';
+    protected $table='experience';
 }

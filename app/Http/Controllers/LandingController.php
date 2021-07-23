@@ -8,11 +8,16 @@ use App\AboutUs;
 use App\Candidate;
 use App\Deficiency;
 use App\Banner;
+use App\Experience;
 use App\News;
 use App\OurNumbers;
 use App\Job;
 use App\OurTeam;
 use App\Video;
+use App\Schooling;
+use App\Field;
+use App\Unit;
+use App\State;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
@@ -56,26 +61,141 @@ class LandingController extends Controller
 
     public function profile(){
         $logged_in=Auth::user();
-        $data=Candidate::where('user_id','=',$logged_in->id)->first();
+        $data=Candidate::where('user_id','=',$logged_in->id)->with(['Schooling','Experience'])->first();
         $deficiencies = Deficiency::all();
+        $schooling_grades=[
+            'technology' => 'Tecnólogo',
+            'technician' => 'Técnico',
+            'graduation' => 'Graduação',
+            'postgrad' => 'Pós Graduação',
+            'masters' => 'Mestrado',
+            'doctor' => 'Doutorado',
+            'phd' => 'PHD',
+        ];
+
+        $schooling_formation=[
+            'fundamental'=>'Fundamental',
+            'highschool'=>'Médio',
+            'technical'=>'Técnico',
+            'superior'=>'Superior',
+        ];
+
+        $schooling_status=[
+            'complete'=>'Concluído',
+            'coursing'=>'Cursando',
+            'incomplete'=>'Incompleto',
+        ];
+
+        if (empty($data->schooling)){
+            $data->schooling = new Schooling;
+        }
+        
         return view('profile')->with([
             'data'=>$data,
             'logged_in'=>$logged_in,
             'deficiencies'=>$deficiencies,
+            'schooling_grades'=>$schooling_grades,
+            'schooling_status'=>$schooling_status,
+            'schooling_formation'=>$schooling_formation,
         ]);
     }
 
     public function saveProfile(Request $request){
         $dados=$request->input();
-        $candidate=Candidate::where('id','=',$dados['id'])->first();
+        $logged_in=Auth::user();
+
+        if (!empty($dados['id']))
+            $candidate=Candidate::where('id','=',$dados['id'])->first();
+        else
+            $candidate=new Candidate;
+
+        $schoolings=json_decode($dados['schoolings'],true);
+        $excluded_schoolings=json_decode($dados['excluded_schoolings'],true);
+        $experiences=json_decode($dados['experiences'],true);
+        $excluded_experiences=json_decode($dados['excluded_experiences'],true);
+
+        Schooling::whereIn('id',$excluded_schoolings)->delete();
+        Experience::whereIn('id',$excluded_experiences)->delete();
+
     	unset($dados['_token']);
         unset($dados['id']);
-
+        unset($dados['schoolings']);
+        unset($dados['excluded_schoolings']);
+        unset($dados['experiences']);
+        unset($dados['excluded_experiences']);
+        unset($dados['experience']);
         foreach($dados as $k => $d){
             $candidate->{$k}=$d;
         }
-
+        $candidate->user_id=$logged_in->id;
         $candidate->save();
+
+        foreach ($schoolings as $schooling_data){
+            if (!empty($schooling_data['id']))
+                $schooling = Schooling::where('id','=',$schooling_data['id'])->first();
+            else
+                $schooling = new Schooling;
+            
+            unset($schooling_data['id']);
+            unset($schooling_data['created_at']);
+            unset($schooling_data['updated_at']);
+            $schooling_data['candidate_id']=$candidate->id;
+            foreach($schooling_data as $k=>$d){
+                $schooling->{$k}=$d;
+            }
+            $schooling->save();
+        }
+
+        foreach ($experiences as $experience_data){
+            if (!empty($experience_data['id']))
+                $experience = Experience::where('id','=',$experience_data['id'])->first();
+            else
+                $experience = new Experience;
+            
+            unset($experience_data['id']);
+            unset($experience_data['created_at']);
+            unset($experience_data['updated_at']);
+            $experience_data['candidate_id']=$candidate->id;
+            foreach($experience_data as $k=>$d){
+                $experience->{$k}=$d;
+            }
+            $experience->save();
+        }
+
         return "";
     }
+
+    public function jobsList(){
+        $logged_in=Auth::user();
+        $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
+        $fields = Field::get();
+        $units = Unit::get();
+        $user_id=0;
+        if ($logged_in)
+            $user_id=$logged_in->id;
+        return view('candidate_jobs')->with([
+            'jobs'=>$jobs,
+            'fields'=>$fields,
+            'units'=>$units,
+            'logged_in'=>$logged_in,
+            'user_id'=>$user_id,
+        ]);
+    }
+
+    public function candidateSubscriptions() {
+        $logged_in=Auth::user();
+        $candidate=Candidate::where('user_id','=',$logged_in->id)->with(['subscriptions'])->first();
+        $subscriptions = $candidate->subscriptions;
+        exit(var_dump($subscriptions));
+        $user_id=0;
+        if ($logged_in)
+            $user_id=$logged_in->id;
+
+        return view('candidate_subscriptions')->with([
+            'subscriptions'=>$subscriptions,
+            'logged_in'=>$logged_in,
+            'user_id'=>$user_id,
+        ]);
+    }
+
 }

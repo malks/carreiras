@@ -54,58 +54,65 @@
                         <button type="button" class="btn-close" v-on:click="resetEditingBanner" data-bs-dismiss="modal" aria-label="Close">X</button>
                     </div>
                     <div class="modal-body">
-                        <form action="/save-banner">
+                        <form id='banner-form' action="/save-banner" style='max-height:400px;overflow-y:scroll;overflow-x:clip!important;padding:15px;'>
+                            @csrf
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-6 margin-top-10">
                                     <label for="">Nome</label>
                                     <input type="text" class='form-control' value=''  v-model='editingBanner.name' name='name'>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6 margin-top-10">
                                     <label for="">Ordem</label>
                                     <input type="text" class='form-control' value=''  v-model='editingBanner.order' name='order'>
                                 </div>                                
-                                <div class="col-6">
+                                <div class="col-6 margin-top-10">
                                     <label for="">Titulo Grande</label>
                                     <input type="text" class='form-control' value=''  v-model='editingBanner.title_big' name='title_big'>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3 margin-top-10">
                                     <label for="">Cor</label> 
                                     <input type="text" class='form-control'  v-model='editingBanner.title_big_color' name='title_big_color'>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3 margin-top-10">
                                     <label for="">Contorno</label>
                                     <input type="text" class='form-control'  v-model='editingBanner.title_big_outline' name='title_big_outline'>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6 margin-top-10">
                                     <label for="">Título Pequeno</label>
                                     <input type="text" class='form-control'  v-model='editingBanner.title_small' name='title_small'>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3 margin-top-10">
                                     <label for="">Cor</label> 
                                     <input type="text" class='form-control'  v-model='editingBanner.title_small_color' name='title_small_color'>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3 margin-top-10">
                                     <label for="">Contorno</label>
                                     <input type="text" class='form-control'  v-model='editingBanner.title_small_outline' name='title_small_outline'>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6 margin-top-10">
                                     <label for="">Chamada</label>
                                     <input type="text" class='form-control'  v-model='editingBanner.cta' name='cta'>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3 margin-top-10">
                                     <label for="">Ativo De</label>
                                     <input type="text" class='form-control'  v-model='editingBanner.active_from' name='active_from'>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3 margin-top-10">
                                     <label for="">Ativo Até</label>
                                     <input type="text" class='form-control'  v-model='editingBanner.active_to' name='active_to'>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label for="">Imagem</label>
+                                    <img id='banner-background-preview' :src=" editingBanner.background " alt="" style='width:100%;height:200px;'>
+                                    <button type='button' class='btn btn-primary margin-top-10' v-on:click="changeBannerBackground">Alterar</button>
+                                    <input style='display:none' type="file" id='banner-background-picker' v-on:change="previewImage" name='background_file'>
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button"  v-on:click="resetEditingBanner" class="btn btn-secondary" data-bs-dismiss="modal" >Fechar</button>
-                        <button type="button" class="btn btn-primary">Salvar</button>
+                        <button type="button" class="btn btn-primary" v-on:click="updateBanner" :disabled='saving'>@{{ savingText }}</button>
                     </div>
                 </div>
             </div>

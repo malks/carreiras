@@ -1,4 +1,5 @@
 let admConf=null;
+let edit=null;
 let fullData=null;
 let selectedIds=Array();
 let ajaxUrl="";
@@ -119,19 +120,35 @@ function editCandidate(){
 function startEdit(screenNameHelper='',firstTab=''){
     edit = new Vue({
         el:'#app',
-        data:{
-            screenName:screenNameHelper,
-            currentTab:firstTab,
-            alwaysTrue:true,
-        },
+        data: getCustomData(screenNameHelper,firstTab),
         methods:{
             isItMe:function (who) {
                 if (this.currentTab==who)
                     return true;
                 return false;
-            }
+            },
+            validateKey:function (loopKey,valueKey){
+                if (loopKey==valueKey)
+                    return true;
+                return false;
+            },
         }
     })
+}
+
+function getCustomData(screenNameHelper,firstTab){
+    let customData = {
+        screenName:screenNameHelper,
+        currentTab:firstTab,
+        alwaysTrue:true,
+    };
+    if (screenNameHelper=='editCandidate'){
+        customData.schoolings=JSON.parse(document.getElementById('schooling-data').value);
+        customData.experiences=JSON.parse(document.getElementById('experience-data').value);
+        customData.schooling_grades=JSON.parse(document.getElementById('schooling-grades').value);
+        customData.schooling_status=JSON.parse(document.getElementById('schooling-status').value);
+    }
+    return customData;
 }
 
 function dropper(it){
@@ -164,6 +181,10 @@ function configurations(){
         $('#banner-modal').hide();
     })
 
+    $('#change-banner-background').click(function () {
+        console.log("lalal");
+    })
+
     let defaultEditingBanner={
         id:null,
         name:'',
@@ -188,6 +209,7 @@ function configurations(){
             saving:false,
             selectedBanner:null,
             editingBanner:{...defaultEditingBanner},
+            bannerBackground:null,
         },
         computed:{
             savingText:function (){
@@ -202,6 +224,31 @@ function configurations(){
             }
         },
         methods:{
+            reloadBanners:function (){
+                let that=this;
+                form = new FormData();
+                form.append('_token',$('[name="_token"]').val());
+            
+                $.ajax({
+                    url:'/adm/banners-list',
+                    type:"post",
+                    processData: false,
+                    contentType: false,
+                    data:form,
+                    success:function (data){
+                        let reloadedBanners=data['data'];
+                        that.banners=reloadedBanners;
+                    }
+                })
+            },
+            previewImage:function (event){
+                form = new FormData();
+                form.append('background_file', event.target.files[0]);
+                this.editingBanner.background=URL.createObjectURL(event.target.files[0]);
+            },
+            changeBannerBackground:function (){
+                $('#banner-background-picker').click();
+            },
             selectBanner:function(id){
                 this.selectedBanner=id;
                 console.log(this.selectedBanner);
@@ -226,17 +273,38 @@ function configurations(){
                     return true;
                 return false;
             },
+            updateBanner:function() {
+                this.saving=true;
+                let that = this;
+                form.append('_token',$('[name="_token"]').val());
+                form.append('banner', JSON.stringify(that.editingBanner));
+                console.log(form.get('background_file'));
+                $.ajax({
+                    url:'/adm/update-banner',
+                    type:'POST',
+                    processData: false,
+                    contentType: false,
+                    data:form,
+                    success:function(data){
+                        that.saving=false;
+                        let bannerIframe=document.getElementById('banner-iframe');
+                        that.reloadBanners();
+                        bannerIframe.src=bannerIframe.src;
+                        $('#banner-modal').hide();
+                    }
+                })
+            },
             saveBanners:function (){
                 this.saving=true;
                 let that = this;
-                let form = new FormData();
+                form = new FormData();
                 form.append('_token',$('[name="_token"]').val());
                 form.append('banners', JSON.stringify(that.banners));
                 $.ajax({
                     url:'/adm/save-banners',
                     type:'POST',
                     processData: false,
-                    contentType: false,            
+                    contentType: multipart/form-data,            
                     data:form,
                     success:function(data){
                         console.log(data);
@@ -289,5 +357,6 @@ function configurations(){
                 console.log(val);
             }
         }
-    })    
+    })
+    console.log(admConf);
 }

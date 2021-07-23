@@ -5,6 +5,16 @@
         <div class="col-12">
             <form method='GET' id='app' class='margin-top-20' action='/adm/candidates/save'>
                 @csrf
+                <input type="hidden" class="hide" id='schooling-data' value='{{ json_encode($data->schooling) }}'>
+                <input type="hidden" class="hide" id='experience-data' value='{{ json_encode($data->experience) }}'>
+                <input type="hidden" class="hide" id='schooling-status' value='{{ json_encode($schooling_status) }}'>
+                <input type="hidden" class="hide" id='schooling-grades' value='{{ json_encode($schooling_grades) }}'>
+                <input type="hidden" class="hide" id='schooling-formation' value='{{ json_encode($schooling_formation) }}'>
+                <input type="hidden" name='schoolings' :value='stringedSchoolings'>
+                <input type="hidden" name='experiences' :value='stringedExperiences'>
+                <input type="hidden" name='excluded_experiences' v-model='stringedExcludedExperiences'>
+                <input type="hidden" name='excluded_schoolings' :value='stringedExcludedSchoolings'>
+
                 <div class="card" profile-edit>
                     <div class='card-header'>
                         <h3>Seu Perfil</h3>
@@ -16,6 +26,12 @@
                             <li class="nav-item">
                                 <a  class='nav-link'  v-bind:class="{ active: isItMe('candidate-data') }" v-on:click="currentTab='candidate-data'" >Pessoal</a>
                             </li>
+                            <li class="nav-item">
+                                <a  class='nav-link'  v-bind:class="{ active: isItMe('schooling-data') }" v-on:click="currentTab='schooling-data'" >Escolaridade</a>
+                            </li>
+                            <li class="nav-item">
+                                <a  class='nav-link'  v-bind:class="{ active: isItMe('experience-data') }" v-on:click="currentTab='experience-data'" >Experiência</a>
+                            </li>        
                             <li class="nav-item">
                                 <a  class='nav-link'  v-bind:class="{ active: isItMe('family-data') }" v-on:click="currentTab='family-data'" >Família</a>
                             </li>
@@ -182,8 +198,8 @@
                                         </select>
                                     </div>
                                     <div class=" col-sm-12 col-lg-4">
-                                        <label for="data-deficiency-type">Tipo de deficiencia</label>
-                                        <select class='form-control' id='deficiency-type' name='deficiency_type'>
+                                        <label for="data-deficiency-id">Tipo de deficiencia</label>
+                                        <select class='form-control' id='data-deficiency-id' name='deficiency_id'>
                                             @foreach($deficiencies as $deficiency)
                                                 <option value='{{$deficiency->id}}' @if($data->deficiency_id==$deficiency->id) selected @endif>{{$deficiency->name}}</option>
                                             @endforeach
@@ -196,7 +212,146 @@
                                 </div>
 
                             </div>
-            
+
+                            <div class='tab-pane fade' v-bind:class="{ active: isItMe('schooling-data') , show: isItMe('schooling-data') }" id="schooling">
+                                <div class="row margin-top-30">
+                                    <div class="col"><h6>Cursos e Certificações</h6></div>
+                                </div>
+                                <div class="row margin-top-10">
+                                    <div class="col-2">
+                                        <button class="btn btn-default" v-on:click='addSchooling'   type='button'>Adicionar</button>
+                                    </div>
+                                </div>
+                                <template v-for='(schooling,index) in schoolings'>
+                                    <div class="row margin-top-30">
+                                        <hr>
+                                        <hr style='color:rgb(2, 5, 133)!important;'>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6>#@{{index+1}}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <button class="btn btn-danger" v-on:click='excludeSchooling(index)' type='button'>
+                                                Excluir
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class=" col-sm-12 col-lg-6">
+                                            <label :for="'schooling-formation-'+index">Formação</label>
+                                            <select :id="'schooling-formation'+index" class="form-control" v-model="schooling.formation">
+                                                <template v-for="(sformation,sfidx) in schooling_formation">
+                                                    <option :value="sfidx" :selected='validateKey(sfidx,schooling.formation)'>
+                                                        @{{sformation}}
+                                                    </option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                        <div class=" col-sm-12 col-lg-6">
+                                            <label :for="'schooling-status'+index">Status</label>
+                                            <select :id="'schooling-status'+index" class="form-control" v-model="schooling.status">
+                                                <template v-for="(sstatus,ssidx) in schooling_status">
+                                                    <option :value="ssidx" :selected='validateKey(ssidx,schooling.status)'>
+                                                        @{{sstatus}}
+                                                    </option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class=" col-sm-12 col-lg-6">
+                                            <label :for="'schooling-course'+index">Curso</label>
+                                            <input type='text' class='form-control' :id="'schooling-course-'+index" v-model="schooling.course" />
+                                        </div>
+                                        <div class=" col-sm-12 col-lg-6">
+                                            <label for="schooling-grade">Grau</label>
+                                            <select :id="'schooling-grade'+index" class="form-control" v-model="schooling.grade">
+                                                <template v-for="(sgrade,sgidx) in schooling_grades">
+                                                    <option :value="sgidx" :selected='validateKey(sgidx,schooling.grade)'>
+                                                        @{{sgrade}}
+                                                    </option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class=" col-sm-12 col-lg-6">
+                                            <label :for="'schooling-institution'+index">Instituição</label>
+                                            <input type='text' class='form-control' :id="'schooling-institution'+index" v-model='schooling.institution' />
+                                        </div>
+                                        <div class=" col-sm-12 col-lg-3">
+                                            <label :for="'schooling-start'+index">Início</label>
+                                            <input type='text' class='form-control text-center' :id="'schooling-start'+index"  v-model="schooling.start"
+                                            />
+                                        </div>
+                                        <div class=" col-sm-12 col-lg-3">
+                                            <label :for="'schooling-end'+index">Fim</label>
+                                            <input type='text' class='form-control text-center' :id="'schooling-end'+index" v-model='schooling.end' />
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+        
+                            <div class='tab-pane fade' v-bind:class="{ active: isItMe('experience-data') , show: isItMe('experience-data') }" id="experience">
+                                <div class="row margin-top-30">
+                                    <div class="col"><h6>Trabalhos Anteriores</h6></div>
+                                </div>
+                                <div class="row margin-top-10">
+                                    <div class="col-2">
+                                        <button class="btn btn-default" v-on:click='addExperience'   type='button'>Adicionar</button>
+                                    </div>
+                                </div>
+                                <template v-for="(experience,index) in experiences">
+                                    <div class="row margin-top-30">
+                                        <hr>
+                                        <hr style='color:rgb(2, 5, 133)!important;'>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6>#@{{index+1}}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <button class="btn btn-danger" v-on:click='excludeExperience(index)' type='button'>
+                                                Excluir
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class=" col-sm-12 col-lg-6">
+                                            <label for="experience-business">Empresa</label>
+                                            <input type='text' class='form-control' id='experience-business' v-model='experience.business' />
+                                        </div>
+                                        <div class=" col-sm-12 col-lg-6">
+                                            <label for="experience-job">Cargo</label>
+                                            <input type='text' class='form-control' id='experience-job' v-model='experience.job'/>
+                                        </div>                                
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class=" col-sm-12 col-lg">
+                                            <label for="experience-activities">Atividades</label>
+                                            <textarea type='text' class='form-control' id='experience-activities' v-model="experience.activities">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class=" col-sm-12 col-lg-3">
+                                            <label for="experience-admission">Admissão</label>
+                                            <input type='text' class='form-control text-center' id='experience-admission' name='experience[].admission' v-model="experience.admission"
+                                            />
+                                        </div>
+                                        <div class=" col-sm-12 col-lg-3">
+                                            <label for="experience-demission">Demissão</label>
+                                            <input type='text' class='form-control text-center' id='experience-demission' v-model='experience.demission'/>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
                             <div class='tab-pane fade'   v-bind:class="{ active: isItMe('family-data') , show: isItMe('family-data') }" id="family-data">
                                 <div class="row margin-top-30">
                                     <div class="col"><h6>Conjuge e Filhos</h6></div>
@@ -249,40 +404,49 @@
                             </div>
             
                             <div class='tab-pane fade' v-bind:class="{ active: isItMe('documents') , show: isItMe('documents') }" id="documents">
-                                <div class=" col-sm-12 col-lg-4">
-                                    <label for="data-cpf">CPF</label>
-                                    <input type='text' class='form-control' id='data-cpf' name='cpf' value='{{$data->cpf}}'/>
+                                <div class="row margin-top-30">
+                                    <div class="col"><h6>Dados Civeis</h6></div>
                                 </div>
-                                <div class=" col-sm-12 col-lg-4">
-                                    <label for="data-work-card">Carteira de Trabalho</label>
-                                    <input type='text' class='form-control' id='data-work-card' name='work_card' value='{{$data->work_card}}'/>
+
+                                <div class="row margin-top-10">
+                                    <div class=" col-sm-12 col-lg-4">
+                                        <label for="data-cpf">CPF</label>
+                                        <input type='text' class='form-control' id='data-cpf' name='cpf' value='{{$data->cpf}}'/>
+                                    </div>
+                                    <div class=" col-sm-12 col-lg-4">
+                                        <label for="data-work-card">Carteira de Trabalho</label>
+                                        <input type='text' class='form-control' id='data-work-card' name='work_card' value='{{$data->work_card}}'/>
+                                    </div>
+                                    <div class=" col-sm-12 col-lg-4">
+                                        <label for="data-serie">Serie</label>
+                                        <input type='text' class='form-control' id='data-serie' name='serie' value='{{$data->serie}}'/>
+                                    </div>
                                 </div>
-                                <div class=" col-sm-12 col-lg-4">
-                                    <label for="data-serie">Serie</label>
-                                    <input type='text' class='form-control' id='data-serie' name='serie' value='{{$data->serie}}'/>
+                                <div class="row margin-top-10">
+                                    <div class=" col-sm-12 col-lg-4">
+                                        <label for="data-serie">PIS</label>
+                                        <input type='text' class='form-control' id='data-serie' name='serie' value='{{$data->serie}}'/>
+                                    </div>
+                                    <div class=" col-sm-12 col-lg-4">
+                                        <label for="data-rg">RG</label>
+                                        <input type='text' class='form-control' id='data-rg' name='rg' value='{{$data->rg}}'/>
+                                    </div>
+                                    <div class=" col-sm-12 col-lg-4">
+                                        <label for="data-rg-emitter">Órgão Expedidor</label>
+                                        <input type='text' class='form-control' id='data-rg-emitter' name='rg_emitter' value='{{$data->rg_emitter}}'/>
+                                    </div>
                                 </div>
-                                <div class=" col-sm-12 col-lg-4">
-                                    <label for="data-serie">PIS</label>
-                                    <input type='text' class='form-control' id='data-serie' name='serie' value='{{$data->serie}}'/>
-                                </div>
-                                <div class=" col-sm-12 col-lg-4">
-                                    <label for="data-rg">RG</label>
-                                    <input type='text' class='form-control' id='data-rg' name='rg' value='{{$data->rg}}'/>
-                                </div>
-                                <div class=" col-sm-12 col-lg-4">
-                                    <label for="data-rg-emitter">Órgão Expedidor</label>
-                                    <input type='text' class='form-control' id='data-rg-emitter' name='rg_emitter' value='{{$data->rg_emitter}}'/>
-                                </div>
-                                <div class=" col-sm-12 col-lg-6">
-                                    <label for="data-elector-card">Título de Eleitor</label>
-                                    <input type='text' class='form-control' id='data-elector-card' name='elector_card' value='{{$data->elector_card}}'/>
-                                </div>
-                                <div class=" col-sm-12 col-lg-6">
-                                    <label for="data-veteran-card">Certificado de Reservista</label>
-                                    <input type='text' class='form-control' id='data-veteran-card' name='veteran_card' value='{{$data->veteran_card}}'/>
+                                <div class="row margin-top-10">
+                                    <div class=" col-sm-12 col-lg-6">
+                                        <label for="data-elector-card">Título de Eleitor</label>
+                                        <input type='text' class='form-control' id='data-elector-card' name='elector_card' value='{{$data->elector_card}}'/>
+                                    </div>
+                                    <div class=" col-sm-12 col-lg-6">
+                                        <label for="data-veteran-card">Certificado de Reservista</label>
+                                        <input type='text' class='form-control' id='data-veteran-card' name='veteran_card' value='{{$data->veteran_card}}'/>
+                                    </div>
                                 </div>
                             </div>
-            
                         </div>
                         <button class='btn btn-info' v-on:click="saveProfile" v-bind:disabled="saving">SALVAR</button>
                     </div>

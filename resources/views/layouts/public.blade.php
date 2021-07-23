@@ -53,7 +53,7 @@
                 <div class="nav-back animated fadeInDown">
                     <nav class="navbar">
                         <div class="container-fluid">
-                            <div class="container">
+                            <div class="container" style='max-width: 1200px;'>
                                 <div class="row">
                                     <div class="col-6 hedone-menu-header">
                                         <div class="nav-button">
@@ -61,7 +61,7 @@
                                         </div>
                                         <!-- SITE LOGO -->
                                         <div class="site-branding">
-                                            <a href="index.html" >
+                                            <a href="/" >
                                                 <img src="{{ asset('/img/grupo-lunelli-colored.png') }}" alt="brand logo"/>
                                                 <span class='logo-complement'>
                                                     Carreiras
@@ -103,6 +103,9 @@
                                                 </ul>
                                             @else 
                                                 <ul class="hedone-menu" id='welcoLogin'>
+                                                    <li class="menu-item" @if(empty($logged_in) && empty($user_id)) style='display:none;' @endif >
+                                                        <a href="/subscriptions">Inscrições</a>
+                                                    </li>
                                                     <li class="menu-item">
                                                         <a href="/jobs">Vagas</a>
                                                     </li>

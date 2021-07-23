@@ -16,4 +16,8 @@ class Job extends Model
         return $this->belongsToMany('App\Tag', 'jobs_tags', 'job_id', 'tag_id');
     }
 
+    public function subscribers(){
+        return $this->belongsToMany('App\Candidate', 'subscribed', 'job_id','candidate_id');
+    }
+
 }

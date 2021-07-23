@@ -28,6 +28,27 @@ class AdmController extends Controller
         return $banners;
     }
 
+    public function updateBanner (Request $request){
+        $arr=$request->all();
+        unset($arr['_token']);
+        $banner_data=json_decode($arr['banner'],true);
+        $banner=Banner::where('id','=',$banner_data['id'])->first();
+
+        unset($banner_data['id']);
+        foreach ($banner_data as $k=>$d){
+            $banner->{$k}=$d;
+        }
+        if ($request->hasFile('background_file')){
+            $extension=$request->background_file->extension();
+            $background_filename=date('U').".".$extension;
+	    	$tmp=$request->background_file->path();
+	    	copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/img/'.$background_filename);
+            $banner->background='/img/'.$background_filename;
+        }
+
+        $banner->save();        
+    }
+
     public function saveBanners (Request $request){
         $arr=$request->all();
         unset($arr['_token']);
@@ -116,12 +137,23 @@ class AdmController extends Controller
             $query->orWhere('state','like',"%$request->search%");
             $query->orWhere('country','like',"%$request->search%");
         })
+        ->with(['Schooling','Experience'])
         ->paginate(15);
+
+        $schooling_grades=[
+            'technology' => 'Tecnólogo',
+            'graduation' => 'Graduação',
+            'postgrad' => 'Pós Graduação',
+            'masters' => 'Mestrado',
+            'doctor' => 'Doutorado',
+            'phd' => 'PHD',
+        ];
 
         return view('adm.candidates.list')->with(
             [
                 'data'=>$data,
                 'search'=>$request->search,
+                'schooling_grades'=>$schooling_grades,
             ]
         );
 
@@ -225,9 +257,27 @@ class AdmController extends Controller
 
     public function candidatesEdit ($id) {
         $data=Candidate::where('id','=',$id)->first();
+
+        $schooling_grades=[
+            'technology' => 'Tecnólogo',
+            'graduation' => 'Graduação',
+            'postgrad' => 'Pós Graduação',
+            'masters' => 'Mestrado',
+            'doctor' => 'Doutorado',
+            'phd' => 'PHD',
+        ];
+
+        $schooling_status=[
+            'complete'=>'Concluído',
+            'coursing'=>'Cursando',
+            'incomplete'=>'Incompleto',
+        ];
+
         return view('adm.candidates.edit')->with(
             [
                 'data'=>$data,
+                'schooling_grades'=>$schooling_grades,
+                'schooling_status'=>$schooling_status,
             ]
         );
     }
