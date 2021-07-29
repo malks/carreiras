@@ -9,6 +9,8 @@
 	<form method='GET' id='app' action='/adm/candidates/save'>
         <input type="hidden" class="hide" id='schooling-data' value='{{ json_encode($data->schooling) }}'>
         <input type="hidden" class="hide" id='experience-data' value='{{ json_encode($data->experience) }}'>
+        <input type="hidden" class="hide" id='schooling-grades' value='{{ json_encode($schooling_grades) }}'>
+        <input type="hidden" class="hide" id='schooling-status' value='{{ json_encode($schooling_status) }}'>
 		@csrf
 	    <div class="card" check-candidates-edit>
 	    	<div class='card-header'>
@@ -268,12 +270,12 @@
                                 <div class=" col-sm-12 col-lg-3">
                                     <label for="schooling-start">Início</label>
                                     <input type='text' class='form-control text-center' id='schooling-start' name='schooling[].start' 
-                                    value='{{date_format(DateTime::createFromFormat('Y-m-d H:i:s', 
+                                    value='{{date_format(DateTime::createFromFormat('Y-m-d', 
 													$schooling->start),'d/m/Y')}}'/>
                                 </div>
                                 <div class=" col-sm-12 col-lg-3">
                                     <label for="schooling-end">Fim</label>
-                                    <input type='text' class='form-control text-center' id='schooling-end' name='schooling[].end' value='{{date_format(DateTime::createFromFormat('Y-m-d H:i:s', 
+                                    <input type='text' class='form-control text-center' id='schooling-end' name='schooling[].end' value='{{date_format(DateTime::createFromFormat('Y-m-d', 
                                     $schooling->end),'d/m/Y')}}'/>
                                 </div>
                             </div>
@@ -308,12 +310,12 @@
                                 <div class=" col-sm-12 col-lg-3">
                                     <label for="experience-admission">Admissão</label>
                                     <input type='text' class='form-control text-center' id='experience-admission' name='experience[].admission' 
-                                    value='{{date_format(DateTime::createFromFormat('Y-m-d H:i:s', 
+                                    value='{{date_format(DateTime::createFromFormat('Y-m-d', 
 													$experience->admission),'d/m/Y')}}'/>
                                 </div>
                                 <div class=" col-sm-12 col-lg-3">
                                     <label for="experience-demission">Demissão</label>
-                                    <input type='text' class='form-control text-center' id='experience-demission' name='experience[].demission' value='{{date_format(DateTime::createFromFormat('Y-m-d H:i:s', 
+                                    <input type='text' class='form-control text-center' id='experience-demission' name='experience[].demission' value='{{date_format(DateTime::createFromFormat('Y-m-d', 
                                     $experience->demission),'d/m/Y')}}'/>
                                 </div>
                             </div>
