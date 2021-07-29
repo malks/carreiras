@@ -1,3 +1,4 @@
+var recruitMachine = null;
 let admConf=null;
 let edit=null;
 let fullData=null;
@@ -17,9 +18,256 @@ $(document).ready(function () {
         unitsList();
     if ($('[check-candidates-edit]').length>0)
         editCandidate();
+    if ($('[check-recruiting]').length>0)
+        recruiting();
     if ($('#configurations').length>0)
         configurations();
 })
+
+function recruiting(){
+    let bootstrapData = {
+        runData: {
+            jobs:null,
+            jobStatusNames:{
+                1:'Ativo',
+                0:'Inativo',
+            },
+            states:[],
+            subscriptions:null,
+            selectedJob:{
+                id:null,
+                subscriptions:null,
+            },
+            notingSubscription:{
+                id:null,
+                notes:null,
+            },
+            notepad:false,
+            saving:false,
+            specificFilter:false,
+        },
+        pushData: {
+            filters: {
+                jobs: {
+                    direct:{
+                        like:{
+                            name:''
+                        },
+                        in:{
+                            field_id:"",
+                            unit_id:""
+                        }
+                    },
+                    deep:{
+                        "subscriptions":{
+                            mustHave:{
+                                states:{
+                                    in: {
+                                        state_id:[1],
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+            },
+        },
+        persistentData:{
+            subscriptions:null,
+        }
+    };
+
+    recruitMachine=new Vue({
+        el:'#app',
+        data: {...bootstrapData},
+        computed:{
+            jobSize:function(){
+                if (this.runData.selectedJob.id!=null)
+                    return "col-4";
+                return "col-8";
+            },
+            candidateSize: function(){
+                if (this.runData.selectedJob.id!=null)
+                    return "col-8";
+                return "col-4";
+            },
+        },
+        mounted:function () {
+            this.updateData();
+        },
+        methods:{
+            specificFilter:function (who){
+                if (!this.runData.specificFilter || this.pushData.filters.jobs.deep.subscriptions.mustHave.states.in.state_id.indexOf(who.states[who.states.length-1].id)!=-1)
+                    return true;
+                return false;
+            },
+            viewCandidate:function(subscription){
+                let helper = null;
+                helper = subscription.states.find(obj=>{
+                    return obj.name.toLowerCase()=="visualizado";
+                })
+                if (typeof helper==undefined || helper==null)
+                    this.addSubscriptionState(subscription.candidate_id,subscription.job_id,'visualizado');
+            },
+            addSubscriptionState:function (who,where,what){
+                let that = this;
+                console.log(that.runData.selectedJob);
+                let persistentData=that.persistentData;
+                persistentData['_token']=$('[name="_token"]').val();
+                persistentData['candidate_id']=who;
+                persistentData['job_id']=where;
+                persistentData['status']=what;
+                console.log(persistentData);
+                $.ajax({
+                    url:'/adm/add-subscription-state',
+                    type:'POST',
+                    data:persistentData,
+                    success:function (data){
+                        that.updateData();
+                        console.log(that.runData.selectedJob);
+                    }
+                });
+            },
+            updateNotes:function (){
+                this.runData.saving=true;
+                let that = this;
+                let persistentData=that.persistentData;
+                persistentData['_token']=$('[name="_token"]').val();
+                persistentData['subscription']=that.runData.notingSubscription;
+                $.ajax({
+                    url:'/adm/update-subscription-note',
+                    type:'POST',
+                    data:persistentData,
+                    success:function(data){
+                        that.updateData();
+                        that.closeNotes();
+                        that.runData.saving=false;
+                    }
+                })
+            },
+            showNotes:function(subscription){
+                this.runData.notepad=true;
+                this.runData.notingSubscription=subscription;
+                $('#note-modal').show();
+            },
+            closeNotes:function (){
+                this.runData.notepad=false;
+                this.runData.notingSubscription={...this.runData.notingSubscription};
+                $('#note-modal').hide();
+            },
+            compareData: function (loopData,currentData){
+                if (loopData==currentData)
+                    return true;
+                return false;
+            },
+            notYet:function (what) {
+                if (what===null)
+                    return true;
+                return false;
+            },
+            getCandidate:function (subscription){
+                let ret = null;
+                this.runData.jobs.find(obj=>{
+                    ret =  obj.subscribers.find(inobj=>{
+                        return inobj.id===subscription.candidate_id;
+                    })
+                    return ret;
+                })
+                return ret;
+            },
+            getState:function(id){
+                let ret = this.runData.states.find(obj=>{
+                    return obj.id==id; 
+                })
+                return ret;
+            },
+            checkedState:function (id){
+                let helper = 0;
+                helper = this.pushData.filters.jobs.deep.subscriptions.mustHave.states.in.state_id.indexOf(id);
+                if (helper!=-1)
+                    return true;
+                return false;
+            },
+            checkState:function (id){
+                let helper = 0;
+                helper = this.pushData.filters.jobs.deep.subscriptions.mustHave.states.in.state_id.indexOf(id);
+                if (helper==-1)
+                    this.pushData.filters.jobs.deep.subscriptions.mustHave.states.in.state_id.push(id);
+                else
+                    this.pushData.filters.jobs.deep.subscriptions.mustHave.states.in.state_id.splice(helper,1);
+                this.updateData();
+            },
+            getUnitById:function(id){
+                let ret = this.runData.units.find(obj=>{
+                    return obj.id==id; 
+                })
+                return ret;
+            },
+            getFieldById:function(id){
+                let ret = this.runData.fields.find(obj=>{
+                    return obj.id==id; 
+                })
+                return ret;
+            },
+            inspectJob:function(job){
+                console.log("inspectJob");
+                let that = this;
+                console.log(this.runData.selectedJob);
+                if (this.runData.selectedJob.id==null || this.runData.selectedJob.id!=job.id){
+                    this.runData.selectedJob={...job};
+                    for (let i in that.runData.selectedJob.subscriptions){
+                        that.runData.selectedJob.subscriptions[i].current_state=that.runData.selectedJob.subscriptions[i].states[that.runData.selectedJob.subscriptions[i].states.length-1].id;
+                    }
+                    that.runData.subscriptions=that.runData.selectedJob.subscriptions;
+                }
+                else{
+                    that.runData.selectedJob={...bootstrapData.selectedJob};
+                    that.runData.subscriptions={...bootstrapData.subscriptions};
+                }
+            },
+            updateSelectedJob:function (){
+                console.log("updateSelectedJob");
+                let that = this;
+                if (this.runData.selectedJob.id!=null){
+                    this.runData.selectedJob=this.runData.jobs.find(obj=>{
+                       return obj.id==this.runData.selectedJob.id;
+                    });
+                    if (this.runData.selectedJob==undefined){
+                        this.runData.selectedJob={...bootstrapData.selectedJob};
+                        console.log(this.runData.selectedJob);
+                    }
+                    else{
+                        for (let i in that.runData.selectedJob.subscriptions){
+                            that.runData.selectedJob.subscriptions[i].current_state=that.runData.selectedJob.subscriptions[i].states[that.runData.selectedJob.subscriptions[i].states.length-1].id;
+                        }
+                    }
+                    that.runData.subscriptions=that.runData.selectedJob.subscriptions;
+                }
+            },
+            updateData:function (){
+                let that = this;
+                console.log(that.runData);
+                let pushData=that.pushData;
+                pushData['_token']=$('[name="_token"]').val();
+                
+                $.ajax({
+                    url:'/adm/recruiting-data',
+                    type:'POST',
+                    data:pushData,
+                    success:function (data){
+                        let objData=JSON.parse(data);
+                        for (let i in objData){
+                            console.log(i);
+                            that.runData[i]=objData[i];
+                        }
+                       that.updateSelectedJob();
+                        console.log(that.runData);
+                    }
+                });
+            }
+        },
+    });
+}
 
 function startData(){
     fullData=JSON.parse($('#full-data').val());

@@ -10,7 +10,7 @@
 @section('content')
 	<form method='GET' action='/adm/jobs' id='app'>
 		@csrf
-	    <div class="card" check-jobs-list>
+	    <div class="card" check-jobs-list v-show="list">
 	    	<div class='card-header'>
 	    		<h5>Vagas</h5>
 	    	</div>

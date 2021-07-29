@@ -3,10 +3,13 @@
 @section('content')
     <div class='row margin-top-30'>
         <div class="col-12 margin-bottom-30" id='app' candidate-jobs>
+            @csrf
+            <input type="hidden" value="{{ json_encode($subscriptions) }}" id='subscriptions-data'>
             <input type="hidden" class="hide" id='jobs-data' value='{{ json_encode($jobs) }}'>
             <input type="hidden" class="hide" id='fields-data' value='{{ json_encode($fields) }}'>
             <input type="hidden" class="hide" id='units-data' value='{{ json_encode($units) }}'>
             <input type="hidden" class="hide" id='user-id' value='{{ $user_id }}'>
+            <input type="hidden" class="hide" id='candidate-id' value='{{ $candidate_id }}'>
 
             <div class="card">
                 
@@ -86,8 +89,16 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button class="btn btn-default" :class=" { 'hide':canApply } " v-on:click="applyForJob"> 
-                                            Aplicar para Vaga
+                                        <button v-show="!isSubscribed(viewingJob.id)" class="btn btn-default" :class=" { 'hide':canApply } " v-on:click="applyForJob(viewingJob.id)"> 
+                                            Inscrever-se na Vaga
+                                        </button>
+                                        <button v-show="isSubscribed(viewingJob.id)" class="btn btn-default" > 
+                                            <i class="fa fa-check" style='margin-right:10px'></i>
+                                            Inscrito
+                                        </button>
+                                        <button v-show="isSubscribed(viewingJob.id)" class="btn btn-warning" v-on:click="cancelApplication(viewingJob.id)" > 
+                                            <i class="fa fa-check" style='margin-right:10px'></i>
+                                            Cancelar Inscrição
                                         </button>
                                         <button class="btn btn-danger" data-bs-dismiss="modal" v-on:click="closeModal">Fechar</button>
                                     </div>
@@ -98,12 +109,17 @@
                         <template v-for='job in jobs'>
                             <div class="col-lg-4 margin-top-20" v-show='inFilter(job)'>
 
-                                <div class="card">
-                                    <div class="card-header">
+                                <div class="card" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
+                                    <div class="card-header" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                         <h5>@{{job.name}}</h5>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="row">
+                                    <div class="card-body" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
+                                        <div class="row" v-show="isSubscribed(job.id)">
+                                            <div class="col">
+                                                <b>Inscrito</b>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-20">
                                             <div class="col">
                                                 @{{job.description}}
                                             </div>

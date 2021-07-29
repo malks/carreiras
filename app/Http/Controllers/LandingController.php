@@ -15,11 +15,13 @@ use App\Job;
 use App\OurTeam;
 use App\Video;
 use App\Schooling;
+use App\Subscribed;
 use App\Field;
 use App\Unit;
 use App\State;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class LandingController extends Controller
 {
@@ -167,6 +169,8 @@ class LandingController extends Controller
 
     public function jobsList(){
         $logged_in=Auth::user();
+        $candidate=Candidate::where('user_id','=',$logged_in->id)->with(['subscriptions'])->first();
+        $subscriptions = $candidate->subscriptions;
         $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
         $fields = Field::get();
         $units = Unit::get();
@@ -179,23 +183,53 @@ class LandingController extends Controller
             'units'=>$units,
             'logged_in'=>$logged_in,
             'user_id'=>$user_id,
+            'subscriptions'=>$subscriptions,
+            'candidate_id'=>$candidate->id,
         ]);
     }
 
     public function candidateSubscriptions() {
         $logged_in=Auth::user();
         $candidate=Candidate::where('user_id','=',$logged_in->id)->with(['subscriptions'])->first();
+        $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
+        $fields = Field::get();
+        $units = Unit::get();
+
         $subscriptions = $candidate->subscriptions;
-        exit(var_dump($subscriptions));
         $user_id=0;
         if ($logged_in)
             $user_id=$logged_in->id;
 
         return view('candidate_subscriptions')->with([
+            'jobs'=>$jobs,
             'subscriptions'=>$subscriptions,
             'logged_in'=>$logged_in,
             'user_id'=>$user_id,
+            'fields'=>$fields,
+            'units'=>$units,
+            'candidate_id'=>$candidate->id,
         ]);
+    }
+
+    public function applyForJob(Request $request){
+        $subscribed = new Subscribed;
+        $subscribed->job_id=$request->job_id;
+        $subscribed->candidate_id=$request->candidate_id;
+        $subscribed->save();
+        DB::connection('mysql')->table('subscribed_has_states')->insert(
+            [
+                'subscribed_id'=>$subscribed->id,
+                'state_id'=>1,
+            ]
+        );
+        return '';
+    }
+
+    public function cancelApplication(Request $request){
+        $subscribed = Subscribed::where('job_id','=',$request->job_id)->where('candidate_id','=',$request->candidate_id)->first();
+        DB::connection('mysql')->table('subscribed_has_states')->where('subscribed_id','=',$subscribed->id)->delete();
+        $subscribed->delete();
+        return '';
     }
 
 }

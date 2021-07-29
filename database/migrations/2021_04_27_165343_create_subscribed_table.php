@@ -17,6 +17,7 @@ class CreateSubscribedTable extends Migration
             $table->id();
             $table->integer('candidate_id');
             $table->integer('job_id');
+            $table->string('notes',500)->nullable();
             $table->timestamps();
         });
     }

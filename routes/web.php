@@ -23,8 +23,12 @@ Route::get('/jobs', 'LandingController@jobsList');
 $router->group(['middleware' => ['auth']], function() {
     Route::get('/profile', 'LandingController@profile');
     Route::get('/subscriptions', 'LandingController@candidateSubscriptions');
+    Route::post('/apply-for-job', 'LandingController@applyForJob');
+    Route::post('/cancel-application', 'LandingController@cancelApplication');
     Route::post('/save-profile', 'LandingController@saveProfile');
     Route::post('/adm/banners-list', 'AdmController@bannersList');
+    Route::post('/adm/add-subscription-state', 'AdmController@addSubscriptionState');
+    Route::post('/adm/update-subscription-note', 'AdmController@updateSubscriptionNote');
 });
 
 $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
@@ -39,6 +43,9 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::get('/adm/jobs', 'AdmController@jobsList')->name('jobs-list');
     Route::get('/adm/tags', 'AdmController@tagsList')->name('tags-list');
     Route::get('/adm/candidates', 'AdmController@candidatesList')->name('candidates-list');
+    
+    Route::get('/adm/recruiting', 'AdmController@recruiting')->name('recruiting');
+    Route::post('/adm/recruiting-data', 'AdmController@recruitingData')->name('recruiting-data');
 
     Route::get('/adm/fields/create', 'AdmController@fieldsCreate')->name('fields-create');
     Route::get('/adm/units/create', 'AdmController@unitsCreate')->name('units-create');

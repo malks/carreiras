@@ -13,9 +13,28 @@ class SubscriptionSeeder extends Seeder
     {
         DB::table('subscribed')->insert(
             [
-                'candidate_id'=>1,
+                'candidate_id'=>2,
                 'job_id'=>1,
             ]
         );
+        DB::table('subscribed')->insert(
+            [
+                'candidate_id'=>3,
+                'job_id'=>1,
+            ]
+        );
+        DB::table('subscribed_has_states')->insert(
+            [
+                'subscribed_id'=>1,
+                'state_id'=>1,
+            ]
+        );
+        DB::table('subscribed_has_states')->insert(
+            [
+                'subscribed_id'=>2,
+                'state_id'=>1,
+            ]
+        );
+
     }
 }

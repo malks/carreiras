@@ -165,3 +165,12 @@ input[type=checkbox]
 .hide {
     display:none;
 }
+
+.subscribed-job {
+    border:1px solid #000;
+}
+
+.card-header.subscribed-job{
+    background-color: #eeffee;
+    color: #000;
+}

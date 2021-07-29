@@ -256,6 +256,11 @@ return [
             'icon' => 'fas fa-user-tie',
         ],
         [
+            'text' => 'Seleção e Recrutamento',
+            'url'  => 'adm/recruiting',
+            'icon' => 'fas fa-clipboard-list',
+        ],
+        [
             'text' => 'Tags',
             'url'  => 'adm/tags',
             'icon' => 'fas fa-tags',

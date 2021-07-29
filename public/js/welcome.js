@@ -8,7 +8,10 @@ $(document).ready(function () {
         candidateSubscription();        
 })
 
+
 function welcomeLogin() {
+
+
     welcoLogin = new Vue({
         el:'#welcoLogin',
         data:{
@@ -51,6 +54,96 @@ function candidateSubscription(){
     candiSubs = new Vue({
         el:'#app',
         data:getSubscriptionsData(),
+        methods:{
+            isSubscribed:function (job){
+                let that = this;
+                let ret = false;
+                console.log(job);
+                for ( i in that.subscriptions ){
+                    if (that.subscriptions[i].id==job){
+                        ret = true;
+                        break;
+                    }
+                }
+                return ret;
+            },
+            closeModal:function () {
+                $('#job-modal').hide();
+            },
+            viewJob:function(job){
+                this.viewingJob={...job};
+                $('#job-modal').show();
+            },
+            resetViewingJob: function(){
+                this.viewingJob={id:null};
+                $('#job-modal').hide();
+            },
+            cancelApplication:function (job){
+                let that = this;
+                let data = {};
+                data['_token']=$('[name="_token"]').val();
+                data['job_id']=job;
+                data['candidate_id']=that.candidate_id;
+                that.saving=true;
+                $.ajax({
+                    url:'/cancel-application',
+                    type:'POST',
+                    data:data,
+                    success:function (data){
+                        that.saving=false;
+
+                        for (i in that.subscriptions){
+                            if (that.subscriptions[i].id==job)
+                                that.subscriptions.splice(i,1);
+                        }
+                    }
+                })
+            }, 
+            inFilter:function(job){
+                console.log(job);
+                let activeFilters ='';
+                let tempJob={...job};
+                console.log(tempJob);
+                let contain = false;
+                if (this.filters.length>0)
+                    activeFilters = this.filters.split(" ");
+
+                if (activeFilters.length>0){
+                    for (i in activeFilters){
+                        console.log("activefilter="+activeFilters[i]);
+                        if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                            contain = false;
+                            break;
+                        }
+                        for (j in tempJob){
+                            console.log("tempjob="+tempJob[j]);
+                            console.log(typeof tempJob[j]);
+                            if (typeof tempJob[j] == 'string'){
+                                console.log('testando...');
+                                contain = tempJob[j].toLowerCase().includes(activeFilters[i].toLowerCase());
+                            }
+                            console.log(contain);
+                            if (contain)
+                                break;
+                            else if (j=='tags'){
+                                for (t in tempJob[j]){
+                                    contain=false;
+                                    console.log("typeof jt"+typeof tempJob[j][t]);
+                                    if (typeof tempJob[j][t] != undefined)
+                                        contain = tempJob[j][t]['name'].toLowerCase().includes(activeFilters[i].toLowerCase());
+                                    if (contain)
+                                        break;
+                                }
+                            }
+                        }
+                        if (contain)
+                            break;
+                    }
+                    return contain;
+                }
+                return true;
+            }
+        },
     })
 }
 
@@ -64,9 +157,74 @@ function candidateJobs(){
                 if (this.user_id!=0)
                     return false;
                 return true;
-            }
+            },
         },
         methods:{
+            isSubscribed:function (job){
+                let that = this;
+                let ret = false;
+                console.log(job);
+                for ( i in that.subscriptions ){
+                    if (that.subscriptions[i].id==job){
+                        ret = true;
+                        break;
+                    }
+                }
+                return ret;
+            },
+            cancelApplication:function (job){
+                let that = this;
+                let data = {};
+                data['_token']=$('[name="_token"]').val();
+                data['job_id']=job;
+                data['candidate_id']=that.candidate_id;
+                that.saving=true;
+                $.ajax({
+                    url:'/cancel-application',
+                    type:'POST',
+                    data:data,
+                    success:function (data){
+                        that.saving=false;
+
+                        for (i in that.subscriptions){
+                            if (that.subscriptions[i].id==job)
+                                that.subscriptions.splice(i,1);
+                        }
+                    }
+                })
+            }, 
+            applyForJob:function (job){
+                console.log(job);
+                let that = this;
+                let data = {};
+                data['_token']=$('[name="_token"]').val();
+                data['job_id']=job;
+                data['candidate_id']=that.candidate_id;
+                that.saving=true;
+                $.ajax({
+                    url:'/apply-for-job',
+                    type:'POST',
+                    data:data,
+                    success:function (data){
+                        that.saving=false;
+                        console.log(data);
+                        let tempscriptions = that.subscriptions;
+                        let subscriptionew = null;
+
+                        console.log("--------tempscriptions--------");
+                        console.log(tempscriptions);
+                        for (i in that.jobs){
+                            if (that.jobs[i].id==job)
+                                subscriptionew=that.jobs[i];
+                        }
+                        console.log(subscriptionew);
+                        tempscriptions.push(subscriptionew);
+
+                        console.log(tempscriptions);
+                        that.subscriptions=tempscriptions;
+                    }
+                })
+            },
             closeModal:function () {
                 $('#job-modal').hide();
             },
@@ -78,9 +236,6 @@ function candidateJobs(){
             resetViewingJob: function(){
                 this.viewingJob={id:null};
                 $('#job-modal').hide();
-            },
-            applyForJob:function (){
-
             },
             viewJob:function(job){
                 this.viewingJob={...job};
@@ -237,11 +392,14 @@ function getCustomData(screenNameHelper,firstTab){
 
 function getJobsData(){
     let customData={};
+    customData.candidate_id=document.getElementById('candidate-id').value;
     customData.jobs=JSON.parse(document.getElementById('jobs-data').value);
     customData.fields=JSON.parse(document.getElementById('fields-data').value);
     customData.units=JSON.parse(document.getElementById('units-data').value);
+    customData.subscriptions=JSON.parse(document.getElementById('subscriptions-data').value);
     customData.filters='';
     customData.user_id=document.getElementById('user-id').value;
+    customData.saving=false;
     customData.viewingJob={
         id:null,
         field_id:1,
@@ -253,7 +411,17 @@ function getJobsData(){
 
 function getSubscriptionsData(){
     let customData={};
+    customData.candidate_id=document.getElementById('candidate-id').value;
     customData.subscriptions=JSON.parse(document.getElementById('subscriptions-data').value);
+    customData.fields=JSON.parse(document.getElementById('fields-data').value);
+    customData.units=JSON.parse(document.getElementById('units-data').value);
+    customData.filters='';
+    customData.viewingJob={
+        id:null,
+        field_id:1,
+        unit_id:1,
+    };
+
     return customData;
 }
 

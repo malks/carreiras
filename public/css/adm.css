@@ -29,6 +29,10 @@ input[type=checkbox]
     cursor:pointer;
 }
 
+.hoverable.active{
+  background-color:#eff;
+}
+
 .nav-link{
   cursor:pointer;
 }
@@ -73,4 +77,27 @@ input[type=checkbox]
   border: 0;
   transform: scale(1.8,1.2);
   color: #555!important;
+}
+
+.select-sized, .select-sized td {
+  line-height:35px;
+}
+
+i.action-icon{
+  cursor:pointer;
+  margin-top: 11px;
+  color:#000;
+}
+
+i.action-icon:hover {
+  color: #666;
+}
+
+.hide{
+  display:none;
+}
+
+.line-margin{
+  margin-left:5px;
+  margin-top:5px;
 }

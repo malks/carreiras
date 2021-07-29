@@ -12,6 +12,9 @@ use App\Job;
 use App\Tag;
 use App\Unit;
 use App\Field;
+use App\State;
+use App\Subscribed;
+use Illuminate\Support\Facades\DB;
 
 class AdmController extends Controller
 {
@@ -21,6 +24,144 @@ class AdmController extends Controller
         return view('adm.config')->with([
             'banners'=>$banners,
         ]);
+    }
+
+    public function recruiting (Request $request){
+        return view('adm.recruiting');
+    }
+
+    public function addSubscriptionState(Request $request){
+        $state = State::where('name','like',"%".$request->status."%")->first();
+        $subscribed = Subscribed::
+        where('candidate_id','=',$request->candidate_id)
+        ->where('job_id','=',$request->job_id)
+        ->first();
+        DB::connection('mysql')->table('subscribed_has_states')->insert(
+            [
+                'subscribed_id'=>$subscribed->id,
+                'state_id'=>$state->id,
+            ]
+        );
+        return '';
+    }
+
+    public function updateSubscriptionNote(Request $request){
+        $subscribed=Subscribed::where('id','=',$request->subscription['id'])->first();
+        $subscribed->notes=$request->subscription['notes'];
+        $subscribed->save();
+        return '';
+    }
+
+    public function recruitingData (Request $request){
+
+       /* $data['candidates']=Candidate::orderBy('updated_at','desc')
+        ->when(!empty($request->filters['direct']['candidates']), function ($query) use ($request) {
+            foreach($request->filters['direct']['candidates'] as $type_filter=>$filter_data){
+                if ($type_filter=='like'){
+                    foreach($filter_data as $key=>$value){
+                        $query->where($key,'like',$value);
+                    }
+                }
+                else if ($type_filter=='in'){
+                    foreach($filter_data as $key=>$value){
+                        $query->whereIn($key,explode(",",$value));
+                    }
+                }
+            }
+        })
+        ->get()->toArray();*/
+
+        $data['jobs']=Job::orderBy('updated_at','desc')
+        ->when(!empty($request->filters['jobs']['direct']), function ($query) use ($request) {
+            $directLikeDone=0;
+            foreach($request->filters['jobs']['direct'] as $type_filter=>$filter_data){
+                if ($type_filter=='like'){
+                    foreach($filter_data as $key=>$value){
+                        if ($value != "" && !$directLikeDone){
+                            $query->where($key,'like',"%".$value."%");
+                            $directLikeDone=1;
+                        }
+                        else if ($value != "")
+                            $query->orWhere($key,'like',"%".$value."%");
+                    }
+                }
+                else if ($type_filter=='in'){
+                    foreach($filter_data as $key=>$value){
+                        if ($value != "" && is_array($value))
+                            $query->whereIn($key,$value);
+                        else if (!is_array($value) && $value!="")
+                            $query->whereIn($key,[$value]);
+                    }
+                }
+            }
+        })
+        ->when(!empty($request->filters['jobs']['mustHave']), function($query) use ($request){
+            $query->with($request->filters['jobs']['mustHave']);
+            foreach($request->filters['jobs']['mustHave'] as $relation){
+                $query->has($relation);
+            }
+        })
+        ->when(!empty($request->filters['jobs']['deep']), function ($query) use ($request) {
+            foreach($request->filters['jobs']['deep'] as $relation=>$filters){
+                $deepLikeDone=0;
+                $query->with([$relation=>function ($inquery) use ($filters){
+                    foreach($filters as $type_filter=>$filter_data){
+                        if ($type_filter=='mustHave'){
+                            $inquery->with(array_keys($filter_data));
+                            foreach($filter_data as $deep_relation => $deep_filter){
+                                $inquery->whereHas($deep_relation, function ($subquery) use ($deep_filter){
+                                    foreach($deep_filter as $deep_filter_type => $deep_filter_data){
+                                        if ($deep_filter_type=='like'){
+                                            foreach($deep_filter_data as $key=>$value){
+                                                if ($value != "" && !$deepLikeDone){
+                                                    $subquery->where($key,'like',"%".$value."%");
+                                                    $deepLikeDone=1;
+                                                }
+                                                else if ($value!="")
+                                                    $subquery->orWhere($key,'like',"%".$value."%");
+                                            }
+                                        }
+                                        else if ($deep_filter_type=='in'){
+                                            foreach($deep_filter_data as $key=>$value){
+                                                if ($value != "")
+                                                    $subquery->whereIn($key,$value);
+                                            }
+                                        }            
+                                    }
+                                });
+                            }
+                        }
+                        else {
+                            if ($type_filter=='like'){
+                                foreach($filter_data as $key=>$value){
+                                    if ($value != "" && !$deepLikeDone){
+                                        $inquery->where($key,'like',"%".$value."%");
+                                        $deepLikeDone=1;
+                                    }
+                                    else if ($value!="")
+                                        $inquery->orWhere($key,'like',"%".$value."%");
+                                }
+                            }
+                            else if ($type_filter=='in'){
+                                foreach($filter_data as $key=>$value){
+                                    if ($value != "")
+                                        $inquery->whereIn($key,$value);
+                                }
+                            }
+                        }
+                    }
+                }]);
+            }
+        })
+        ->with(['subscribers','tags','field','unit'])
+        ->withCount('subscriptions as subscription_amount')
+        ->get()->toArray();
+
+        $data['states'] = State::all()->toArray();
+        $data['units']  = Unit::all()->toArray();
+        $data['fields'] = Field::all()->toArray();
+
+        return json_encode($data);
     }
 
     public function bannersList (Request $request){

@@ -17,7 +17,6 @@ class CreateSubscribedHasStatesTable extends Migration
             $table->id();
             $table->integer('subscribed_id');
             $table->integer('state_id');
-            $table->string('notes');
             $table->timestamps();
         });
     }
