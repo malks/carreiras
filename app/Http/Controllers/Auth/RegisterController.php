@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\Candidate;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -67,13 +68,13 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $role=Role::where('name','=','admin')->first();
+        $role=Role::where('name','=','candidate')->first();
         if (empty($role))
-            $role = Role::create(['name' => 'admin']);
+            $role = Role::create(['name' => 'candidate']);
 
-        $permission=Permission::where('name','=','access admin')->first();
+        $permission=Permission::where('name','=','profile')->first();
         if (empty($permission))
-            $permission = Permission::create(['name' => 'access admin']);
+            $permission = Permission::create(['name' => 'profile']);
 
         $role->givePermissionTo($permission);
 
@@ -83,7 +84,13 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        $user->assignRole('admin');
+        $candidate=new Candidate;
+        $candidate->user_id=$user->id;
+        $candidate->name=$data['name'];
+        $candidate->email=$data['email'];
+        $candidate->save();
+
+        $user->assignRole('candidate');
         return $user;
     }
 }

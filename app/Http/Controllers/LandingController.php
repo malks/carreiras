@@ -87,9 +87,9 @@ class LandingController extends Controller
             'coursing'=>'Cursando',
             'incomplete'=>'Incompleto',
         ];
-
         if (empty($data->schooling)){
-            $data->schooling = new Schooling;
+            $schooling = new Schooling;
+            $data->schooling=$schooling;
         }
         
         return view('profile')->with([
@@ -169,8 +169,18 @@ class LandingController extends Controller
 
     public function jobsList(){
         $logged_in=Auth::user();
-        $candidate=Candidate::where('user_id','=',$logged_in->id)->with(['subscriptions'])->first();
-        $subscriptions = $candidate->subscriptions;
+        if (!empty($logged_in))
+            $candidate=Candidate::where('user_id','=',$logged_in->id)->with(['subscriptions'])->first();
+        else
+            $candidate = new Candidate;
+            
+        $candidate_id="";
+        if (!empty($candidate)){
+            $subscriptions = $candidate->subscriptions;
+            $candidate_id=$candidate->id;
+        }
+        else
+            $subscriptions = Array();
         $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
         $fields = Field::get();
         $units = Unit::get();
@@ -184,7 +194,7 @@ class LandingController extends Controller
             'logged_in'=>$logged_in,
             'user_id'=>$user_id,
             'subscriptions'=>$subscriptions,
-            'candidate_id'=>$candidate->id,
+            'candidate_id'=>$candidate_id,
         ]);
     }
 
