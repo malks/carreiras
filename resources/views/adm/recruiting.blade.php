@@ -26,6 +26,15 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col">
+                                    <label for="">Observações do Candidato:</label><br>
+                                    <template v-for='obs in notingObservation'>
+                                        <span>@{{obs}}</span><bR>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col">
+                                    <label for="">Anotações de Recrutamento:</label><br>
                                     <textarea width='100%' style='width:inherit;min-height:200px;' v-model="runData.notingSubscription.notes"></textarea>
                                 </div>
                             </div>

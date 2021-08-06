@@ -84,6 +84,16 @@
     color:#fff!important;
 }
 
+.btn-close{
+    background:none!important;
+    border:0px!important;
+    font-weight:bold;
+}
+
+.btn-close:hover{
+    color:#666!important;
+}
+
 #welcoLogin .btn{
     height: 34px!important;
 }
@@ -138,6 +148,17 @@ a.btn{
     margin-bottom:50px;
 }
 
+.margin-left-20{
+    margin-left:20px;
+}
+
+.margin-left-40{
+    margin-left:40px;
+}
+
+.padding-top-10{
+    padding-top:10px!important;
+}
 
 input[type=checkbox]
 {
@@ -156,10 +177,17 @@ input[type=checkbox]
 
 .nav-link{
   cursor:pointer;
+  border:none!important;
+}
+
+.nav-link:hover{
+    border:none;
+    color:#333;
 }
 
 .nav-link.active {
-    background-color:#eee!important;
+    color:rgb(138, 122, 1)!important;
+    border:none;
 }
 
 .hide {
@@ -167,10 +195,56 @@ input[type=checkbox]
 }
 
 .subscribed-job {
-    border:1px solid #000;
+    border:none;
 }
 
-.card-header.subscribed-job{
-    background-color: #eeffee;
-    color: #000;
+.tab-pane{
+    box-shadow: none;
+}
+
+.card.elegant {
+    border: none;
+    border-radius:0px!important;
+}
+
+.card.elegant > .card-header{
+    background-color:none!important;
+    background:none!important;
+    border:none;
+    border-radius:0px!important;
+}
+
+.card.elegant > .card-header > .animatedParent > .head-subtitle{
+    padding-bottom:10px;
+}
+
+.card.elegant > .card-header > h3{
+    margin-top:7px;
+}
+
+.card.elegant > .card-body > .nav.nav-tabs{
+    border-bottom:none;
+}
+
+.card.elegant-mini {
+    border:none;
+    border-radius:0px!important;
+    box-shadow: 0px 10px 20px -10px #cacbce;
+}
+
+.card.elegant-mini > .card-header{
+    background:#fff;
+    color:#1a1a1a;
+    border:none;
+    border-radius:0px!important;
+    border-top:3px solid #1a1a1a;
+    border-bottom:1px solid #ddd;
+}
+
+.card.elegant-mini > .card-header > h5{
+    margin-top:5px;
+}
+
+.card.elegant-mini > .card-header.subscribed-job{
+    border-top:3px solid rgb(60, 143, 0)!important;
 }

@@ -5,13 +5,13 @@ $(document).ready(function () {
     else if ($('[candidate-jobs]')[0]!=undefined)
         candidateJobs();
     else if ($('[candidate-subscriptions]')[0]!=undefined)
-        candidateSubscription();        
+        candidateSubscription();
+    else if ($('[check-jobs-home]')[0]!=undefined)
+        homeJobs();
 })
 
 
 function welcomeLogin() {
-
-
     welcoLogin = new Vue({
         el:'#welcoLogin',
         data:{
@@ -55,12 +55,25 @@ function candidateSubscription(){
         el:'#app',
         data:getSubscriptionsData(),
         methods:{
+            getSubscriptionState:function (job){
+                let that = this;
+                for (let i in that.subscriptions){
+                    if (that.subscriptions[i].job_id==job)
+                        return that.subscriptions[i].states[that.subscriptions[i].states.length-1].name
+                }
+            },
+            getSubscriptionsJob: function(subscription){
+                let that = this;
+                return that.jobs.find(obj => {
+                    return obj.id==subscription.job_id;
+                })
+            },
             isSubscribed:function (job){
                 let that = this;
                 let ret = false;
                 console.log(job);
                 for ( i in that.subscriptions ){
-                    if (that.subscriptions[i].id==job){
+                    if (that.subscriptions[i].job_id==job){
                         ret = true;
                         break;
                     }
@@ -93,7 +106,7 @@ function candidateSubscription(){
                         that.saving=false;
 
                         for (i in that.subscriptions){
-                            if (that.subscriptions[i].id==job)
+                            if (that.subscriptions[i].job_id==job)
                                 that.subscriptions.splice(i,1);
                         }
                     }
@@ -160,12 +173,19 @@ function candidateJobs(){
             },
         },
         methods:{
+            getSubscriptionState:function (job){
+                let that = this;
+                for (let i in that.subscriptions){
+                    if (that.subscriptions[i].job_id==job)
+                        return that.subscriptions[i].states[that.subscriptions[i].states.length-1].name
+                }
+            },
             isSubscribed:function (job){
                 let that = this;
                 let ret = false;
                 console.log(job);
-                for ( i in that.subscriptions ){
-                    if (that.subscriptions[i].id==job){
+                for ( let i in that.subscriptions ){
+                    if (that.subscriptions[i].job_id==job){
                         ret = true;
                         break;
                     }
@@ -187,46 +207,53 @@ function candidateJobs(){
                         that.saving=false;
 
                         for (i in that.subscriptions){
-                            if (that.subscriptions[i].id==job)
+                            if (that.subscriptions[i].job_id==job)
                                 that.subscriptions.splice(i,1);
                         }
                     }
                 })
             }, 
             applyForJob:function (job){
+                $('#observation-modal').show();
+            },
+            jobApply:function(){
+                let job = this.viewingJob.id;
+                if (this.user_id==0){
+                    alert('Registre-se e faça o login para se inscrever.');
+                    this.closeModal();
+                    return false;
+                }
                 console.log(job);
                 let that = this;
-                let data = {};
-                data['_token']=$('[name="_token"]').val();
-                data['job_id']=job;
-                data['candidate_id']=that.candidate_id;
+                let tempData = {};
+                tempData['_token']=$('[name="_token"]').val();
+                tempData['job_id']=job;
+                tempData['candidate_id']=that.candidate_id;
+                tempData['obs']=that.observation;
+                tempData['states']=[{name:'Inscrito'}];
                 that.saving=true;
                 $.ajax({
                     url:'/apply-for-job',
                     type:'POST',
-                    data:data,
-                    success:function (data){
+                    data:tempData,
+                    success:function (){
                         that.saving=false;
-                        console.log(data);
                         let tempscriptions = that.subscriptions;
-                        let subscriptionew = null;
+                        let subscriptionew = tempData;
 
-                        console.log("--------tempscriptions--------");
-                        console.log(tempscriptions);
-                        for (i in that.jobs){
-                            if (that.jobs[i].id==job)
-                                subscriptionew=that.jobs[i];
-                        }
-                        console.log(subscriptionew);
                         tempscriptions.push(subscriptionew);
 
-                        console.log(tempscriptions);
                         that.subscriptions=tempscriptions;
                     }
                 })
             },
             closeModal:function () {
+                this.viewingJob={id:null};
                 $('#job-modal').hide();
+            },
+            closeObsModal:function () {
+                this.jobApply();
+                $('#observation-modal').hide();
             },
             validateKey:function (loopKey,valueKey){
                 if (loopKey==valueKey)
@@ -285,6 +312,130 @@ function candidateJobs(){
                 }
                 return true;
             }
+        }
+    });
+}
+
+
+function homeJobs(){
+    $('#subscribe').click(function (){
+        let subscriberData={};
+        subscriberData['email']=$('#subscriber-email').val();
+        subscriberData['_token']=$('[name="_token"]').val();
+        $.ajax({
+            url:'/newsletter-subscribe',
+            type:'POST',
+            data:subscriberData,
+            success:function (data){
+                console.log(data);
+                $('#subscribe').text('Assinar');
+                $('#subscriber-email').val('');
+            }
+        })
+    });
+
+    landingJobs = new Vue({
+        el:'#home-jobs-app',
+        data:getJobsData(),
+        computed:{
+            canApply:function(){
+                if (this.user_id!=0)
+                    return false;
+                return true;
+            },
+        },
+        methods:{
+            isSubscribed:function (job){
+                let that = this;
+                let ret = false;
+                console.log(job);
+                for ( let i in that.subscriptions ){
+                    if (that.subscriptions[i].job_id==job){
+                        ret = true;
+                        break;
+                    }
+                }
+                return ret;
+            },
+            cancelApplication:function (job){
+                let that = this;
+                let data = {};
+                data['_token']=$('[name="_token"]').val();
+                data['job_id']=job;
+                data['candidate_id']=that.candidate_id;
+                that.saving=true;
+                $.ajax({
+                    url:'/cancel-application',
+                    type:'POST',
+                    data:data,
+                    success:function (data){
+                        that.saving=false;
+
+                        for (i in that.subscriptions){
+                            if (that.subscriptions[i].job_id==job)
+                                that.subscriptions.splice(i,1);
+                        }
+                    }
+                })
+            },
+            applyForJob:function (job){
+                if (this.user_id==0){
+                    alert('Registre-se e faça o login para se inscrever.');
+                    this.closeModal();
+                    window.location.href='/register';
+                    return false;
+                }
+                $('#observation-modal').show();
+            },
+            jobApply:function(){
+                let job = this.viewingJob.id;
+                console.log(job);
+                let that = this;
+                let tempData = {};
+                tempData['_token']=$('[name="_token"]').val();
+                tempData['job_id']=job;
+                tempData['candidate_id']=that.candidate_id;
+                tempData['obs']=that.observation;
+                that.saving=true;
+                $.ajax({
+                    url:'/apply-for-job',
+                    type:'POST',
+                    data:tempData,
+                    success:function (){
+                        that.saving=false;
+                        let tempscriptions = that.subscriptions;
+                        let subscriptionew = tempData;
+
+                        tempscriptions.push(subscriptionew);
+
+                        that.subscriptions=tempscriptions;
+                    }
+                })
+            },
+            closeModal:function () {
+                this.viewingJob={id:null};
+                $('#job-modal').hide();
+            },
+            closeObsModal:function () {
+                this.jobApply();
+                $('#observation-modal').hide();
+            },
+            validateKey:function (loopKey,valueKey){
+                if (loopKey==valueKey)
+                    return true;
+                return false;
+            },
+            resetViewingJob: function(){
+                this.viewingJob={id:null};
+                $('#job-modal').hide();
+            },
+            viewJob:function(job){
+                let theJob=this.jobs.find(obj => {
+                    return obj.id==job;
+                })
+                this.viewingJob={...theJob};
+                $('#job-modal').show();
+            },
         }
     });
 }
@@ -398,6 +549,7 @@ function getJobsData(){
     customData.units=JSON.parse(document.getElementById('units-data').value);
     customData.subscriptions=JSON.parse(document.getElementById('subscriptions-data').value);
     customData.filters='';
+    customData.observation='';
     customData.user_id=document.getElementById('user-id').value;
     customData.saving=false;
     customData.viewingJob={
@@ -413,6 +565,7 @@ function getSubscriptionsData(){
     let customData={};
     customData.candidate_id=document.getElementById('candidate-id').value;
     customData.subscriptions=JSON.parse(document.getElementById('subscriptions-data').value);
+    customData.jobs=JSON.parse(document.getElementById('jobs-data').value);
     customData.fields=JSON.parse(document.getElementById('fields-data').value);
     customData.units=JSON.parse(document.getElementById('units-data').value);
     customData.filters='';

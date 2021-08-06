@@ -104,7 +104,7 @@
                                             @else 
                                                 <ul class="hedone-menu" id='welcoLogin'>
                                                     <li class="menu-item" @if(empty($logged_in) && empty($user_id)) style='display:none;' @endif >
-                                                        <a href="/subscriptions">Inscrições</a>
+                                                        <a href="/subscriptions">Candidaturas</a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="/jobs">Vagas</a>

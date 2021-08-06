@@ -11,17 +11,20 @@
             <input type="hidden" class="hide" id='user-id' value='{{ $user_id }}'>
             <input type="hidden" class="hide" id='candidate-id' value='{{ $candidate_id }}'>
 
-            <div class="card">
+            <div class="card elegant">
                 
                 <div class='card-header'>
-                    <h3>Vagas</h3>
+                    <div class="animatedParent animateOnce">
+                        <h3 class="head-h3">VAGAS</h3>
+                        <p class="head-subtitle">candidate-se aqui</p>
+                    </div>
                 </div>
                 
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <label for="job-filters">Filtrar</label>
-                            <input placeholder="vendas marketing comercial...." id='job-filters' type="text" class='form-control' v-model='filters'>
+                            <label for="job-filters">Buscar</label>
+                            <input placeholder="vendas marketing comercial...." id='job-filters' type="text" class='w-input text-field white-background' v-model='filters'>
                         </div>
                     </div>
                     <div class="row">
@@ -33,20 +36,22 @@
                                         <button type="button" class="btn-close" v-on:click="resetViewingJob" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <!--
-                                        'field_id'=>'1',
-                                        'unit_id'=>'1',
-                                        'name'=>'Desenvolvedor',
-                                        'description'=>'Uma descrição \r\n com muitas \r\n linhas ',
-                                        'activities'=>'atividadesss',
-                                        'required'=>'requisitos',
-                                        'desirable'=>'desejavel',
-                                        'status'=>'1',
-                                        'home_highlights'=>'1',
-                                        'home_slider'=>'1',
-                                        'period'=>'07 as 12 e 13 as 17',
-                                        'created_at'=>'2021-06-05 01:03:04',
-                                        -->
+                                        <div id='observation-modal' class="modal" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5>Adicionar uma observação?</h5>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <textarea v-model='observation' style='width:100%;min-height:150px;'></textarea>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class='btn btn-default'  data-bs-dismiss="modal" v-on:click="closeObsModal">OK</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+            
                                         <div class="row">
                                             <div class="col-6">
                                                 <label for="" class="control-label">Área</label>
@@ -92,10 +97,6 @@
                                         <button v-show="!isSubscribed(viewingJob.id)" class="btn btn-default" :class=" { 'hide':canApply } " v-on:click="applyForJob(viewingJob.id)"> 
                                             Inscrever-se na Vaga
                                         </button>
-                                        <button v-show="isSubscribed(viewingJob.id)" class="btn btn-default" > 
-                                            <i class="fa fa-check" style='margin-right:10px'></i>
-                                            Inscrito
-                                        </button>
                                         <button v-show="isSubscribed(viewingJob.id)" class="btn btn-warning" v-on:click="cancelApplication(viewingJob.id)" > 
                                             <i class="fa fa-check" style='margin-right:10px'></i>
                                             Cancelar Inscrição
@@ -109,14 +110,14 @@
                         <template v-for='job in jobs'>
                             <div class="col-lg-4 margin-top-20" v-show='inFilter(job)'>
 
-                                <div class="card" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
+                                <div class="card elegant-mini" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                     <div class="card-header" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                         <h5>@{{job.name}}</h5>
                                     </div>
                                     <div class="card-body" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                         <div class="row" v-show="isSubscribed(job.id)">
                                             <div class="col">
-                                                <b>Inscrito</b>
+                                                <b>@{{getSubscriptionState(job.id)}}</b>
                                             </div>
                                         </div>
                                         <div class="row margin-top-20">
@@ -129,7 +130,7 @@
                                                 @{{job.required}}
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row margin-top-20">
                                             <div class="col">
                                                 <button class="btn btn-default" v-on:click="viewJob(job)">Visualizar</button>
                                             </div>

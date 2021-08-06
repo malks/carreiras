@@ -10,6 +10,8 @@ let form = new FormData();
 $(document).ready(function () {
     if ($('[check-fields-list]').length>0)
         fieldsList();
+    if ($('[check-states-list]').length>0)
+        statesList();
     if ($('[check-candidates-list]').length>0)
         candidatesList();
     if ($('[check-jobs-list]').length>0)
@@ -91,6 +93,12 @@ function recruiting(){
                     return "col-8";
                 return "col-4";
             },
+            notingObservation:function () {
+                let obs = "";
+                if (this.runData.notingSubscription.obs!==undefined)
+                    obs=this.runData.notingSubscription.obs;
+                return obs.split("\n");
+            }
         },
         mounted:function () {
             this.updateData();
@@ -275,6 +283,15 @@ function startData(){
     form.append('_token',$('[name="_token"]').val());
 }
 
+
+function statesList(){
+    startData();
+    ajaxUrl=$('#app').attr('action');
+    startList([1,2,3,4],[1,2,3,4]);
+    $('#search').focus();
+}
+
+
 function fieldsList(){
     startData();
     ajaxUrl=$('#app').attr('action');
@@ -303,17 +320,36 @@ function jobsList(){
     $('#search').focus();
 }
 
-function startList(){
-    let list = new Vue({
+function startList(blockEditIds=[],blockDeleteIds=[]){
+    let list = null;
+    list=new Vue({
         el:'#app',
-        data:{selectedIds:new Array()},
+        data:{
+            selectedIds:new Array(),
+            blockEditIds:blockEditIds,
+            blockDeleteIds:blockDeleteIds,
+        },
         computed:{
             canEdit:function(){
-                if (this.selectedIds.length==1)
+                let that = this;
+                if (that.blockEditIds.length>0){
+                    for (let i=0;i<that.blockEditIds.length;i++){
+                        if (that.selectedIds.indexOf(that.blockEditIds[i])!==-1)
+                            return true;
+                    }
+                }
+                if (that.selectedIds.length==1)
                     return false;
                 return true;
             },
             canDestroy:function(){
+                let that = this;
+                if (that.blockDeleteIds.length>0){
+                    for (let i=0;i<that.blockDeleteIds.length;i++){
+                        if (that.selectedIds.indexOf(that.blockDeleteIds[i])!==-1)
+                            return true;
+                    }
+                }
                 if (this.selectedIds.length>0)
                     return false;
                 return true;
@@ -357,7 +393,7 @@ function startList(){
    
             },
         }
-    })
+    });
 }
 
 function editCandidate(){

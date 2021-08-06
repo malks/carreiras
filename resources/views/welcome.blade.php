@@ -134,6 +134,12 @@
         <!-- HEADER END -->
 
         <div>
+            <input type="hidden" value='@php echo json_encode($jobs->toArray());@endphp' id='jobs-data' check-jobs-home>
+            <input type="hidden" value='@php echo json_encode($fields->toArray());@endphp' id='fields-data'>
+            <input type="hidden" value='@php echo json_encode($units->toArray());@endphp' id='units-data'>
+            <input type="hidden" value='@php echo json_encode($subscriptions);@endphp' id='subscriptions-data'>
+            <input type="hidden" value='@php echo $user_id;@endphp' id='user-id'>
+            <input type="hidden" value='@php echo $candidate_id;@endphp' id='candidate-id'>
             <!-- HERO SECTION SLIDER-->
             <div class="hero-slider">
                 <div class="owl-hero-slider owl-carousel owl-theme">
@@ -300,7 +306,7 @@
             </div>
 
             <!-- BLOG SECTION-->
-            <section class="padding-top-bottom-120px white-background animation-overflow">
+            <section class="padding-top-bottom-120px white-background animation-overflow" id='home-jobs-app'>
                 <div class="container">
                     <div class="row">
                         <div class="animatedParent animateOnce">
@@ -310,6 +316,87 @@
                     </div>
                 </div>
                 <!-- BLOG LISTING THREE COLUMNS -->
+                <div id='job-modal' class="modal" :class="{ 'hide':viewingJob.id==null }" tabindex="-1">
+                    @csrf
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+            
+                            <div class="modal-header">
+                                <h5 class="modal-title pull-left">@{{ viewingJob.name}}</h5>
+                                <button type="button" class="btn-close pull-right" v-on:click="resetViewingJob" data-bs-dismiss="modal" aria-label="Close">X</button>
+                            </div>
+                            <div class="modal-body">
+                                <div id='observation-modal' class="modal" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5>Adicionar uma observação?</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <textarea v-model='observation' style='width:100%;min-height:150px;'></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class='btn btn-default'  data-bs-dismiss="modal" v-on:click="closeObsModal">OK</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label for="" class="control-label">Área</label>
+                                        <span> @{{fields[viewingJob.field_id].name}}</span>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="" class="control-label">Unidade</label>
+                                        <span> @{{units[viewingJob.unit_id].name}}</span>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-30">
+                                    <div class="col-lg-12">
+                                        <label for="" class="control-label">Vaga:</label>
+                                        <span> @{{viewingJob.name}}</span>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-30">
+                                    <div class="col-lg-12">
+                                        <label for="" class="control-label">Descrição:</label>
+                                        <span> @{{viewingJob.description}}</span>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-30">
+                                    <div class="col-lg-12">
+                                        <label for="" class="control-label">Atividades:</label>
+                                        <span> @{{viewingJob.activities}}</span>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-30">
+                                    <div class="col-lg-12">
+                                        <label for="" class="control-label">Requisitos:</label>
+                                        <span> @{{viewingJob.required}}</span>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-30">
+                                    <div class="col-lg-12">
+                                        <label for="" class="control-label">Desejável:</label>
+                                        <span> @{{viewingJob.desirable}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button v-show="!isSubscribed(viewingJob.id)" class="btn btn-default" v-on:click="applyForJob(viewingJob.id)"> 
+                                    Inscrever-se na Vaga
+                                </button>
+                                <button v-show="isSubscribed(viewingJob.id)" class="btn btn-warning" v-on:click="cancelApplication(viewingJob.id)" > 
+                                    <i class="fa fa-check" style='margin-right:10px'></i>
+                                    Cancelar Inscrição
+                                </button>
+                                <button class="btn btn-danger" data-bs-dismiss="modal" v-on:click="closeModal">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="container-fluid">
                     <div class="row">
                         <div class="blog-page-listing animatedParent animateOnce">
@@ -336,9 +423,9 @@
                                             <div class="blog-page-post-content">
                                                 <p>{{$job->description}}</p>
                                             </div>
-                                            <!--div class="blog-page-post-author">
-                                                <a href="#author-link">Alex Andrews</a>
-                                            </div-->
+                                            <div class="blog-page-post-author">
+                                                <a href="#author-link" v-on:click="viewJob({{ $job->id }})">Inscreva-se</a>
+                                            </div>
                                             <div class="blog-page-post-date">
                                                 <a href="#published">
                                                     @if (!empty($job->created_at))
@@ -383,9 +470,9 @@
                                                 <div class="blog-page-post-content">
                                                     <p>{{$job->description}}</p>
                                                 </div>
-                                                <!--div class="blog-page-post-author">
-                                                    <a href="#author-link">Alex Andrews</a>
-                                                </div-->
+                                                <div class="blog-page-post-author">
+                                                    <a href="#author-link" v-on:click="viewJob({{ $job->id }})">Inscreva-se</a>
+                                                </div>
                                                 <div class="blog-page-post-date">
                                                     <a href="#published">
                                                         @if (!empty($job->created_at))
@@ -412,9 +499,9 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-xs-12">
-                            <form id="subscribe-form" name="subscribe-form" method="post">
-                                <input id="subscribe-email" type="text" placeholder="seu email aqui" name="email" required="required" class="subscribe-style">
-                                <button type="button" data-value="subscribe" data-wait="Aguarde..." class="w-button subscribe-button">Inscrever-se</button>
+                            <form id="subscribe-form" name="subscribe-form" method="post" action="/newsletter-subscribe">
+                                <input id="subscriber-email" type="text" placeholder="Quer receber nossas novidades? Cadastre seu email aqui!" name="email" required="required" class="subscribe-style">
+                                <button type="button" id='subscribe' data-wait="Aguarde..." class="w-button subscribe-button">Assinar</button>
                             </form>
                             <div class="alert alert-success contact-form-done no-border-radius">
                                 <p>Obrigado! Inscrição recebida!</p>

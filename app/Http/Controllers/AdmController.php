@@ -238,6 +238,20 @@ class AdmController extends Controller
         );
     }
 
+    public function statesList (Request $request){
+        $data=State:: when(!empty($request->search),function($query) use ($request) {
+            $query->where('name','like',"%$request->search%");
+        })
+        ->paginate(15);
+
+        return view('adm.states.list')->with(
+            [
+                'data'=>$data,
+                'search'=>$request->search,
+            ]
+        );
+    }
+
     public function jobsList (Request $request){
         $data=Job:: when(!empty($request->search),function($query) use ($request) {
             $query->where('name','like',"%$request->search%");
@@ -314,6 +328,16 @@ class AdmController extends Controller
 
     }
 
+    public function statesCreate (Request $request) {
+        $data=new State;
+        return view('adm.states.edit')->with(
+            [
+                'data'=>$data,
+            ]
+        );
+
+    }
+
     public function unitsCreate (Request $request) {
         $data=new Unit;
         return view('adm.units.edit')->with(
@@ -363,6 +387,15 @@ class AdmController extends Controller
     public function fieldsEdit ($id) {
         $data=Field::where('id','=',$id)->first();
         return view('adm.fields.edit')->with(
+            [
+                'data'=>$data,
+            ]
+        );
+    }
+
+    public function statesEdit ($id) {
+        $data=State::where('id','=',$id)->first();
+        return view('adm.states.edit')->with(
             [
                 'data'=>$data,
             ]
@@ -437,6 +470,11 @@ class AdmController extends Controller
         return;
     }
 
+    public function statesDestroy (Request $request) {
+        State::whereIn('id',explode(",",$request->ids))->delete();
+        return;
+    }
+
     public function unitsDestroy (Request $request) {
         Unit::whereIn('id',explode(",",$request->ids))->delete();
         return;
@@ -460,6 +498,21 @@ class AdmController extends Controller
     public function usersDestroy (Request $request) {
         User::whereIn('id',explode(",",$request->ids))->delete();
         return;
+    }
+
+    public function statesSave (Request $request) {
+        $data=new State;
+        $arr=$request->toArray();
+        unset($arr['_token']);
+
+        if(!empty($arr['id']))
+            $data=State::where('id','=',$arr['id'])->first();
+
+        foreach ($arr as $k=>$value){
+            $data->{$k}=$value;
+        }
+        $data->save();
+		return redirect('/adm/states/');
     }
 
     public function fieldsSave (Request $request) {

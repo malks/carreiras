@@ -16,6 +16,7 @@ use App\OurTeam;
 use App\Video;
 use App\Schooling;
 use App\Subscribed;
+use App\Subscriber;
 use App\Field;
 use App\Unit;
 use App\State;
@@ -28,10 +29,22 @@ class LandingController extends Controller
     
     public function index (Request $request,Response $response){
         $logged_in=Auth::user();
+        $user_id=0;
+        $candidate_id=0;
+        $subscriptions=Array();
+
+        if (!empty($logged_in)){
+            $user_id=$logged_in->id;
+            $candidate_id=Candidate::where('user_id','=',$logged_in->id)->first()->id;
+            $subscriptions=Subscribed::where('candidate_id','=',$candidate_id)->get()->toArray();
+        }
+
         $start_date=Carbon::parse(Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d H:i:s'))->setTimezone('UTC');
         $final_date=Carbon::parse(Carbon::now('America/Sao_Paulo')->endOfDay()->format('Y-m-d H:i:s'))->setTimezone('UTC');
 
         $banners=Banner::where('active_from','<=',$start_date)->where('active_to','>=',$final_date)->orderBy('order','asc')->get();
+        $fields=Field::all();
+        $units=Unit::all();
         $about_us=AboutUs::where('id','=',1)->first();
 
         $our_numbers=OurNumbers::where('active_from','<=',$start_date)->where('active_to','>=',$final_date)->take(12)->get();
@@ -55,11 +68,22 @@ class LandingController extends Controller
                 'total_numbers'=>$total_numbers,
                 'video'=>$video,
                 'jobs'=>$jobs,
+                'units'=>$units,
+                'subscriptions'=>$subscriptions,
+                'fields'=>$fields,
                 'logged_in'=>$logged_in,
+                'user_id'=>$user_id,
+                'candidate_id'=>$candidate_id,
             ]
         );
     }
 
+    public function newsletterSubscribe(Request $request){
+        $subscriber=new Subscriber;
+        $subscriber->email=$request->email;
+        $subscriber->save();
+		return '';
+    }
 
     public function profile(){
         $logged_in=Auth::user();
@@ -170,13 +194,15 @@ class LandingController extends Controller
     public function jobsList(){
         $logged_in=Auth::user();
         if (!empty($logged_in))
-            $candidate=Candidate::where('user_id','=',$logged_in->id)->with(['subscriptions'])->first();
+            $candidate=Candidate::where('user_id','=',$logged_in->id)->first();
         else
             $candidate = new Candidate;
-            
+
         $candidate_id="";
         if (!empty($candidate)){
-            $subscriptions = $candidate->subscriptions;
+            $subscriptions = Subscribed::where('candidate_id','=',$candidate->id)->with(['states'=>function ($states_query) {
+                $states_query->where('candidate_visible','=','1');
+            }])->get();
             $candidate_id=$candidate->id;
         }
         else
@@ -205,7 +231,15 @@ class LandingController extends Controller
         $fields = Field::get();
         $units = Unit::get();
 
-        $subscriptions = $candidate->subscriptions;
+        if (!empty($candidate)){
+            $subscriptions = Subscribed::where('candidate_id','=',$candidate->id)->with(['states'=>function ($states_query) {
+                $states_query->where('candidate_visible','=','1');
+            }])->get();
+            $candidate_id=$candidate->id;
+        }
+        else
+            $subscriptions = Array();
+            
         $user_id=0;
         if ($logged_in)
             $user_id=$logged_in->id;
@@ -225,6 +259,7 @@ class LandingController extends Controller
         $subscribed = new Subscribed;
         $subscribed->job_id=$request->job_id;
         $subscribed->candidate_id=$request->candidate_id;
+        $subscribed->obs=$request->obs;
         $subscribed->save();
         DB::connection('mysql')->table('subscribed_has_states')->insert(
             [

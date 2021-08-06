@@ -5,9 +5,12 @@
         
         <div class="col-10 offset-1">
 
-            <div class="card">
+            <div class="card elegant">
                 <div class="card-header">
-                    Formulário de Registro
+                    <div class="animatedParent animateOnce">
+                        <h3 class="head-h3">REGISTRO</h3>
+                        <p class="head-subtitle">seu primeiro passo</p>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -62,8 +65,8 @@
                             </div>
 
                             {{-- Register button --}}
-                            <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
-                                Registre-se
+                            <button type="submit" class="btn btn-block btn-default">
+                                CRIAR CONTA
                             </button>
 
                         </form>
