@@ -9,6 +9,7 @@
 
 <div class="card" id="app" check-recruiting>
     @csrf
+    <input type="hidden" value='{{json_encode($schooling_grades)}}' id='data-schooling-grades'>
     <div class='card-header'>
         <h5>Seleção e Recrutamento de Candidatos</h5>
     </div>
@@ -53,12 +54,28 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>Vagas</h4>
+                        <div class="row">
+                            <div class="col">
+                                <h6>Filtro por Nome</h6>
+                                <input type="text" placeholder="Buscar vaga por nome" class='form-control' id='job-search' v-model='otherData.jobNameSearch'>
+                                <h6 class='margin-top-10'>Filtro por Tags</h6>
+                                <input type="text" placeholder="Buscar vaga por tags ex: vendas comercial" class='form-control' id='job-tag-search' v-model='otherData.tagFilters'>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col">
+                                <input type="checkbox" v-model='pushData.filters.jobs.direct.in.status' value='1' v-on:change='updateData'>
+                                <label style='margin-left:3px' for="">Ativas</label>
+                                <input type="checkbox" style='margin-left:10px' v-model='pushData.filters.jobs.direct.in.status' value='0'  v-on:change='updateData'>
+                                <label style='margin-left:3px' for="">Inativas</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body" style='overflow-x:hidden'>
                         <div class="row">
                             <div class="col">
                                 <select v-on:change="updateData" v-model="pushData.filters.jobs.direct.in.unit_id" class='form-control' id="job-unit-filter">
-                                    <option value="">Filtro de Unidade</option>
+                                    <option value="">Todas as Unidades</option>
                                     <template v-for='unit in runData.units'>
                                         <option :value="unit.id">@{{unit.name}}</option>
                                     </template>
@@ -66,7 +83,7 @@
                             </div>
                             <div class="col">
                                 <select v-on:change="updateData" v-model="pushData.filters.jobs.direct.in.field_id" class='form-control' id="job-field-filter">
-                                    <option value="">Filtro de Campo</option>
+                                    <option value="">Todas as Áreas</option>
                                     <template v-for='field in runData.fields'>
                                         <option :value="field.id">@{{field.name}}</option>
                                     </template>
@@ -78,7 +95,7 @@
                                 <tr>
                                     <th>Nome</th>
                                     <th>Unidade</th>
-                                    <th>Campo</th>
+                                    <th>Área</th>
                                     <th class='text-center'>Status</th>
                                     <th class='text-right'>Candidatos</th>
                                 </tr>
@@ -88,11 +105,11 @@
                                 <tr v-show="notYet(runData.jobs)">
                                     <td colspan=3> Carregando...</td>
                                 </tr>
-                                <tr v-show="runData.jobs==null && !notYet(runData.jobs)">
-                                    <td colspan=3> Sem resultados...</td>
+                                <tr v-show="(runData.jobs==null || runData.jobs.length==0) && !notYet(runData.jobs) && !runData.updating">
+                                    <td colspan=3> Sem resultados</td>
                                 </tr>
                                 <template v-for="job in runData.jobs">
-                                    <tr v-on:click="inspectJob(job)" class='hoverable' :class="{ 'active':runData.selectedJob.id==job.id }">
+                                    <tr v-show='inFilter(job) && inJobNameFilter(job)' v-on:click="inspectJob(job)" class='hoverable' :class="{ 'active':runData.selectedJob.id==job.id }">
                                         <td>@{{ job.name }}</td>
                                         <td>@{{ getUnitById(job.unit_id).name }}</td>
                                         <td>@{{ getFieldById(job.field_id).name }}</td>
@@ -114,6 +131,14 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>Candidatos</h4>
+                        <div class="row">
+                            <div class="col">
+                                <h6>Filtro por Nome</h6>
+                                <input type="text" placeholder="Buscar candidato por nome" class='form-control' id='candidate-search' v-model='otherData.candidateNameSearch' >
+                                <h6 class='margin-top-10'>Filtro por Interesses</h6>
+                                <input type="text" placeholder="Buscar candidato por interesses ex: vendas comercial" class='form-control' id='candidate-tag-search' v-model='otherData.candidateTagSearch'>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="hide">
@@ -157,7 +182,7 @@
                                 </tr>
 
                                 <template v-for="(subscription,subx) in runData.subscriptions">
-                                    <tr class='select-sized' v-show="specificFilter(subscription)">
+                                    <tr v-show="candidateNameFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription))" class='select-sized' v-show="specificFilter(subscription)">
                                         <td>@{{ getCandidate(subscription).name }}</td>
                                         <td class='text-center'>
                                             <select class="form-control" v-on:change="addSubscriptionState(getCandidate(subscription).id,runData.selectedJob.id,getState(runData.subscriptions[subx].current_state).name)" v-model="runData.subscriptions[subx].current_state">

@@ -7,6 +7,7 @@
 
 @section('content')
     <div class="card" id='configurations'>
+        @csrf
 
         <div class="card-header">
             <h2>Configurações</h2>
@@ -22,11 +23,17 @@
                             </label>
                             <div class="row">
                                 <div class="col-2">
+                                    <button class="btn btn-secondary" v-on:click='addBanner' >Novo</button>
+                                </div>
+                                <div class="col-2">
                                     <button class="btn btn-primary" v-on:click='saveBanners' :disabled='saving'>@{{ savingText }}</button>
                                 </div>
                                 <div class="col-2">
                                     <button class="btn btn-info" v-on:click='editBanner' :disabled='canEdit'>Editar</button>
-                                </div>                                
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-danger" v-on:click='deleteBanner' :disabled='canEdit'>Excluir</button>
+                                </div>
                             </div>
                             <div class="list-group margin-top-10">
                                 <template v-for='banner in banners'>
@@ -55,7 +62,6 @@
                     </div>
                     <div class="modal-body">
                         <form id='banner-form' action="/save-banner" style='max-height:400px;overflow-y:scroll;overflow-x:clip!important;padding:15px;'>
-                            @csrf
                             <div class="row">
                                 <div class="col-6 margin-top-10">
                                     <label for="">Nome</label>
@@ -90,7 +96,7 @@
                                     <input type="text" class='form-control'  v-model='editingBanner.title_small_outline' name='title_small_outline'>
                                 </div>
                                 <div class="col-6 margin-top-10">
-                                    <label for="">Chamada</label>
+                                    <label for="">Texto do Botão</label>
                                     <input type="text" class='form-control'  v-model='editingBanner.cta' name='cta'>
                                 </div>
                                 <div class="col-3 margin-top-10">

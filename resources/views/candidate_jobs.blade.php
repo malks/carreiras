@@ -36,60 +36,62 @@
                                         <button type="button" class="btn-close" v-on:click="resetViewingJob" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div id='observation-modal' class="modal" tabindex="-1">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5>Adicionar uma observação?</h5>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <textarea v-model='observation' style='width:100%;min-height:150px;'></textarea>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class='btn btn-default'  data-bs-dismiss="modal" v-on:click="closeObsModal">OK</button>
+                                        <div class='maxed-height-500'>
+                                            <div id='observation-modal' class="modal" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5>Adicionar uma observação?</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <textarea v-model='observation' style='width:100%;min-height:150px;'></textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class='btn btn-default'  data-bs-dismiss="modal" v-on:click="closeObsModal">OK</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-            
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <label for="" class="control-label">Área</label>
-                                                <span> @{{fields[viewingJob.field_id].name}}</span>
+                
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="" class="control-label">Área</label>
+                                                    <span> @{{fields[viewingJob.field_id].name}}</span>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <label for="" class="control-label">Unidade</label>
+                                                    <span> @{{units[viewingJob.unit_id].name}}</span>
+                                                </div>
                                             </div>
-                                            <div class="col-6">
-                                                <label for="" class="control-label">Unidade</label>
-                                                <span> @{{units[viewingJob.unit_id].name}}</span>
+                                            <div class="row margin-top-30">
+                                                <div class="col-lg-12">
+                                                    <label for="" class="control-label">Vaga:</label>
+                                                    <span> @{{viewingJob.name}}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row margin-top-30">
-                                            <div class="col">
-                                                <label for="" class="control-label">Vaga:</label>
-                                                <span> @{{viewingJob.name}}</span>
+                                            <div class="row margin-top-30">
+                                                <div class="col-lg-12">
+                                                    <label for="" class="control-label">Descrição:</label>
+                                                    <span v-html='printDescription'></span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row margin-top-30">
-                                            <div class="col">
-                                                <label for="" class="control-label">Descrição:</label>
-                                                <span> @{{viewingJob.description}}</span>
+                                            <div class="row margin-top-30">
+                                                <div class="col-lg-12">
+                                                    <label for="" class="control-label">Atividades:</label>
+                                                    <span v-html='printActivities'> </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row margin-top-30">
-                                            <div class="col">
-                                                <label for="" class="control-label">Atividades:</label>
-                                                <span> @{{viewingJob.activities}}</span>
+                                            <div class="row margin-top-30">
+                                                <div class="col-lg-12">
+                                                    <label for="" class="control-label">Requisitos:</label>
+                                                    <span v-html='printRequired'> </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row margin-top-30">
-                                            <div class="col">
-                                                <label for="" class="control-label">Requisitos:</label>
-                                                <span> @{{viewingJob.required}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-30">
-                                            <div class="col">
-                                                <label for="" class="control-label">Desejável:</label>
-                                                <span> @{{viewingJob.desirable}}</span>
+                                            <div class="row margin-top-30">
+                                                <div class="col-lg-12">
+                                                    <label for="" class="control-label">Desejável:</label>
+                                                    <span v-html='printDesirable'></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -121,13 +123,11 @@
                                             </div>
                                         </div>
                                         <div class="row margin-top-20">
-                                            <div class="col">
-                                                @{{job.description}}
+                                            <div class="col fixed-height-50"  v-html='job.description.split("\r\n").join("<br>")'>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
-                                            <div class="col">
-                                                @{{job.required}}
+                                            <div class="col fixed-height-50" v-html='job.required.split("\r\n").join("<br>")'>
                                             </div>
                                         </div>
                                         <div class="row margin-top-20">

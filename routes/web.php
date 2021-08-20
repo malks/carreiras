@@ -37,6 +37,7 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
 
     Route::post('/adm/save-banners', 'AdmController@saveBanners')->name('save-banners');
     Route::post('/adm/update-banner', 'AdmController@updateBanner')->name('update-banner');
+    Route::post('/adm/delete-banner', 'AdmController@deleteBanner')->name('delete-banner');
 
     Route::get('/adm/config', 'AdmController@config')->name('config');
     Route::get('/adm/fields', 'AdmController@fieldsList')->name('fields-list');
@@ -45,6 +46,7 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::get('/adm/jobs', 'AdmController@jobsList')->name('jobs-list');
     Route::get('/adm/tags', 'AdmController@tagsList')->name('tags-list');
     Route::get('/adm/candidates', 'AdmController@candidatesList')->name('candidates-list');
+    Route::get('/adm/users', 'AdmController@usersList')->name('users-list');
     
     Route::get('/adm/recruiting', 'AdmController@recruiting')->name('recruiting');
     Route::post('/adm/recruiting-data', 'AdmController@recruitingData')->name('recruiting-data');
@@ -55,6 +57,7 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::get('/adm/jobs/create', 'AdmController@jobsCreate')->name('jobs-create');
     Route::get('/adm/tags/create', 'AdmController@tagsCreate')->name('tags-create');
     Route::get('/adm/candidates/create', 'AdmController@candidatesCreate')->name('candidates-create');
+    Route::get('/adm/users/create', 'AdmController@usersCreate')->name('users-create');
 
     Route::get('/adm/fields/edit/{id}', 'AdmController@fieldsEdit')->name('fields-edit');
     Route::get('/adm/states/edit/{id}', 'AdmController@statesEdit')->name('states-edit');
@@ -62,6 +65,7 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::get('/adm/jobs/edit/{id}', 'AdmController@jobsEdit')->name('jobs-edit');
     Route::get('/adm/tags/edit/{id}', 'AdmController@tagsEdit')->name('tags-edit');
     Route::get('/adm/candidates/edit/{id}', 'AdmController@candidatesEdit')->name('candidates-edit');
+    Route::get('/adm/users/edit/{id}', 'AdmController@usersEdit')->name('users-edit');
 
     Route::post('/adm/fields/destroy', 'AdmController@fieldsDestroy')->name('fields-destroy');
     Route::post('/adm/states/destroy', 'AdmController@statesDestroy')->name('states-destroy');
@@ -69,6 +73,7 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::post('/adm/jobs/destroy', 'AdmController@jobsDestroy')->name('jobs-destroy');
     Route::post('/adm/tags/destroy', 'AdmController@tagsDestroy')->name('tags-destroy');
     Route::post('/adm/candidates/destroy', 'AdmController@candidatesDestroy')->name('candidates-destroy');
+    Route::post('/adm/users/destroy', 'AdmController@usersDestroy')->name('users-destroy');
 
     Route::get('/adm/fields/save', 'AdmController@fieldsSave')->name('fields-save');
     Route::get('/adm/states/save', 'AdmController@statesSave')->name('states-save');
@@ -76,4 +81,5 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::get('/adm/jobs/save', 'AdmController@jobsSave')->name('jobs-save');
     Route::get('/adm/tags/save', 'AdmController@tagsSave')->name('tags-save');
     Route::get('/adm/candidates/save', 'AdmController@candidatesSave')->name('candidates-save');
+    Route::get('/adm/users/save', 'AdmController@usersSave')->name('users-save');
 });

@@ -21,13 +21,43 @@ class Candidate extends Model
         return $this->belongsToMany('App\Job', 'subscribed', 'candidate_id', 'job_id');
     }
 
-    protected $casts = [
-        'arrival_date' => 'date:d/m/Y',
-        'dob' => 'date:d/m/Y',
+    public function interests(){
+        return $this->belongsToMany('App\Tag', 'candidates_tags', 'candidate_id', 'tag_id');
+    }
+
+    /*protected $casts = [
         'last_seen' => 'datetime:d/m/Y',
         'mother_dob' => 'date:d/m/Y',
         'father_dob' => 'date:d/m/Y',
-    ];
+    ];*/
+    
+    public function setLunelliEarlierWorkPeriodStartAttribute($value)
+    {
+        $carbon = new Carbon($value);
+        $carbon->toDateTimeString();
+        $this->attributes['lunelli_earlier_work_period_start'] = $carbon;
+    }
+
+    public function setLunelliEarlierWorkPeriodEndAttribute($value)
+    {
+        $carbon = new Carbon($value);
+        $carbon->toDateTimeString();
+        $this->attributes['lunelli_earlier_work_period_end'] = $carbon;
+    }
+
+    public function setLastTimeDoctorAttribute($value)
+    {
+        $carbon = new Carbon($value);
+        $carbon->toDateTimeString();
+        $this->attributes['last_time_doctor'] = $carbon;
+    }
+    
+    public function setVisaExpirationAttribute($value)
+    {
+        $carbon = new Carbon($value);
+        $carbon->toDateTimeString();
+        $this->attributes['visa_expiration'] = $carbon;
+    }
     
     public function setArrivalDateAttribute($value)
     {

@@ -54,6 +54,29 @@ function candidateSubscription(){
     candiSubs = new Vue({
         el:'#app',
         data:getSubscriptionsData(),
+        computed:{
+            printDescription:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.description.split("\r\n").join("<br>");
+                return "";
+            },
+            printActivities:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.activities.split("\r\n").join("<br>");
+                return "";
+            },
+            printRequired:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.required.split("\r\n").join("<br>");
+                return "";
+            },
+            printDesirable:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.desirable.split("\r\n").join("<br>");
+                return "";
+            }
+
+        },
         methods:{
             getSubscriptionState:function (job){
                 let that = this;
@@ -61,6 +84,19 @@ function candidateSubscription(){
                     if (that.subscriptions[i].job_id==job)
                         return that.subscriptions[i].states[that.subscriptions[i].states.length-1].name
                 }
+                return "&nbsp";
+            },
+            getStatusClass:function (job){
+                let that = this;
+                let state_id=null;
+                for (let i in that.subscriptions){
+                    if (that.subscriptions[i].job_id==job)
+                        state_id=that.subscriptions[i].states[that.subscriptions[i].states.length-1].name
+                }
+                if (state_id==2)
+                    return 'red-color';
+                else 
+                    return 'green-color';
             },
             getSubscriptionsJob: function(subscription){
                 let that = this;
@@ -171,6 +207,26 @@ function candidateJobs(){
                     return false;
                 return true;
             },
+            printDescription:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.description.split("\r\n").join("<br>");
+                return "";
+            },
+            printActivities:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.activities.split("\r\n").join("<br>");
+                return "";
+            },
+            printRequired:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.required.split("\r\n").join("<br>");
+                return "";
+            },
+            printDesirable:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.desirable.split("\r\n").join("<br>");
+                return "";
+            }
         },
         methods:{
             getSubscriptionState:function (job){
@@ -179,6 +235,7 @@ function candidateJobs(){
                     if (that.subscriptions[i].job_id==job)
                         return that.subscriptions[i].states[that.subscriptions[i].states.length-1].name
                 }
+                return " &nbsp ";
             },
             isSubscribed:function (job){
                 let that = this;
@@ -343,6 +400,26 @@ function homeJobs(){
                     return false;
                 return true;
             },
+            printDescription:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.description.split("\r\n").join("<br>");
+                return "";
+            },
+            printActivities:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.activities.split("\r\n").join("<br>");
+                return "";
+            },
+            printRequired:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.required.split("\r\n").join("<br>");
+                return "";
+            },
+            printDesirable:function (){
+                if (this.viewingJob.id!=null)
+                    return this.viewingJob.desirable.split("\r\n").join("<br>");
+                return "";
+            }
         },
         methods:{
             isSubscribed:function (job){
@@ -465,6 +542,12 @@ function startProfile(screenNameHelper='',firstTab=''){
                 that=this;
                 return JSON.stringify(that.experiences);
             },
+            currentInterestSize:function () {
+                let len=this.currentInterest.length;
+                if (len<10)
+                    len=10;
+                return "width:"+len+"0px;";
+            },
         },
         methods:{
             isItMe:function (who) {
@@ -477,6 +560,48 @@ function startProfile(screenNameHelper='',firstTab=''){
                     return true;
                 return false;
             },
+            filterTags:function(){
+                let ctag=this.currentInterest;
+                if (ctag.length==0)
+                    this.filteredTags=[{id:null,name:""}];
+                else
+                    this.filteredTags=this.tags.filter(obj=>{
+                        return obj.name.toLowerCase().startsWith(ctag.toLowerCase())==true;
+                    })
+            },
+            selectTag:function (){
+                let that=this;
+
+                if (that.currentInterest.length==0)
+                    return false;
+
+                let filter = that.filteredTags;
+                let tempTags=that.selectedTags;
+                let tag = null;
+                if (filter.length>0)
+                    tag=filter[0].id;
+                let newTag=that.tags.find(obj=>{ return obj.id==tag; });
+                if (newTag)
+                    tempTags.push(newTag);
+                else
+                    tempTags.push({id:null,name:that.currentInterest});
+                that.selectedTags=tempTags;
+                that.currentInterest="";
+            },
+            removeTag:function (idx){
+                let that=this;
+                let tempTags=that.selectedTags;
+                tempTags.splice(idx,1);
+            },
+            targetInterestsInputFocus: function () {
+                $('#interests-input').focus();
+            },
+            targetInterestsInputShow: function () {
+                this.interestInput=true;
+            },
+            targetInterestsInputHide: function () {
+                this.interestInput=false;
+            },
             addSchooling:function (){
                 this.schoolings.unshift(loadDefault('schoolings'));
             },
@@ -486,6 +611,8 @@ function startProfile(screenNameHelper='',firstTab=''){
             saveProfile:function(){
                 this.saving=true;
                 that=this;
+                let interests=JSON.stringify(that.selectedTags);
+                $('#data-interests').val(interests);
                 data=$('form').serialize();
                 $.ajax({
                     url:'/save-profile',
@@ -534,6 +661,14 @@ function getCustomData(screenNameHelper,firstTab){
     if (screenNameHelper=='profile-edit'){
         customData.schoolings=JSON.parse(document.getElementById('schooling-data').value);
         customData.experiences=JSON.parse(document.getElementById('experience-data').value);
+        customData.tags=JSON.parse(document.getElementById('tags-data').value);
+        customData.interestInput=false;
+        customData.currentInterest='';
+        if ($('#data-interests').val()!="")
+            customData.selectedTags=JSON.parse($('#data-interests').val());
+        else
+            customData.selectedTags=[];
+        customData.filteredTags=[];
         customData.schooling_grades=JSON.parse(document.getElementById('schooling-grades').value);
         customData.schooling_status=JSON.parse(document.getElementById('schooling-status').value);
         customData.schooling_formation=JSON.parse(document.getElementById('schooling-formation').value);
@@ -556,6 +691,7 @@ function getJobsData(){
         id:null,
         field_id:1,
         unit_id:1,
+        description:"",
     };
     console.log(customData);
     return customData;

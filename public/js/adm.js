@@ -18,6 +18,10 @@ $(document).ready(function () {
         jobsList();
     if ($('[check-units-list]').length>0)
         unitsList();
+    if ($('[check-users-list]').length>0)
+        usersList();
+    if ($('[check-tags-list]').length>0)
+        tagsList();
     if ($('[check-candidates-edit]').length>0)
         editCandidate();
     if ($('[check-recruiting]').length>0)
@@ -46,6 +50,7 @@ function recruiting(){
             },
             notepad:false,
             saving:false,
+            updating:false,
             specificFilter:false,
         },
         pushData: {
@@ -57,7 +62,8 @@ function recruiting(){
                         },
                         in:{
                             field_id:"",
-                            unit_id:""
+                            unit_id:"",
+                            status:[]
                         }
                     },
                     deep:{
@@ -69,15 +75,29 @@ function recruiting(){
                                     }
                                 }
                             }
+                        },
+                        tags:{
+                            like:{
+                                name:''
+                            }
                         }
-                    }
+                    },
                 },
             },
         },
         persistentData:{
             subscriptions:null,
+        },
+        otherData:{
+            jobSearch:'',
+            jobNameSearch:'',
+            jobTagSearch:'',
+            candidateNameSearch:'',
+            candidateTagSearch:'',
+            tagFilters:'',
         }
     };
+    console.log(bootstrapData);
 
     recruitMachine=new Vue({
         el:'#app',
@@ -256,8 +276,16 @@ function recruiting(){
                 let that = this;
                 console.log(that.runData);
                 let pushData=that.pushData;
+                pushData.filters.jobs.direct.like.name="";
+              //  pushData.filters.jobs.mustHave.tags.name="";
+                if(that.otherData.jobSearch!=""){
+                    pushData.filters.jobs.direct.like.name=that.otherData.jobSearch;
+                }
+                /*if (that.otherData.jobTagSearch!=""){
+                    pushData.filters.jobs.mustHave.tags.name=that.otherData.jobTagSearch;
+                }*/
                 pushData['_token']=$('[name="_token"]').val();
-                
+                this.runData.updating=true;
                 $.ajax({
                     url:'/adm/recruiting-data',
                     type:'POST',
@@ -268,10 +296,109 @@ function recruiting(){
                             console.log(i);
                             that.runData[i]=objData[i];
                         }
-                       that.updateSelectedJob();
+                        that.updateSelectedJob();
                         console.log(that.runData);
+                        that.runData.updating=false;
                     }
                 });
+            },
+            inJobNameFilter:function (job) {
+                let contain=true;
+                let activeFilters="";
+                if(this.otherData.jobNameSearch.length>0){
+                    contain=false;
+                    activeFilters = this.otherData.jobNameSearch.split(" ");
+                    for (let i in activeFilters){
+                        if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                            contain = false;
+                            break;
+                        }
+                        if (job.name.toLowerCase().includes(activeFilters[i].toLowerCase())){
+                            contain=true;
+                            break;
+                        }
+                    }
+                }
+                return contain;
+            },
+            candidateNameFilter:function (candidate) {
+                let contain=true;
+                let activeFilters="";
+                if(this.otherData.candidateNameSearch.length>0){
+                    contain=false;
+                    activeFilters = this.otherData.candidateNameSearch.split(" ");
+                    for (let i in activeFilters){
+                        if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                            contain = false;
+                            break;
+                        }
+                        if (candidate.name.toLowerCase().includes(activeFilters[i].toLowerCase())){
+                            contain=true;
+                            break;
+                        }
+                    }
+                }
+                return contain;
+            },
+            candidateTagFilter:function (candidate) {
+                let contain=true;
+                let activeFilters="";
+                let dudeTags=candidate['interests'];
+                if(this.otherData.candidateTagSearch.length>0){
+                    contain=false;
+                    activeFilters = this.otherData.candidateTagSearch.split(" ");
+                    for (let i in activeFilters){
+                        if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                            contain = false;
+                            break;
+                        }
+                        for (let j in dudeTags){
+                            if (dudeTags[j].name.toLowerCase().includes(activeFilters[i].toLowerCase())){
+                                contain=true;
+                                break;
+                            }
+                        }
+                        if (contain)
+                            break;
+                    }
+                }
+                return contain;
+            },
+            inFilter:function(job){
+                console.log(job);
+                let activeFilters ='';
+                let tempJob={...job};
+                console.log(tempJob);
+                let contain = false;
+                if (this.otherData.tagFilters.length>0)
+                    activeFilters = this.otherData.tagFilters.split(" ");
+
+                if (activeFilters.length>0){
+                    for (let i in activeFilters){
+                        if(activeFilters[i].length>0){
+                            console.log("activefilter="+activeFilters[i]);
+                            if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                                contain = false;
+                                break;
+                            }
+                            if(tempJob['tags'].length==0){
+                                contain=false;
+                                break;
+                            }
+                            for (let t in tempJob['tags']){
+                                if (typeof tempJob['tags'][t] != undefined)
+                                    contain = tempJob['tags'][t]['name'].toLowerCase().includes(activeFilters[i].toLowerCase());
+                                if (contain)
+                                    break;
+                            }
+                            if (contain)
+                                break;
+
+                        }
+                    }
+                    return contain;
+                }
+                return true;
             }
         },
     });
@@ -313,6 +440,20 @@ function unitsList(){
     $('#search').focus();
 }
 
+function tagsList(){
+    startData();
+    ajaxUrl=$('#app').attr('action');
+    startList();
+    $('#search').focus();
+}
+
+function usersList(){
+    startData();
+    ajaxUrl=$('#app').attr('action');
+    startList();
+    $('#search').focus();
+}
+
 function jobsList(){
     startData();
     ajaxUrl=$('#app').attr('action');
@@ -321,13 +462,16 @@ function jobsList(){
 }
 
 function startList(blockEditIds=[],blockDeleteIds=[]){
+    console.log('lalala');
     let list = null;
+    let logged_id=$('#logged-id').val();
     list=new Vue({
         el:'#app',
         data:{
             selectedIds:new Array(),
             blockEditIds:blockEditIds,
             blockDeleteIds:blockDeleteIds,
+            logged_id:logged_id,
         },
         computed:{
             canEdit:function(){
@@ -344,6 +488,8 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             },
             canDestroy:function(){
                 let that = this;
+                if (logged_id!=null && that.selectedIds==logged_id)
+                    return true;
                 if (that.blockDeleteIds.length>0){
                     for (let i=0;i<that.blockDeleteIds.length;i++){
                         if (that.selectedIds.indexOf(that.blockDeleteIds[i])!==-1)
@@ -364,6 +510,7 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     this.selectedIds.push(id);
             },
             reverseSelection:function(){
+                console.log(fullData);
                 for (let i in fullData){
                     let idx=this.selectedIds.findIndex(el=>el == fullData[i].id);
                     if(idx>=0)
@@ -378,7 +525,7 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             destroy:function(){
                 let that=this;
                 form.append('ids',that.selectedIds);
-                if(confirm('Você está certo disso?')){
+                if(confirm('Tem certeza que deseja excluir?')){
                     $.ajax({
                         url:ajaxUrl+'/destroy',
                         type:'POST',
@@ -480,8 +627,8 @@ function configurations(){
         title_small_outline:'',
         cta:'',
         background:'',
-        active_from:'',
-        active_to:'',
+        active_from:'1970-01-01',
+        active_to:'2030-01-01',
         order:''
     };
 
@@ -508,6 +655,13 @@ function configurations(){
             }
         },
         methods:{
+            addBanner:function (){
+                let nbanner={...defaultEditingBanner};
+                nbanner.id=0;
+                nbanner.name='Novo Banner';
+                nbanner.order=this.banners.length+1;
+                this.banners.push(nbanner);
+            },
             reloadBanners:function (){
                 let that=this;
                 form = new FormData();
@@ -534,11 +688,17 @@ function configurations(){
                 $('#banner-background-picker').click();
             },
             selectBanner:function(id){
-                this.selectedBanner=id;
+                if (this.selectedBanner==null || this.selectedBanner!=id)
+                    this.selectedBanner=id;
+                else{
+                    this.selectedBanner=null;
+                    $('.dropzone').blur();
+                }
                 console.log(this.selectedBanner);
             },
             resetEditingBanner: function (){
                 this.editingBanner={...defaultEditingBanner};
+                this.selectedBanner=null;
                 $('#banner-modal').hide();
             },
             editBanner:function(){
@@ -552,6 +712,30 @@ function configurations(){
                     return false;
                 });
             },
+            deleteBanner:function(){
+                let that=this;
+                if (confirm('Tem certeza de que deseja excluir?')){
+                    form = new FormData();
+                    form.append('_token',$('[name="_token"]').val());
+                    form.append('banner_id',that.selectedBanner);
+                    $.ajax({
+                        url:'/adm/delete-banner',
+                        type:'POST',
+                        processData: false,
+                        contentType: false,
+                        data:form,
+                        success:function(data){
+                            let tempBanners=that.banners;
+                            for (let i in tempBanners){
+                                if (tempBanners[i].id==that.selectedBanner)
+                                    tempBanners.splice(i,1);
+                            }
+                            that.banners=tempBanners;
+                            that.resetEditingBanner();
+                        }
+                    });
+                };
+            },
             activeBanner:function(id){
                 if (this.selectedBanner==id)
                     return true;
@@ -560,6 +744,7 @@ function configurations(){
             updateBanner:function() {
                 this.saving=true;
                 let that = this;
+                form = new FormData();
                 form.append('_token',$('[name="_token"]').val());
                 form.append('banner', JSON.stringify(that.editingBanner));
                 console.log(form.get('background_file'));
@@ -575,6 +760,7 @@ function configurations(){
                         that.reloadBanners();
                         bannerIframe.src=bannerIframe.src;
                         $('#banner-modal').hide();
+                        that.resetEditingBanner();
                     }
                 })
             },
@@ -588,7 +774,7 @@ function configurations(){
                     url:'/adm/save-banners',
                     type:'POST',
                     processData: false,
-                    contentType: multipart/form-data,            
+                    contentType: false,
                     data:form,
                     success:function(data){
                         console.log(data);
@@ -617,22 +803,24 @@ function configurations(){
                 if (item.target.className.indexOf("dropzone")!=-1){
                     let movedKey = item.dataTransfer.getData("text");
                     let tempBanner = this.banners[movedKey-1];
-                    this.banners.splice(movedKey-1,1);
-    
-                    let newbanners = Array();
-                    for (let i=0;i<that.banners.length;i++){
-                        if((i+1)==item.target.getAttribute('data-key'))
-                            newbanners.push(tempBanner);
-                        newbanners.push(that.banners[i]);
-                    }
-                    for (let i=0;i<newbanners.length;i++){
-                        newbanners[i].order=i+1;
-                    }
-                    this.banners = null;
-                    this.banners = newbanners;
-                    //Vue.set(admConf.banners,0,newbanners[0]);
+                    if (item.target.getAttribute('data-key')!=movedKey){
+                        this.banners.splice(movedKey-1,1);
+        
+                        let newbanners = Array();
+                        for (let i=0;i<that.banners.length;i++){
+                            if((i+1)==item.target.getAttribute('data-key'))
+                                newbanners.push(tempBanner);
+                            newbanners.push(that.banners[i]);
+                        }
+                        for (let i=0;i<newbanners.length;i++){
+                            newbanners[i].order=i+1;
+                        }
+                        this.banners = null;
+                        this.banners = newbanners;
+                        //Vue.set(admConf.banners,0,newbanners[0]);
 
-                    console.log(this.banners);    
+                        console.log(this.banners);
+                    }
                 }
             }            
         },

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStatesTable extends Migration
+class CreateSeniorSync extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateStatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('states', function (Blueprint $table) {
+        Schema::create('senior_sync', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50);
-            $table->integer('candidate_visible')->default(0);
-            $table->integer('sync_to_senior')->default(0);
-            $table->timestamps();
+            $table->string('type')->nullable();
+            $table->integer('active')->default(1);
+            $table->datetime('last_sync')->nullable();
         });
     }
 
@@ -29,6 +28,6 @@ class CreateStatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('states');
+        Schema::dropIfExists('senior_sync');
     }
 }

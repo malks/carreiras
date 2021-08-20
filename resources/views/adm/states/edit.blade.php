@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Edição de Área | Lunelli Carreiras')
+@section('title', 'Edição de Estados | Lunelli Carreiras')
 
 @section('content_header')
 @stop
@@ -10,7 +10,7 @@
 		@csrf
 	    <div class="card" check-states-edit>
 	    	<div class='card-header'>
-	    		<h5>Edição de Estdos</h5>
+	    		<h5>Edição de Estados</h5>
 	    	</div>
 	        <div class="card-body">
 	        	<div class='row'>
@@ -33,7 +33,14 @@
 							<option value="0" @if ($data->candidate_visible==0) selected @endif>Não</option>
 							<option value="1" @if ($data->candidate_visible==1) selected @endif>Sim</option>
 						</select>
-                    </div>                    
+                    </div>
+                    <div class=" col-sm-12 col-lg">
+                        <label for="data-name">Sincronizar com Senior neste status?</label>
+						<select name="sync_to_senior" id="" class="form-control">
+							<option value="0" @if ($data->sync_to_senior==0) selected @endif>Não</option>
+							<option value="1" @if ($data->sync_to_senior==1) selected @endif>Sim</option>
+						</select>
+                    </div>
                 </div>
 			</div>
 		</div>

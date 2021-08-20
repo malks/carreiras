@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Áreas | Lunelli Carreiras')
+@section('title', 'Estados de Recrutamento | Lunelli Carreiras')
 
 @section('content_header')
 @stop
@@ -12,7 +12,7 @@
 		@csrf
 	    <div class="card" check-states-list>
 	    	<div class='card-header'>
-	    		<h5>Estados do Processo de Seleção</h5>
+	    		<h5>Estados de Recrutamento</h5>
 	    	</div>
 	        <div class="card-body">
 	        	<div class='row'>
@@ -42,6 +42,7 @@
 			        				<th>Nome</th>
 			        				<th>Visível para Candidato?</th>
 			        				<th>Requerido pelo sistema</th>
+			        				<th>Sincronizar com Senior neste status?</th>
 			        			</tr>
 			        		</thead>
 			        		<tbody>
@@ -59,6 +60,7 @@
 										<td>{{$d->name}}</td>
 										<td>{{$candidate_visible[$d->candidate_visible]}}</td>
 										<td>{{($d->id<=4) ? 'Sim' : 'Não'}} </td>
+										<td>{{($d->sync_to_senior) ? 'Sim' : 'Não'}} </td>
 									</tr>
 								@endforeach
 							</tbody>

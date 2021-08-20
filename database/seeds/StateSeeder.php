@@ -37,6 +37,7 @@ class StateSeeder extends Seeder
         DB::table('states')->insert(
             [
                 'name'=>"Selecionado",
+                'sync_to_senior'=>1,
             ]
         );
         DB::table('states')->insert(

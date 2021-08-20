@@ -9,10 +9,10 @@ class Schooling extends Model
 {
     protected $table='schooling';
     
-    protected $casts = [
+   /* protected $casts = [
         'start' => 'datetime:d/m/Y',
         'end' => 'datetime:d/m/Y',
-    ];
+    ];*/
     
     public function setStartAttribute($value)
     {

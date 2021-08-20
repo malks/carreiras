@@ -281,182 +281,138 @@
                 </div>
             </section>
 
-            <!-- BRANDING SLIDER -->
-            <div class="padding-top-bottom-60px dark-background">
-                <div class="container">
-                    <div class="row">
-                        <div class="brand-slider owl-carousel owl-theme">
-                            @foreach ($jobs as $job)
-                                @if($job->index==7)
-                                    @php break @endphp
-                                @endif
-                                @if ($job->home_slider==1)
-                                    <div class="item">
-                                        <div class="brand-logo-holder">
-                                            <span class='job-item'>
-                                                {{$job->name}}
-                                            </span>
+            <div  id='home-jobs-app'>
+                <!-- BRANDING SLIDER -->
+                <div class="padding-top-bottom-60px dark-background" >
+                    <div class="container">
+                        <div class="row">
+                            <div class="brand-slider owl-carousel owl-theme">
+                                @foreach ($jobs as $job)
+                                    @if($job->index==7)
+                                        @php break @endphp
+                                    @endif
+                                    @if ($job->home_slider==1)
+                                        <div class="item">
+                                            <div class="brand-logo-holder">
+                                                <span class='job-item' style='cursor:pointer;' v-on:click="viewJob({{ $job->id }})">
+                                                    {{$job->name}}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endif
-                            @endforeach
+                                    @endif
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- BLOG SECTION-->
-            <section class="padding-top-bottom-120px white-background animation-overflow" id='home-jobs-app'>
-                <div class="container">
-                    <div class="row">
-                        <div class="animatedParent animateOnce">
-                            <h3 class="head-h3">Vagas</h3>
-                            <p class="head-subtitle">Em Aberto</p>
+                <!-- BLOG SECTION-->
+                <section class="padding-top-bottom-120px white-background animation-overflow">
+                    <div class="container">
+                        <div class="row">
+                            <div class="animatedParent animateOnce">
+                                <h3 class="head-h3">Vagas</h3>
+                                <p class="head-subtitle">Em Aberto</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- BLOG LISTING THREE COLUMNS -->
-                <div id='job-modal' class="modal" :class="{ 'hide':viewingJob.id==null }" tabindex="-1">
-                    @csrf
-                    <div class="modal-dialog">
-                        <div class="modal-content">
+                    <!-- BLOG LISTING THREE COLUMNS -->
+                    <div id='job-modal' class="modal" :class="{ 'hide':viewingJob.id==null }" tabindex="-1">
+                        @csrf
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                
+                                <div class="modal-header">
+                                    <h5 class="modal-title pull-left">@{{ viewingJob.name}}</h5>
+                                    <button type="button" class="btn-close pull-right" v-on:click="resetViewingJob" data-bs-dismiss="modal" aria-label="Close">X</button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class='maxed-height-500'>
+                                        <div id='observation-modal' class="modal" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5>Adicionar uma observação?</h5>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <textarea v-model='observation' style='width:100%;min-height:150px;'></textarea>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class='btn btn-default'  data-bs-dismiss="modal" v-on:click="closeObsModal">OK</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
             
-                            <div class="modal-header">
-                                <h5 class="modal-title pull-left">@{{ viewingJob.name}}</h5>
-                                <button type="button" class="btn-close pull-right" v-on:click="resetViewingJob" data-bs-dismiss="modal" aria-label="Close">X</button>
-                            </div>
-                            <div class="modal-body">
-                                <div id='observation-modal' class="modal" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5>Adicionar uma observação?</h5>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="" class="control-label">Área</label>
+                                                <span> @{{fields[viewingJob.field_id].name}}</span>
                                             </div>
-                                            <div class="modal-body">
-                                                <textarea v-model='observation' style='width:100%;min-height:150px;'></textarea>
+                                            <div class="col-lg-6">
+                                                <label for="" class="control-label">Unidade</label>
+                                                <span> @{{units[viewingJob.unit_id].name}}</span>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button class='btn btn-default'  data-bs-dismiss="modal" v-on:click="closeObsModal">OK</button>
+                                        </div>
+                                        <div class="row margin-top-30">
+                                            <div class="col-lg-12">
+                                                <label for="" class="control-label">Vaga:</label>
+                                                <span> @{{viewingJob.name}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-30">
+                                            <div class="col-lg-12">
+                                                <label for="" class="control-label">Descrição:</label>
+                                                <span v-html='printDescription'></span>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-30">
+                                            <div class="col-lg-12">
+                                                <label for="" class="control-label">Atividades:</label>
+                                                <span v-html='printActivities'> </span>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-30">
+                                            <div class="col-lg-12">
+                                                <label for="" class="control-label">Requisitos:</label>
+                                                <span v-html='printRequired'> </span>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-30">
+                                            <div class="col-lg-12">
+                                                <label for="" class="control-label">Desejável:</label>
+                                                <span v-html='printDesirable'></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-    
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <label for="" class="control-label">Área</label>
-                                        <span> @{{fields[viewingJob.field_id].name}}</span>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <label for="" class="control-label">Unidade</label>
-                                        <span> @{{units[viewingJob.unit_id].name}}</span>
-                                    </div>
+                                <div class="modal-footer">
+                                    <button v-show="!isSubscribed(viewingJob.id)" class="btn btn-default" v-on:click="applyForJob(viewingJob.id)"> 
+                                        Inscrever-se na Vaga
+                                    </button>
+                                    <button v-show="isSubscribed(viewingJob.id)" class="btn btn-warning" v-on:click="cancelApplication(viewingJob.id)" > 
+                                        <i class="fa fa-check" style='margin-right:10px'></i>
+                                        Cancelar Inscrição
+                                    </button>
+                                    <button class="btn btn-danger" data-bs-dismiss="modal" v-on:click="closeModal">Fechar</button>
                                 </div>
-                                <div class="row margin-top-30">
-                                    <div class="col-lg-12">
-                                        <label for="" class="control-label">Vaga:</label>
-                                        <span> @{{viewingJob.name}}</span>
-                                    </div>
-                                </div>
-                                <div class="row margin-top-30">
-                                    <div class="col-lg-12">
-                                        <label for="" class="control-label">Descrição:</label>
-                                        <span> @{{viewingJob.description}}</span>
-                                    </div>
-                                </div>
-                                <div class="row margin-top-30">
-                                    <div class="col-lg-12">
-                                        <label for="" class="control-label">Atividades:</label>
-                                        <span> @{{viewingJob.activities}}</span>
-                                    </div>
-                                </div>
-                                <div class="row margin-top-30">
-                                    <div class="col-lg-12">
-                                        <label for="" class="control-label">Requisitos:</label>
-                                        <span> @{{viewingJob.required}}</span>
-                                    </div>
-                                </div>
-                                <div class="row margin-top-30">
-                                    <div class="col-lg-12">
-                                        <label for="" class="control-label">Desejável:</label>
-                                        <span> @{{viewingJob.desirable}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button v-show="!isSubscribed(viewingJob.id)" class="btn btn-default" v-on:click="applyForJob(viewingJob.id)"> 
-                                    Inscrever-se na Vaga
-                                </button>
-                                <button v-show="isSubscribed(viewingJob.id)" class="btn btn-warning" v-on:click="cancelApplication(viewingJob.id)" > 
-                                    <i class="fa fa-check" style='margin-right:10px'></i>
-                                    Cancelar Inscrição
-                                </button>
-                                <button class="btn btn-danger" data-bs-dismiss="modal" v-on:click="closeModal">Fechar</button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="blog-page-listing animatedParent animateOnce">
-                            @php $count=0 @endphp
-                            @foreach ($jobs as $job)
-                                @if($count<3)
-                                <div class="col-sm-6 col-md-4">
-                                    <article>
-                                        <div class="blog-page-post-wrapp animated">
-                                            @if(!empty($job->picture))
-                                                <img class="blog-page-post-img" src="{{ asset('/img/'.$job->picture) }}" alt="{{$job->name}}"/>
-                                            @endif
-                                            <h2 class="blog-page-post-head-h2"><a href="standard-gallery-post.html">{{$job->name}}</a></h2>
-                                            <ul class="blog_post_category">
-                                                <li><i class="fa fa-thumb-tack"></i></li>
-                                                <li><a href="#category">{{$job->field->name}}</a></li>
-                                            </ul>
-                                            <ul class="blog_post_tags">
-                                                <li><i class="fa fa-tags"></i></li>
-                                                @foreach($job->tags as $tag)
-                                                    <li><a href="#category">{{$tag->name}}</a></li>
-                                                @endforeach
-                                            </ul>
-                                            <div class="blog-page-post-content">
-                                                <p>{{$job->description}}</p>
-                                            </div>
-                                            <div class="blog-page-post-author">
-                                                <a href="#author-link" v-on:click="viewJob({{ $job->id }})">Inscreva-se</a>
-                                            </div>
-                                            <div class="blog-page-post-date">
-                                                <a href="#published">
-                                                    @if (!empty($job->created_at))
-                                                        {{date_format(DateTime::createFromFormat('Y-m-d H:i:s', $job->created_at),'m/Y')}}
-                                                    @endif
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </article>
-                                </div>
-                                @endif
-                                @php $count++ @endphp
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BLOG LISTING FOUR COLUMNS -->
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="blog-page-listing animatedParent animateOnce">
-                            @php $count=0 @endphp
-                            @foreach ($jobs as $job)
-                                @if($count>=3 && $count<7)
-                                    <div class="col-sm-6 col-md-3">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="blog-page-listing animatedParent animateOnce">
+                                @php $count=0 @endphp
+                                @foreach ($jobs as $job)
+                                    @if($count<3)
+                                    <div class="col-sm-6 col-md-4">
                                         <article>
                                             <div class="blog-page-post-wrapp animated">
                                                 @if(!empty($job->picture))
                                                     <img class="blog-page-post-img" src="{{ asset('/img/'.$job->picture) }}" alt="{{$job->name}}"/>
                                                 @endif
-                                                <h2 class="blog-page-post-head-h2"><a href="standard-gallery-post.html">{{$job->name}}</a></h2>
+                                                <h2 class="blog-page-post-head-h2"><a  href="#job" v-on:click="viewJob({{ $job->id }})">{{$job->name}}</a></h2>
                                                 <ul class="blog_post_category">
                                                     <li><i class="fa fa-thumb-tack"></i></li>
                                                     <li><a href="#category">{{$job->field->name}}</a></li>
@@ -468,10 +424,10 @@
                                                     @endforeach
                                                 </ul>
                                                 <div class="blog-page-post-content">
-                                                    <p>{{$job->description}}</p>
+                                                    <p>@php echo str_replace(["\r","\n","\r\n"],"<br>",$job->description)@endphp</p>
                                                 </div>
                                                 <div class="blog-page-post-author">
-                                                    <a href="#author-link" v-on:click="viewJob({{ $job->id }})">Inscreva-se</a>
+                                                    <a href="#job" v-on:click="viewJob({{ $job->id }})">Inscreva-se</a>
                                                 </div>
                                                 <div class="blog-page-post-date">
                                                     <a href="#published">
@@ -483,16 +439,65 @@
                                             </div>
                                         </article>
                                     </div>
-                                @endif
-                                @php $count++ @endphp
-                            @endforeach
-                            <div class="clearfix"></div>
+                                    @endif
+                                    @php $count++ @endphp
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            </section>
-            <!-- END BLOG SECTION -->
+                    <!-- BLOG LISTING FOUR COLUMNS -->
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="blog-page-listing animatedParent animateOnce">
+                                @php $count=0 @endphp
+                                @foreach ($jobs as $job)
+                                    @if($count>=3 && $count<7)
+                                        <div class="col-sm-6 col-md-3">
+                                            <article>
+                                                <div class="blog-page-post-wrapp animated">
+                                                    @if(!empty($job->picture))
+                                                        <img class="blog-page-post-img" src="{{ asset('/img/'.$job->picture) }}" alt="{{$job->name}}"/>
+                                                    @endif
+                                                    <h2 class="blog-page-post-head-h2"><a href="standard-gallery-post.html">{{$job->name}}</a></h2>
+                                                    <ul class="blog_post_category">
+                                                        <li><i class="fa fa-thumb-tack"></i></li>
+                                                        <li><a href="#category">{{$job->field->name}}</a></li>
+                                                    </ul>
+                                                    <ul class="blog_post_tags">
+                                                        <li><i class="fa fa-tags"></i></li>
+                                                        @foreach($job->tags as $tag)
+                                                            <li><a href="#category">{{$tag->name}}</a></li>
+                                                        @endforeach
+                                                    </ul>
+                                                    <div class="blog-page-post-content">
+                                                        <p>{{$job->description}}</p>
+                                                    </div>
+                                                    <div class="blog-page-post-author">
+                                                        <a href="#author-link" v-on:click="viewJob({{ $job->id }})">Inscreva-se</a>
+                                                    </div>
+                                                    <div class="blog-page-post-date">
+                                                        <a href="#published">
+                                                            @if (!empty($job->created_at))
+                                                                {{date_format(DateTime::createFromFormat('Y-m-d H:i:s', $job->created_at),'m/Y')}}
+                                                            @endif
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        </div>
+                                    @endif
+                                    @php $count++ @endphp
+                                @endforeach
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+                <!-- END BLOG SECTION -->
+
+            </div>
 
             <!-- SUBSCRIBE SECTION -->
             <div class="padding-top-bottom-60px white-background">

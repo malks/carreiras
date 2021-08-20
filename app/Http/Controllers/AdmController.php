@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Candidate;
+use App\Deficiency;
 use App\Banner;
 use App\AboutUs;
 use App\OurNumbers;
@@ -12,9 +13,12 @@ use App\Job;
 use App\Tag;
 use App\Unit;
 use App\Field;
+use App\User;
 use App\State;
 use App\Subscribed;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AdmController extends Controller
 {
@@ -27,7 +31,19 @@ class AdmController extends Controller
     }
 
     public function recruiting (Request $request){
-        return view('adm.recruiting');
+
+        $schooling_grades=[
+            'technology' => 'Tecnólogo',
+            'graduation' => 'Graduação',
+            'postgrad' => 'Pós Graduação',
+            'masters' => 'Mestrado',
+            'doctor' => 'Doutorado',
+            'phd' => 'PHD',
+        ];
+
+        return view('adm.recruiting')->with([
+            'schooling_grades'=>$schooling_grades,
+        ]);
     }
 
     public function addSubscriptionState(Request $request){
@@ -70,10 +86,10 @@ class AdmController extends Controller
             }
         })
         ->get()->toArray();*/
-
+        $directLikeDone=0;
+        $deepLikeDone=0;
         $data['jobs']=Job::orderBy('updated_at','desc')
-        ->when(!empty($request->filters['jobs']['direct']), function ($query) use ($request) {
-            $directLikeDone=0;
+        ->when(!empty($request->filters['jobs']['direct']), function ($query) use ($request,$directLikeDone) {
             foreach($request->filters['jobs']['direct'] as $type_filter=>$filter_data){
                 if ($type_filter=='like'){
                     foreach($filter_data as $key=>$value){
@@ -101,19 +117,19 @@ class AdmController extends Controller
                 $query->has($relation);
             }
         })
-        ->when(!empty($request->filters['jobs']['deep']), function ($query) use ($request) {
+        ->when(!empty($request->filters['jobs']['deep']), function ($query) use ($request,$deepLikeDone,$directLikeDone) {
+            $arr_deep_filters=[];
             foreach($request->filters['jobs']['deep'] as $relation=>$filters){
-                $deepLikeDone=0;
-                $query->with([$relation=>function ($inquery) use ($filters){
+                $arr_deep_filters[$relation]=function ($inquery) use ($filters,$deepLikeDone,$directLikeDone){
                     foreach($filters as $type_filter=>$filter_data){
                         if ($type_filter=='mustHave'){
                             $inquery->with(array_keys($filter_data));
                             foreach($filter_data as $deep_relation => $deep_filter){
-                                $inquery->whereHas($deep_relation, function ($subquery) use ($deep_filter){
+                                $inquery->whereHas($deep_relation, function ($subquery) use ($deep_filter,$deepLikeDone,$directLikeDone){
                                     foreach($deep_filter as $deep_filter_type => $deep_filter_data){
                                         if ($deep_filter_type=='like'){
                                             foreach($deep_filter_data as $key=>$value){
-                                                if ($value != "" && !$deepLikeDone){
+                                                if ($value != "" && !empty($deepLikeDone)){
                                                     $subquery->where($key,'like',"%".$value."%");
                                                     $deepLikeDone=1;
                                                 }
@@ -126,7 +142,7 @@ class AdmController extends Controller
                                                 if ($value != "")
                                                     $subquery->whereIn($key,$value);
                                             }
-                                        }            
+                                        }
                                     }
                                 });
                             }
@@ -134,12 +150,13 @@ class AdmController extends Controller
                         else {
                             if ($type_filter=='like'){
                                 foreach($filter_data as $key=>$value){
-                                    if ($value != "" && !$deepLikeDone){
+                                    if ($value != "" && !empty($deepLikeDone)){
                                         $inquery->where($key,'like',"%".$value."%");
                                         $deepLikeDone=1;
                                     }
-                                    else if ($value!="")
+                                    else if ($value!=""){
                                         $inquery->orWhere($key,'like',"%".$value."%");
+                                    }
                                 }
                             }
                             else if ($type_filter=='in'){
@@ -150,10 +167,11 @@ class AdmController extends Controller
                             }
                         }
                     }
-                }]);
-            }
+                };
+            };
+            $query->with($arr_deep_filters);
         })
-        ->with(['subscribers','tags','field','unit'])
+        ->with(['tags','subscribers','subscribers.interests','field','unit'])
         ->withCount('subscriptions as subscription_amount')
         ->get()->toArray();
 
@@ -169,13 +187,19 @@ class AdmController extends Controller
         return $banners;
     }
 
+    public function deleteBanner (Request $request){
+        $banner=Banner::where('id','=',$request['banner_id'])->delete();
+        return '';
+    }
+
     public function updateBanner (Request $request){
         $arr=$request->all();
         unset($arr['_token']);
         $banner_data=json_decode($arr['banner'],true);
-        $banner=Banner::where('id','=',$banner_data['id'])->first();
+        $banner = new Banner;
+        if (!empty($banner_data['id']))
+            $banner=Banner::where('id','=',$banner_data['id'])->first();
 
-        unset($banner_data['id']);
         foreach ($banner_data as $k=>$d){
             $banner->{$k}=$d;
         }
@@ -195,7 +219,9 @@ class AdmController extends Controller
         unset($arr['_token']);
         $banners=json_decode($arr['banners'],true);
         foreach ($banners as $a){
-            $banner=Banner::where('id','=',$a['id'])->first();
+            $banner = new Banner;
+            if (!empty($a['id']))
+                $banner=Banner::where('id','=',$a['id'])->first();
             unset($a['id']);
 
             foreach ($a as $k=>$d){
@@ -204,7 +230,7 @@ class AdmController extends Controller
 
             $banner->save();
         }
-		return "";
+		return '';
     }
 
     public function fieldsList (Request $request){
@@ -315,7 +341,21 @@ class AdmController extends Controller
     }
 
     public function usersList (Request $request){
-        $data=User::leftJoin('candidates','candidates.user_id','=','id')->whereNull('candidates.id')->get();
+        $logged_in=Auth::user();
+        $data=User::leftJoin('model_has_roles','model_has_roles.model_id','=','users.id')
+        ->where('model_has_roles.role_id','=','1')
+        ->when(!empty($request->search),function($query) use ($request) {
+            $query->where('name','like',"%$request->search%");
+            $query->orWhere('email','like',"%$request->search%");
+        })
+        ->paginate(15);
+        return view('adm.users.list')->with(
+            [
+                'data'=>$data,
+                'search'=>$request->search,
+                'logged_id'=>$logged_in->id,
+            ]
+        );
     }
 
     public function fieldsCreate (Request $request) {
@@ -413,9 +453,13 @@ class AdmController extends Controller
 
     public function jobsEdit ($id) {
         $data=Job::where('id','=',$id)->first();
+        $units=Unit::all();
+        $fields=Field::all();
         return view('adm.jobs.edit')->with(
             [
                 'data'=>$data,
+                'units'=>$units,
+                'fields'=>$fields,
             ]
         );
     }
@@ -431,6 +475,7 @@ class AdmController extends Controller
 
     public function candidatesEdit ($id) {
         $data=Candidate::where('id','=',$id)->first();
+        $deficiencies = Deficiency::all();
 
         $schooling_grades=[
             'technology' => 'Tecnólogo',
@@ -450,6 +495,7 @@ class AdmController extends Controller
         return view('adm.candidates.edit')->with(
             [
                 'data'=>$data,
+                'deficiencies'=>$deficiencies,
                 'schooling_grades'=>$schooling_grades,
                 'schooling_status'=>$schooling_status,
             ]
@@ -457,7 +503,7 @@ class AdmController extends Controller
     }
 
     public function usersEdit ($id) {
-        $data=Unit::where('id','=',$id)->first();
+        $data=User::where('id','=',$id)->first();
         return view('adm.users.edit')->with(
             [
                 'data'=>$data,
@@ -486,6 +532,8 @@ class AdmController extends Controller
     }
 
     public function tagsDestroy (Request $request) {
+        DB::table('jobs_tags')->whereIn('tag_id',explode(",",$request->ids))->delete();
+        DB::table('candidates_tags')->whereIn('tag_id',explode(",",$request->ids))->delete();
         Tag::whereIn('id',explode(",",$request->ids))->delete();
         return;
     }
@@ -497,6 +545,7 @@ class AdmController extends Controller
 
     public function usersDestroy (Request $request) {
         User::whereIn('id',explode(",",$request->ids))->delete();
+        DB::table('model_has_roles')->whereIn('model_id',explode(",",$request->ids))->delete();
         return;
     }
 
@@ -591,19 +640,23 @@ class AdmController extends Controller
     }
 
     public function usersSave (Request $request) {
-        $data=new User;
+        $user=new User; 
         $arr=$request->toArray();
         unset($arr['_token']);
 
         if(!empty($arr['id']))
-            $data=User::where('id','=',$arr['id'])->first();
+            $user=User::where('id','=',$arr['id'])->first();
 
         foreach ($arr as $k=>$value){
-            $data->{$k}=$value;
+            if ($k=='password' && empty($value))
+                continue;
+            else if ($k=='password')
+                $value=Hash::make($value);
+            $user->{$k}=$value;
         }
-        $data->save();
+        $user->save();
+        DB::table('model_has_roles')->insertOrIgnore([['role_id'=>1,'model_id'=>$user->id,'model_type'=>'App\User']]);
 		return redirect('/adm/users/');
-
     }
 
 }

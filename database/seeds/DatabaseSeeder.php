@@ -27,5 +27,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ExperienceSeeder::class);
         $this->call(SubscriptionSeeder::class);
         $this->call(StateSeeder::class);
+        $this->call(SeniorSyncSeeder::class);
     }
 }

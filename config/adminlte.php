@@ -234,6 +234,11 @@ return [
             'url'  => 'adm/config',
             'icon' => 'fas fa-tools',
         ],
+        [
+            'text' => 'Usuários do Sistema',
+            'url'  => 'adm/users',
+            'icon' => 'fas fa-user',
+        ],
         ['header' => 'GERENCIAR'],
         [
             'text' => 'Unidades',

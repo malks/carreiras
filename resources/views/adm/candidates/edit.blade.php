@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Edição de Área | Lunelli Carreiras')
+@section('title', 'Edição de Candidatos | Lunelli Carreiras')
 
 @section('content_header')
 @stop
@@ -48,6 +48,13 @@
                     <li class="nav-item">
                         <a class='nav-link' v-bind:class="{  active: isItMe('documents') }" v-on:click="currentTab='documents'" >Documentos</a>
                     </li>
+                    <li class="nav-item">
+                        <a class='nav-link' v-bind:class="{  active: isItMe('extra') }" v-on:click="currentTab='extra'" >Informações Adicionais</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class='nav-link' v-bind:class="{  active: isItMe('questionary') }" v-on:click="currentTab='questionary'" >Questionário de Seleção</a>
+                    </li>
+
                     <!--li class="nav-item">
                         <a  v-bind:class="nav-link { active: isItMe('candidate-data') }" v-on:click="currentTab='candidate-data'" href="#" tabindex="-1" aria-disabled="alwaysTrue">Disabled</a>
                     </li-->
@@ -137,7 +144,7 @@
                         <div class="row">
                             <div class=" col-sm-12 col-lg">
                                 <label for="data-dob">Data de Nascimento</label>
-                                <input type='text' class='form-control' id='data-dob' name='dob' value='{{$data->dob}}'/>
+                                <input type='date' class='form-control' id='data-dob' name='dob' value='{{$data->dob}}'/>
                             </div>
                             <div class=" col-sm-12 col-lg">
                                 <label for="data-civil-state">Estado Civil</label>
@@ -174,29 +181,80 @@
                                 <input type='text' class='form-control' id='data-weight' name='weight' value='{{$data->weight}}'/>
                             </div>
                         </div>
-    
+                        <div class="row margin-top-10">
+                            <div class=" col-sm-12 col-lg-8">
+                                <label for="data-foreigner">Estrangeiro?</label>
+                                <select class='form-control' id='foreigner' name='foreigner' >
+                                    <option value='1' @if($data->foreigner) selected @endif>Sim</option>
+                                    <option value='0'  @if(!$data->foreigner) selected @endif>Não</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-lg-4">
+                                <label for="data-arrival-date">Data de Chegada</label>
+                                <input type='date' class='form-control' id='data-arrival-date' name='arrival_date' value='{{$data->arrival_date}}'/>
+                            </div>
+                            <div class="col-sm-12 col-lg-4 margin-top-10">
+                                <label for="data-foreign-register">Registro de Estrangeiro</label>
+                                <input type='text' class='form-control' id='data-foreign-register' name='foreign_register' value='{{$data->foreign_register}}'/>
+                            </div>
+                            <div class="col-sm-12 col-lg-4 margin-top-10">
+                                <label for="data-foreign-emitter">Orgão Emissor</label>
+                                <input type='text' class='form-control' id='data-foreign-emitter' name='foreign_emitter' value='{{$data->foreign_emitter}}'/>
+                            </div>
+                            <div class="col-sm-12 col-lg-4 margin-top-10">
+                                <label for="data-visa-expiration">Validade do Visto</label>
+                                <input type='date' class='form-control' id='data-visa-expiration' name='visa_expiration' value='{{$data->visa_expiration}}'/>
+                            </div>                                    
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class=" col-sm-12 col-lg-4">
+                                <label for="data-deficiency">Apresenta deficiencia?</label>
+                                <select class='form-control' id='deficiency' name='deficiency' >
+                                    <option value='1' @if($data->deficiency) selected @endif>Sim</option>
+                                    <option value='0'  @if(!$data->deficiency) selected @endif>Não</option>
+                                </select>
+                            </div>
+                            <div class=" col-sm-12 col-lg-4">
+                                <label for="data-deficiency-id">Tipo de deficiencia</label>
+                                <select class='form-control' id='data-deficiency-id' name='deficiency_id'>
+                                    @foreach($deficiencies as $deficiency)
+                                        <option value='{{$deficiency->id}}' @if($data->deficiency_id==$deficiency->id) selected @endif>{{$deficiency->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-lg-4">
+                                <label for="data-cid">CID</label>
+                                <input type='text' class='form-control' id='data-cid' name='cid' value='{{$data->cid}}'/>
+                            </div>
+
+                        </div>
                     </div>
     
                     <div class='tab-pane fade'   v-bind:class="{ active: isItMe('family-data') , show: isItMe('family-data') }" id="family-data">
                         <div class="row margin-top-30">
                             <div class="col"><h6>Conjuge e Filhos</h6></div>
                         </div>
-
                         <div class="row">
-                            <div class=" col-sm-12 col-lg">
+                            <div class=" col-sm-12 col-lg-6">
                                 <label for="data-spouse-name">Nome do Conjuge</label>
                                 <input type='text' class='form-control' id='data-spouse-name' name='spouse_name' value='{{$data->spouse_name}}'/>
                             </div>
-                            <div class=" col-sm-12 col-lg">
+                            <div class=" col-sm-12 col-lg-6">
+                                <label for="data-spouse-job">Profissão do Conjuge</label>
+                                <input type='text' class='form-control' id='data-spouse-job' name='spouse_job' value='{{$data->spouse_job}}'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class=" col-sm-12 col-lg-6">
                                 <label for="data-children-amount">Numero de Filhos</label>
                                 <input type='text' class='form-control' id='data-children-amount' name='children_amount' value='{{$data->children_amount}}'/>
                             </div>
-                            <div class=" col-sm-12 col-lg">
+                            <div class=" col-sm-12 col-lg-6">
                                 <label for="data-children-age">Idades dos Filhos</label>
                                 <input type='text' class='form-control' id='data-children-age' name='children_age' value='{{$data->children_age}}'  placeholder='10,11,12...'/>
                             </div>
                         </div>
-                        <div class="row margin-top-10">
+                <div class="row margin-top-10">
                             <div class=" col-sm-12 col-lg">
                                 <label for="data-children-location">Onde ficarão os fihos durante o trabalho?</label>
                                 <input type='text' class='form-control' id='data-children-location' name='children_location' value='{{$data->children_location}}'/>
@@ -213,7 +271,7 @@
                             </div>
                             <div class=" col-sm-12 col-lg">
                                 <label for="data-father-dob">Data de nascimento do Pai</label>
-                                <input type='text' class='form-control' id='data-father-dob' name='father_dob' value='{{$data->father_dob}}'/>
+                                <input type='date' class='form-control' id='data-father-dob' name='father_dob' value='{{$data->father_dob}}'/>
                             </div>
                         </div>
                         <div class="row margin-top-10">
@@ -223,7 +281,7 @@
                             </div>
                             <div class=" col-sm-12 col-lg">
                                 <label for="data-mother-dob">Data de nascimento da Mãe</label>
-                                <input type='text' class='form-control' id='data-mother-dob' name='mother_dob' value='{{$data->mother_dob}}'/>
+                                <input type='date' class='form-control' id='data-mother-dob' name='mother_dob' value='{{$data->mother_dob}}'/>
                             </div>
                         </div>
                     </div>
@@ -323,36 +381,31 @@
                     </div>
                     
                     <div class='tab-pane fade' v-bind:class="{ active: isItMe('documents') , show: isItMe('documents') }" id="documents">
-                        <div class="row margin-top-30">
-                            <div class="col"><h6>Documentação</h6></div>
-                        </div>
 
                         <div class="row margin-top-10">
-                            <div class=" col-sm-12 col-lg-6">
+                            <div class=" col-sm-12 col-lg-4">
                                 <label for="data-cpf">CPF</label>
                                 <input type='text' class='form-control' id='data-cpf' name='cpf' value='{{$data->cpf}}'/>
                             </div>
-                            <div class=" col-sm-12 col-lg-6">
+                            <div class=" col-sm-12 col-lg-4">
                                 <label for="data-work-card">Carteira de Trabalho</label>
                                 <input type='text' class='form-control' id='data-work-card' name='work_card' value='{{$data->work_card}}'/>
                             </div>
-                        </div>
-                        <div class="row margin-top-10">
-                            <div class=" col-sm-12 col-lg-6">
+                            <div class=" col-sm-12 col-lg-4">
                                 <label for="data-serie">Serie</label>
                                 <input type='text' class='form-control' id='data-serie' name='serie' value='{{$data->serie}}'/>
                             </div>
-                            <div class=" col-sm-12 col-lg-6">
-                                <label for="data-serie">PIS</label>
-                                <input type='text' class='form-control' id='data-serie' name='serie' value='{{$data->serie}}'/>
-                            </div>
                         </div>
                         <div class="row margin-top-10">
-                            <div class=" col-sm-12 col-lg-6">
+                            <div class=" col-sm-12 col-lg-4">
+                                <label for="data-pis">PIS</label>
+                                <input type='text' class='form-control' id='data-pis' name='serie' value='{{$data->serie}}'/>
+                            </div>
+                            <div class=" col-sm-12 col-lg-4">
                                 <label for="data-rg">RG</label>
                                 <input type='text' class='form-control' id='data-rg' name='rg' value='{{$data->rg}}'/>
                             </div>
-                            <div class=" col-sm-12 col-lg-6">
+                            <div class=" col-sm-12 col-lg-4">
                                 <label for="data-rg-emitter">Órgão Expedidor</label>
                                 <input type='text' class='form-control' id='data-rg-emitter' name='rg_emitter' value='{{$data->rg_emitter}}'/>
                             </div>
@@ -368,12 +421,226 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="tab-pane fade" v-bind:class="{ active: isItMe('extra') , show: isItMe('extra') }" id="extra">
+
+                        <div class="row margin-top-10">
+                            <div class=" col-sm-12">
+                                <label for="data-interests">Interesses</label>
+                                <ul style='list-style-type:none;  height: 150px;width: 100%;padding: 0px;'>
+                                    @foreach($data->interests as $interest)
+                                        <li style='float:left;margin-left:15px;'>
+                                            {{$interest['name']}}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="row margin-top-30">
+                            <div class=" col-sm-12">
+                                <label for="data-skills">Habilidades</label>
+                                <textarea name="skills" id="data-skills"  style='width: 100%;border-radius: 5px;height:150px;'></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="row margin-top-30">
+                            <div class=" col-sm-12">
+                                <label for="data-others">Outros</label>
+                                <textarea name="others" id="data-others"  style='width: 100%;border-radius: 5px;height:150px;'></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class='tab-pane fade padding-top-10'  v-bind:class="{ active: isItMe('questionary'), show: isItMe('questionary') }" id="questionary">
+                        <div class="row margin-top-20">
+                            <div class="col-lg-4">
+                                <label for="data-worked-earlier-at-lunelli">1. Trabalhou anteriormente na Lunelli?</label>
+                                <select class='form-control'  name='worked_earlier_at_lunelli' id='data-worked-earlier-at-lunelli'>
+                                    <option value="0" @if($data->worked_earlier_at_lunelli==0) selected @endif>Não</option>
+                                    <option value="1" @if($data->worked_earlier_at_lunelli==1) selected @endif>Sim</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="data-worked-earlier-at-lunelli-period-start">1.a. Início</label>
+                                <input class='form-control' type='date' value="{{$data->lunelli_earlier_work_period_start}}" name='lunelli_earlier_work_period_start' id='data-lunelli-earlier-work-period-start'/>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="data-worked-earlier-at-lunelli-period-end">1.b. Fim</label>
+                                <input class='form-control' type='date' value="{{$data->lunelli_earlier_work_period_end}}" name='lunelli_earlier_work_period_end' id='data-worked-earlier-at-lunelli-period-end'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-6">
+                                <label for="data-time-living-in-sc">2. Há quanto tempo vive em Santa Catarina?</label>
+                                <input class='form-control' type='text' value="{{$data->time_living_in_sc}}" name='time_living_in_sc' id='data-time-living-in-sc'/>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="data-cities-lived-before">3. Em que cidades viveu anteriormente?</label>
+                                <input class='form-control' type='text' value="{{$data->cities_lived_before}}" name='cities_lived_before' id='data-cities-lived-before'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-6">
+                                <label for="data-living-with">4. Mora com Quem?</label>
+                                <input class='form-control' type='text' value="{{$data->living_with}}" name='living_with' id='data-living-with'/>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="data-living-with-professions">5. Qual a profissão das pessoas que moram com você?</label>
+                                <input class='form-control' type='text' value="{{$data->living_with_professions}}" name='living_with_professions' id='data-living-with-professions'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <label for="data-work-commute">6. Como pretende se deslocar até a empresa?</label>
+                                <input class='form-control' type='text' value="{{$data->work_commute}}" name='work_commute' id='data-work-commute'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-4">
+                                <label for="data-last-time-doctor">7. Quando foi pela última vez ao médico?</label>
+                                <input class='form-control' type='date' value="{{$data->last_time_doctor}}" name='last_time_doctor' id='data-last-time-doctor'/>
+                            </div>
+                            <div class="col-lg-8">
+                                <label for="data-last-time-doctor-reason">7.a. Qual foi o motivo?</label>
+                                <input class='form-control' type='text' value="{{$data->last_time_doctor_reason}}" name='last_time_doctor_reason' id='data-last-time-doctor-reason'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-4">
+                                <label for="data-surgery">8. Ja passou por alguma cirurgia?</label>
+                                <select class='form-control' name='surgery' id='data-surgery'>
+                                    <option value="0" @if($data->surgery==0) selected @endif>Não</option>
+                                    <option value="1" @if($data->surgery==1) selected @endif>Sim</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="data-surgery-reason">8.a. Qual foi o motivo?</label>
+                                <input class='form-control' type='text' value="{{$data->surgery_reason}}" name='surgery_reason' id='data-surgery-reason'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-4">
+                                <label for="data-hospitalized">9. Já ficou internado(a) por algum motivo?</label>
+                                <select class='form-control'  name='hospitalized' id='data-hospitalized'>
+                                    <option value="0" @if($data->hospitalized==0) selected @endif>Não</option>
+                                    <option value="1" @if($data->hospitalized==1) selected @endif>Sim</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-8">
+                                <label for="data-hospitalized-reason">9.a. Qual foi o motivo? Quanto Tempo?</label>
+                                <input class='form-control' type='text' value="{{$data->hospitalized_reason}}" name='hospitalized_reason' id='data-hospitalized-reason'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-4">
+                                <label for="data-work-accident">10. Já sofreu acidente de trabalho? </label>
+                                <select class='form-control'  name='work_accident' id='data-work-accident'>
+                                    <option value="0" @if($data->work_accident==0) selected @endif>Não</option>
+                                    <option value="1" @if($data->work_accident==1) selected @endif>Sim</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-8">
+                                <label for="data-work-accident-where">10.a. Quando e qual empresa?</label>
+                                <input class='form-control' type='text' value="{{$data->work_accident_where}}" name='work_accident_where' id='data-work-accident-where'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <label for="data-positive-personal-characteristics">11. Cite características pessoais que você considera positivas: </label>
+                                <input class='form-control' type='text'value="{{$data->positive_personal_characteristics}}" name='positive_personal_characteristics' id='data-positive-personal-characteristics'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <label for="data-personal-aspects-for-betterment">12. Cite aspectos pessoais que você acredita que poderiam ser melhorados: </label>
+                                <input class='form-control' type='text' value="{{$data->personal_aspects_for_betterment}}" name='personal_aspects_for_betterment' id='data-personal-aspects-for-betterment'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <label for="data-lunelli-family">13. Possui parentes ou conhecidos que trabalham na Lunelli? Informe o nome:</label>
+                                <input class='form-control' type='text'  value="{{$data->lunelli_family}}" name='lunelli_family' id='data-lunelli-family'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <label for="data-pretended-salary">14. Pretensão salarial (mensal) em reais:</label>
+                                <input class='form-control' type='text' value="{{$data->pretended_salary}}" name='pretended_salary' id='data-pretended-salary'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-4">
+                                <label for="data-worked-without-ctp">15. Já trabalhou sem registro em carteira?</label>
+                                <select class='form-control'  name='worked_without_ctp' id='data-worked-without-ctp'>
+                                    <option value="0" @if($data->worked_without_ctp==0) selected @endif>Não</option>
+                                    <option value="1" @if($data->worked_without_ctp==1) selected @endif>Sim</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="data-worked-without-ctp">15.a. Onde?</label>
+                                <input class='form-control' type='text' value="{{$data->worked_without_ctp_job}}" name='worked_without_ctp_job' id='data-worked-without-ctp-job'/>
+                            </div>
+                            <div class="col-lg-4
+                            ">
+                                <label for="data-worked-without-ctp">15.b. Quanto tempo?</label>
+                                <input class='form-control' type='text' value="{{$data->worked_without_ctp_how_long}}" name='worked_without_ctp_how_long' id='data-worked-without-ctp-how-long'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-4">
+                                <label for="data-previous-work-legal-action">16. Possui alguma questão trabalhista?</label>
+                                <select class='form-control' type='text' name='previous_work_legal_action' id='data-previous-work-legal-action'>
+                                    <option value="0" @if($data->previous_work_legal_action==1) selected @endif>Não</option>
+                                    <option value="1" @if($data->previous_work_legal_action==1) selected @endif>Sim</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="data-previous-work-legal-action-business">16.a. Com qual empresa?</label>
+                                <input class='form-control' type='text' value="{{$data->previous_work_legal_action_business}}" name='previous_work_legal_action_business' id='data-previous-work-legal-action-business'/>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="data-previous-work-legal-action-reason">16.b. Qual o motivo?</label>
+                                <input class='form-control' type='text' value="{{$data->previous_work_legal_action_reason}}" name='previous_work_legal_action_reason' id='data-previous-work-legal-action-reason'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <label for="data-professional-dream">17. Qual o seu sonho profissional?</label>
+                                <input class='form-control' type='text' value="{{$data->professional_dream}}" name='professional_dream' id='data-professional-dream'/>
+                            </div>
+                            <!--div class="col-lg-12">
+                                <label for="data-personal-dream">Qual o seu sonho pessoal?</label>
+                                <input class='form-control' type='text' name='personal_dream' id='data-personal-dream'/>
+                            </div-->
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <label for="data-who-are-you">18. Resumidamente escreva quem é você:</label>
+                                <input class='form-control' type='text' value="{{$data->who_are_you}}" name='who_are_you' id='data-who-are-you'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <label for="data-professional-motivation">19. O que o motiva profissionalmente?</label>
+                                <input class='form-control' type='text' value="{{$data->professional_motivation}}" name='professional_motivation' id='data-professional-motivation'/>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
+                            <div class="col-lg-12">
+                                <label for="data-what-irritates-you">20. O que o irrita?</label>
+                                <input class='form-control' value="{{$data->what_irritates_you}}" type='text' name='what_irritates_you' id='data-what-irritates-you'/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
                     <div class="row margin-top-10">
-                        <div class=" col-sm-12 col-lg">
+                        <!--div class=" col-sm-12 col-lg">
                             <div class=" col-sm-12 col-lg">
                                 <a href='{{$data->cv}}' target='_blank'>Ver Curriculum Atualizado</a>
                             </div>
-                        </div>
+                        </div-->
                     </div>
                 </div>
 			</div>

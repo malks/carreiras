@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Edição de Área | Lunelli Carreiras')
+@section('title', 'Edição de Unidades | Lunelli Carreiras')
 
 @section('content_header')
 @stop

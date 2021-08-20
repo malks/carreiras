@@ -9,12 +9,12 @@ class Experience extends Model
 {
     protected $table='experience';
 
-
+/*
     protected $casts = [
         'admission' => 'datetime:d/m/Y',
         'demission' => 'datetime:d/m/Y',
     ];
-
+*/
 
     public function setAdmissionAttribute($value)
     {

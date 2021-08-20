@@ -3745,6 +3745,7 @@ return array(
     'SebastianBergmann\\Type\\UnknownType' => $vendorDir . '/sebastian/type/src/UnknownType.php',
     'SebastianBergmann\\Type\\VoidType' => $vendorDir . '/sebastian/type/src/VoidType.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
+    'SeniorSyncSeeder' => $baseDir . '/database/seeds/SeniorSyncSeeder.php',
     'Spatie\\Permission\\Commands\\CacheReset' => $vendorDir . '/spatie/laravel-permission/src/Commands/CacheReset.php',
     'Spatie\\Permission\\Commands\\CreatePermission' => $vendorDir . '/spatie/laravel-permission/src/Commands/CreatePermission.php',
     'Spatie\\Permission\\Commands\\CreateRole' => $vendorDir . '/spatie/laravel-permission/src/Commands/CreateRole.php',

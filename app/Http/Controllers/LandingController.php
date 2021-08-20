@@ -20,6 +20,7 @@ use App\Subscriber;
 use App\Field;
 use App\Unit;
 use App\State;
+use App\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,7 @@ class LandingController extends Controller
 
         $start_date=Carbon::parse(Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d H:i:s'))->setTimezone('UTC');
         $final_date=Carbon::parse(Carbon::now('America/Sao_Paulo')->endOfDay()->format('Y-m-d H:i:s'))->setTimezone('UTC');
+        $today=Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
 
         $banners=Banner::where('active_from','<=',$start_date)->where('active_to','>=',$final_date)->orderBy('order','asc')->get();
         $fields=Field::all();
@@ -57,7 +59,7 @@ class LandingController extends Controller
 
         $video = Video::where('active','=',1)->first();
 
-        $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
+        $jobs = Job::where('status','=',1)->where('start','<=',$today)->where('end','>=',$today)->with(['tags','field'])->orderBy('created_at','desc')->get();
         return view('welcome')->with(
             [
                 'banners'=>$banners,
@@ -87,8 +89,9 @@ class LandingController extends Controller
 
     public function profile(){
         $logged_in=Auth::user();
-        $data=Candidate::where('user_id','=',$logged_in->id)->with(['Schooling','Experience'])->first();
+        $data=Candidate::where('user_id','=',$logged_in->id)->with(['Schooling','Experience','interests'])->first();
         $deficiencies = Deficiency::all();
+        $tags = Tag::all();
         $schooling_grades=[
             'technology' => 'Tecnólogo',
             'technician' => 'Técnico',
@@ -117,6 +120,7 @@ class LandingController extends Controller
         }
         
         return view('profile')->with([
+            'tags'=>$tags,
             'data'=>$data,
             'logged_in'=>$logged_in,
             'deficiencies'=>$deficiencies,
@@ -130,6 +134,44 @@ class LandingController extends Controller
         $dados=$request->input();
         $logged_in=Auth::user();
 
+/*
+
+Titulos de campos de questionario para sincronizar com senior
+
+$arr['worked_earlier_at_lunelli']="1. Trabalhou anteriormente na Lunelli?";
+$arr['lunelli_earlier_work_period_start']="1.a. Início";
+$arr['lunelli_earlier_work_period_end']="1.b. Fim";
+$arr['time_living_in_sc']="2. Há quanto tempo vive em Santa Catarina?";
+$arr['cities_lived_before']="3. Em que cidades viveu anteriormente?";
+$arr['living_with']="4. Mora com Quem?";
+$arr['living_with_professions']="5. Qual a profissão das pessoas que moram com você?";
+$arr['spouse_job']="6. Como pretende se deslocar até a empresa?";
+$arr['last_time_doctor']="7. Quando foi pela última vez ao médico?";
+$arr['last_time_doctor_reason']="7.a. Qual foi o motivo?";
+$arr['surgery']="8. Ja passou por alguma cirurgia?";
+$arr['surgery_reason']="8.a. Qual foi o motivo?";
+$arr['hospitalized']="9. Já ficou internado(a) por algum motivo?";
+$arr['hospitalized_reason']="9.a. Qual foi o motivo? Quanto Tempo?";
+$arr['work_accident']="10. Já sofreu acidente de trabalho? ";
+$arr['work_accident_where']="10.a. Quando e qual empresa?";
+$arr['positive_personal_characteristics']="11. Cite características pessoais que você considera positivas: ";
+$arr['personal_aspects_for_betterment']="12. Cite aspectos pessoais que você acredita que poderiam ser melhorados: ";
+$arr['lunelli_family']="13. Possui parentes ou conhecidos que trabalham na Lunelli? Informe o nome:";
+$arr['pretended_salary']="14. Pretensão salarial (mensal) em reais:";
+$arr['worked_without_ctp']="15. Já trabalhou sem registro em carteira?";
+$arr['worked_without_ctp_job']="15.a. Onde?";
+$arr['worked_without_ctp_how_long']="15.b. Quanto tempo?";
+$arr['previous_work_legal_action']="16. Possui alguma questão trabalhista?";
+$arr['previous_work_legal_action_business']="16.a. Com qual empresa?";
+$arr['previous_work_legal_action_reason']="16.b. Qual o motivo?";
+$arr['professional_dream']="17. Qual o seu sonho profissional?";
+$arr['who_are_you']="18. Resumidamente escreva quem é você:";
+$arr['professional_motivation']="19. O que o motiva profissionalmente?";
+$arr['what_irritates_you']="20. O que o irrita?";
+
+*/
+
+
         if (!empty($dados['id']))
             $candidate=Candidate::where('id','=',$dados['id'])->first();
         else
@@ -139,6 +181,7 @@ class LandingController extends Controller
         $excluded_schoolings=json_decode($dados['excluded_schoolings'],true);
         $experiences=json_decode($dados['experiences'],true);
         $excluded_experiences=json_decode($dados['excluded_experiences'],true);
+        $interests=json_decode($dados['interests'],true);
 
         Schooling::whereIn('id',$excluded_schoolings)->delete();
         Experience::whereIn('id',$excluded_experiences)->delete();
@@ -150,11 +193,25 @@ class LandingController extends Controller
         unset($dados['experiences']);
         unset($dados['excluded_experiences']);
         unset($dados['experience']);
+        unset($dados['interests']);
         foreach($dados as $k => $d){
             $candidate->{$k}=$d;
         }
         $candidate->user_id=$logged_in->id;
         $candidate->save();
+
+        DB::table('candidates_tags')->where('candidate_id','=',$candidate->id)->delete();
+        foreach($interests as $interest){
+            if (empty($interest['id']) || $interest['id']=='null' || $interest['id']==null){
+                $tag = new Tag;
+                $tag->name=strtolower($interest['name']);
+                $tag->save();
+            }
+            else {
+                $tag=Tag::where('id','=',$interest['id'])->first();
+            }
+            DB::table('candidates_tags')->insert(['candidate_id'=>$candidate->id,'tag_id'=>$tag->id]);
+        }
 
         foreach ($schoolings as $schooling_data){
             if (!empty($schooling_data['id']))
@@ -207,7 +264,10 @@ class LandingController extends Controller
         }
         else
             $subscriptions = Array();
-        $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
+
+        $today=Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
+
+        $jobs = Job::where('status','=',1)->where('start','<=',$today)->where('end','>=',$today)->with(['tags','field'])->orderBy('created_at','desc')->get();
         $fields = Field::get();
         $units = Unit::get();
         $user_id=0;

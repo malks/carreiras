@@ -1,23 +1,24 @@
 @extends('adminlte::page')
 
-@section('title', 'Vagas | Lunelli Carreiras')
+@section('title', 'Usuários | Lunelli Carreiras')
 
 @section('content_header')
 @stop
 
 <input type='hidden' id='full-data' value='@php echo json_encode($data->toArray()['data']);@endphp'/>
+<input type='hidden' id='logged-id' value='@php echo json_encode($logged_id);@endphp'/>
 
 @section('content')
-	<form method='GET' action='/adm/jobs' id='app'>
+	<form method='GET' action='/adm/users' id='app'>
 		@csrf
-	    <div class="card" check-jobs-list>
+	    <div class="card" check-users-list>
 	    	<div class='card-header'>
-	    		<h5>Vagas</h5>
+	    		<h5>Usuários</h5>
 	    	</div>
 	        <div class="card-body">
 	        	<div class='row'>
 	        		<div class="col-1">
-	        			<a class="btn btn-primary" id='new' href='/adm/jobs/create'>Nova</a>
+	        			<a class="btn btn-primary" id='new' href='/adm/users/create'>Nova</a>
 	        		</div>
 	        		<div class="col-1">
 	        			<button class="btn btn-secondary" id='edit' v-on:click='edit()' type='button' v-bind:disabled='canEdit'>Editar</button>
@@ -38,9 +39,8 @@
 			        		<thead>
 			        			<tr>
 									<th style='width:40px;'><input type='checkbox' id='check-all' v-on:click='reverseSelection()'></th>
-			        				<th>Id</th>
 			        				<th>Nome</th>
-			        				<th>Status</th>
+			        				<th>Email</th>
 			        			</tr>
 			        		</thead>
 			        		<tbody>
@@ -51,9 +51,8 @@
 									<tr class='hoverable' v-on:click='addItem({{$d->id}})' > 
 										<td style='width:40px;' for='data-check-{{$d->id}}' class='checker'>
 											<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
-										<td>{{$d->id}}</td>
 										<td>{{$d->name}}</td>
-										<td>{{($d->status) ? "Ativa" : "Inativa"}}</td>
+										<td>{{$d->email}}</td>
 									</tr>
 								@endforeach
 							</tbody>
