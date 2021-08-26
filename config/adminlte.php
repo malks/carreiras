@@ -230,6 +230,11 @@ return [
             'topnav' => true,
         ],
         [
+            'text' => 'Página Inicial',
+            'url'  => '/',
+            'icon' => 'fas fa-external-link-alt',
+        ],
+        [
             'text' => 'Configurações',
             'url'  => 'adm/config',
             'icon' => 'fas fa-tools',

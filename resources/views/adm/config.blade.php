@@ -15,23 +15,23 @@
 
         <div class="card-body">
             <div class="row">
-                <div class="col-xs-12 col-5">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
                     <div class="row">
                         <div class="col-12">
-                            <label class='label-form'>
+                            <h5>
                                 Banners
-                            </label>
+                            </h5>
                             <div class="row">
-                                <div class="col-2">
+                                <div class="col-lg-2 col-sm-6">
                                     <button class="btn btn-secondary" v-on:click='addBanner' >Novo</button>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-lg-2 col-sm-6">
                                     <button class="btn btn-primary" v-on:click='saveBanners' :disabled='saving'>@{{ savingText }}</button>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-lg-2 col-sm-6">
                                     <button class="btn btn-info" v-on:click='editBanner' :disabled='canEdit'>Editar</button>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-lg-2 col-sm-6">
                                     <button class="btn btn-danger" v-on:click='deleteBanner' :disabled='canEdit'>Excluir</button>
                                 </div>
                             </div>
@@ -46,9 +46,173 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row margin-top-50">
+                        <div class="col-12">
+                            <h5>
+                                Sobre Nós
+                            </h5>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class='btn btn-primary' :disabled='saving' v-on:click="saveOtherConf('about_us')">Salvar</button>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Título</label>
+                                    <input type="text" class="form-control" v-model='otherConf.about_us.title'>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Fundo do Título</label>
+                                    <input type="text" class="form-control" v-model='otherConf.about_us.background_title'>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Depoimento</label>
+                                    <textarea type="text" class="form-control" v-model='otherConf.about_us.testimonial'></textarea>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Autor Depoimento</label>
+                                    <input type="text" class="form-control" v-model='otherConf.about_us.testimonial_author'>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Foto do Autor do Depoimento</label><br>
+                                    <img id='testimonial-author-pic' class='config-block-image' src="" alt="" ><br>
+                                    <label for="" class='label-form margin-top-20'>Alterar Foto:</label><br>
+                                    <input type="file" class="form-control" name='testimonial_author_picture' id='testimonial-author-picture' v-on:change="updateTestimonialAuthorPicture">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row margin-top-50">
+                        <div class="col-12">
+                            <h5>
+                                Nossos Números
+                            </h5>
+                            <div class="row">
+                                <div class="col-3">
+                                    <button class="btn btn-secondary" v-on:click="addNumber">Adicionar</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-primary" :disabled='saving' v-on:click="saveOtherConf('our_numbers')">Salvar</button>
+                                </div>
+                                <template v-for='(numbers,idx) in otherConf.our_numbers'>
+                                    <div class="col-12 margin-top-20" v-show='showNumber(idx)'>
+                                        <div class="col-12">
+                                            <hr>
+                                            <button class="btn btn-danger" v-on:click="if (confirm('Tem certeza?')) removeNumber(idx)">Remover</button>
+                                        </div>    
+                                        <div class="col-12 margin-top-10">
+                                            <label class='label-form' for="">Título</label>
+                                            <input type="text" class="form-control" v-model='numbers.title'>
+                                        </div>
+                                        <div class="col-12 margin-top-10">
+                                            <label class='label-form' for="">Valor</label>
+                                            <input type="text" class="form-control" v-model='numbers.number'>
+                                        </div>
+                                        <div class="col-6 margin-top-10">
+                                            <label class='label-form' for="">Ativo de</label>
+                                            <input type="date" class="form-control" v-model='numbers.active_from'>
+                                        </div>
+                                        <div class="col-6 margin-top-10">
+                                            <label class='label-form' for="">Ativo até</label>
+                                            <input type="date" class="form-control" v-model='numbers.active_to'>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row margin-top-50">
+                        <div class="col-12">
+                            <h5>
+                                Nosso Time
+                            </h5>
+                            <div class="row">
+                                <div class="col-3">
+                                    <button class="btn btn-secondary" v-on:click="addTeam">Adicionar</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-primary" :disabled='saving' v-on:click="saveOtherConf('our_team')">Salvar</button>
+                                </div>
+                                <template v-for='(member,idx) in otherConf.our_team'>
+                                    <div class="col-12 margin-top-20" v-show='showTeam(idx)'>
+                                        <div class="col-12">
+                                            <hr>
+                                            <button class="btn btn-danger" v-on:click="if (confirm('Tem certeza?')) removeTeam(idx)">Remover</button>
+                                        </div>    
+                                        <div class="col-12 margin-top-10">
+                                            <label class='label-form' for="">Nome</label>
+                                            <input type="text" class="form-control" v-model='member.name'>
+                                        </div>
+                                        <div class="col-12 margin-top-10">
+                                            <label class='label-form' for="">Cargo</label>
+                                            <input type="text" class="form-control" v-model='member.job'>
+                                        </div>
+                                        <div class="col-12 margin-top-10">
+                                            <label class='label-form' for="">Depoimento</label>
+                                            <input type="text" class="form-control" v-model='member.testimonial'>
+                                        </div>
+                                        <div class="col-6 margin-top-10">
+                                            <label class='label-form' for="">Ativo de</label>
+                                            <input type="date" class="form-control" v-model='member.active_from'>
+                                        </div>
+                                        <div class="col-6 margin-top-10">
+                                            <label class='label-form' for="">Ativo até</label>
+                                            <input type="date" class="form-control" v-model='member.active_to'>
+                                        </div>
+                                        <div class="col-12 margin-top-10">
+                                            <label class='label-form' for="">Foto</label><br>
+                                            <img class='config-block-image' :src="member.picture" alt=""><br>
+                                            <label class='label-form' for="" class='margin-top-20'>Alterar Foto:</label><br>
+                                            <input type="file" :id="'team-pic-picker-'+idx" class="form-control team-pic-picker" v-on:change="updateTeamPic(idx)">
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row margin-top-50">
+                        <div class="col-12">
+                            <h5>
+                                Video
+                            </h5>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class='btn btn-primary' :disabled='saving' v-on:click="saveOtherConf('video')">Salvar</button>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Título</label>
+                                    <input type="text" class="form-control" v-model='otherConf.video.title'>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Fundo do Título</label>
+                                    <input type="text" class="form-control" v-model='otherConf.video.title_background'>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Capa</label><br>
+                                    <img class='config-block-image'  id='video-pic' src="" alt=""><br>
+                                    <label class='label-form' for="" class='margin-top-20'>Alterar Foto:</label><br>
+                                    <input type="file" class="form-control" name='video_picture' id='video-picture' v-on:change="updateVideoPicture">
+
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Ativo</label>
+                                    <select name="" id="" class="form-control" v-model='otherConf.video.active'>
+                                        <option value="0">Não</option>
+                                        <option value="1">Sim</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 margin-top-10">
+                                    <label class='label-form' for="">Link</label><br>
+                                    <small>Links do youtube precisam conter /embed/ na URL logo depois do domínio, antes da chave do video e outros parametros</small><br>
+                                    <input type="text" class="form-control margin-top-10" v-model='otherConf.video.file'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
                 </div>
-                <div class="col-xs-12 col-7 pull-right">
-                    <iframe height="600px" width='100%' src="/" frameborder="0" id='banner-iframe'></iframe>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7 pull-right">
+                    <h5>Visão da Home</h5>
+                    <iframe height="1200px" width='100%' src="/" frameborder="0" id='banner-iframe' style='border:2px solid black;padding:5px;'></iframe>
                 </div>
             </div>
         </div>
@@ -63,53 +227,63 @@
                     <div class="modal-body">
                         <form id='banner-form' action="/save-banner" style='max-height:400px;overflow-y:scroll;overflow-x:clip!important;padding:15px;'>
                             <div class="row">
-                                <div class="col-6 margin-top-10">
+                                <div class="col-md-6  col-xs-12 margin-top-10">
                                     <label for="">Nome</label>
                                     <input type="text" class='form-control' value=''  v-model='editingBanner.name' name='name'>
                                 </div>
-                                <div class="col-6 margin-top-10">
+                                <div class="col-md-6  col-xs-12 margin-top-10">
                                     <label for="">Ordem</label>
                                     <input type="text" class='form-control' value=''  v-model='editingBanner.order' name='order'>
                                 </div>                                
-                                <div class="col-6 margin-top-10">
+                                <div class="col-12 margin-top-10">
                                     <label for="">Titulo Grande</label>
                                     <input type="text" class='form-control' value=''  v-model='editingBanner.title_big' name='title_big'>
                                 </div>
-                                <div class="col-3 margin-top-10">
+                                <div class="col-md-6  col-xs-12 margin-top-10">
                                     <label for="">Cor</label> 
-                                    <input type="text" class='form-control'  v-model='editingBanner.title_big_color' name='title_big_color'>
+                                    <input type="color" class='form-control'  v-model='editingBanner.title_big_color' name='title_big_color'>
                                 </div>
-                                <div class="col-3 margin-top-10">
+                                <div class="col-md-6 col-xs-12  margin-top-10">
                                     <label for="">Contorno</label>
-                                    <input type="text" class='form-control'  v-model='editingBanner.title_big_outline' name='title_big_outline'>
+                                    <select name="title_big_outline" class='form-control' v-model='editingBanner.title_big_outline' >
+                                        <option value="">Nenhum</option>
+                                        <option value="outline-dark-grey">Chumbo</option>
+                                        <option value="outline-light-grey">Cinza Claro</option>
+                                        <option value="outline-dark-white">Branco</option>
+                                    </select>
                                 </div>
-                                <div class="col-6 margin-top-10">
+                                <div class="col-12 margin-top-10">
                                     <label for="">Título Pequeno</label>
                                     <input type="text" class='form-control'  v-model='editingBanner.title_small' name='title_small'>
                                 </div>
-                                <div class="col-3 margin-top-10">
+                                <div class="col-md-6 col-xs-12  margin-top-10">
                                     <label for="">Cor</label> 
-                                    <input type="text" class='form-control'  v-model='editingBanner.title_small_color' name='title_small_color'>
+                                    <input type="color" class='form-control'  v-model='editingBanner.title_small_color' name='title_small_color'>
                                 </div>
-                                <div class="col-3 margin-top-10">
+                                <div class="col-md-6 col-xs-12  margin-top-10">
                                     <label for="">Contorno</label>
-                                    <input type="text" class='form-control'  v-model='editingBanner.title_small_outline' name='title_small_outline'>
+                                    <select name="title_small_outline" class='form-control' v-model='editingBanner.title_small_outline' >
+                                        <option value="">Nenhum</option>
+                                        <option value="outline-dark-grey">Chumbo</option>
+                                        <option value="outline-light-grey">Cinza Claro</option>
+                                        <option value="outline-dark-white">Branco</option>
+                                    </select>
                                 </div>
-                                <div class="col-6 margin-top-10">
+                                <div class="col-12 margin-top-10">
                                     <label for="">Texto do Botão</label>
                                     <input type="text" class='form-control'  v-model='editingBanner.cta' name='cta'>
                                 </div>
-                                <div class="col-3 margin-top-10">
+                                <div class="col-md-6 col-xs-12  margin-top-10">
                                     <label for="">Ativo De</label>
-                                    <input type="text" class='form-control'  v-model='editingBanner.active_from' name='active_from'>
+                                    <input type="date" class='form-control'  v-model='editingBanner.active_from' :value='editingBanner.active_from' name='active_from'>
                                 </div>
-                                <div class="col-3 margin-top-10">
+                                <div class="col-md-6 col-xs-12 margin-top-10">
                                     <label for="">Ativo Até</label>
-                                    <input type="text" class='form-control'  v-model='editingBanner.active_to' name='active_to'>
+                                    <input type="date" class='form-control'  v-model='editingBanner.active_to' :value='editingBanner.active_to' name='active_to'>
                                 </div>
                                 <div class="col-12 margin-top-10">
                                     <label for="">Imagem</label>
-                                    <img id='banner-background-preview' :src=" editingBanner.background " alt="" style='width:100%;height:200px;'>
+                                    <img  class='config-block-image'  id='banner-background-preview' :src=" editingBanner.background " alt="" style='height:200px;'>
                                     <button type='button' class='btn btn-primary margin-top-10' v-on:click="changeBannerBackground">Alterar</button>
                                     <input style='display:none' type="file" id='banner-background-picker' v-on:change="previewImage" name='background_file'>
                                 </div>

@@ -17,11 +17,16 @@ class CreateUnitsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('address')->nullable();
+            $table->string('district')->nullable();
+            $table->string('zip')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->string('country')->nullable();
+            $table->string('country')->default('Brasil');
             $table->integer('cod_senior')->nullable();
+            $table->integer('cod_emp_senior')->nullable();
+            $table->string('cnpj')->nullable();
             $table->timestamps();
+            $table->unique(['cod_senior','cod_emp_senior','cnpj'],'senior_keys');
         });
     }
 

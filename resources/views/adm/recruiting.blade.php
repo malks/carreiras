@@ -188,7 +188,7 @@
                                             <select class="form-control" v-on:change="addSubscriptionState(getCandidate(subscription).id,runData.selectedJob.id,getState(runData.subscriptions[subx].current_state).name)" v-model="runData.subscriptions[subx].current_state">
                                                 <template v-for='state in runData.states'>
                                                     <option 
-                                                        :value="state.id" >
+                                                        :value="state.id" :disabled='state.id==5'>
                                                         @{{state.name}}
                                                     </option>
                                                 </template>

@@ -24,8 +24,8 @@ class CreateBannersTable extends Migration
             $table->string('title_small_outline')->default('');
             $table->string('cta')->nullable();
             $table->string('background')->nullable();
-            $table->datetime('active_from')->nullable();
-            $table->datetime('active_to')->nullable();
+            $table->date('active_from')->nullable();
+            $table->date('active_to')->nullable();
             $table->integer('order')->nullable();
             $table->timestamps();
         });

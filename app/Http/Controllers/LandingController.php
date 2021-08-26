@@ -19,6 +19,7 @@ use App\Subscribed;
 use App\Subscriber;
 use App\Field;
 use App\Unit;
+use App\User;
 use App\State;
 use App\Tag;
 use Illuminate\Support\Facades\Auth;
@@ -32,11 +33,15 @@ class LandingController extends Controller
         $logged_in=Auth::user();
         $user_id=0;
         $candidate_id=0;
+        $role='';
         $subscriptions=Array();
 
         if (!empty($logged_in)){
             $user_id=$logged_in->id;
-            $candidate_id=Candidate::where('user_id','=',$logged_in->id)->first()->id;
+            $role=User::where('id','=',$user_id)->with('roles')->first()->roles[0]->name;
+            $candidate_helper=Candidate::where('user_id','=',$logged_in->id)->first();
+            if (!empty($candidate_helper))
+                $candidate_id=$candidate_helper->id;
             $subscriptions=Subscribed::where('candidate_id','=',$candidate_id)->get()->toArray();
         }
 
@@ -76,6 +81,7 @@ class LandingController extends Controller
                 'logged_in'=>$logged_in,
                 'user_id'=>$user_id,
                 'candidate_id'=>$candidate_id,
+                'role'=>$role,
             ]
         );
     }

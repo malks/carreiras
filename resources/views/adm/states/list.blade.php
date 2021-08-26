@@ -59,7 +59,7 @@
 										<td>{{$d->id}}</td>
 										<td>{{$d->name}}</td>
 										<td>{{$candidate_visible[$d->candidate_visible]}}</td>
-										<td>{{($d->id<=4) ? 'Sim' : 'Não'}} </td>
+										<td>{{($d->id<=5) ? 'Sim' : 'Não'}} </td>
 										<td>{{($d->sync_to_senior) ? 'Sim' : 'Não'}} </td>
 									</tr>
 								@endforeach

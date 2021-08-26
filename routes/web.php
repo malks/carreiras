@@ -38,6 +38,8 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::post('/adm/save-banners', 'AdmController@saveBanners')->name('save-banners');
     Route::post('/adm/update-banner', 'AdmController@updateBanner')->name('update-banner');
     Route::post('/adm/delete-banner', 'AdmController@deleteBanner')->name('delete-banner');
+    Route::post('/adm/config-data', 'AdmController@configData')->name('config-data');
+    Route::post('/adm/save-other-conf', 'AdmController@saveOtherConf')->name('save-other-conf');
 
     Route::get('/adm/config', 'AdmController@config')->name('config');
     Route::get('/adm/fields', 'AdmController@fieldsList')->name('fields-list');
@@ -79,6 +81,7 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::get('/adm/states/save', 'AdmController@statesSave')->name('states-save');
     Route::get('/adm/units/save', 'AdmController@unitsSave')->name('units-save');
     Route::get('/adm/jobs/save', 'AdmController@jobsSave')->name('jobs-save');
+    Route::post('/adm/jobs/save', 'AdmController@jobsSave')->name('jobs-save');
     Route::get('/adm/tags/save', 'AdmController@tagsSave')->name('tags-save');
     Route::get('/adm/candidates/save', 'AdmController@candidatesSave')->name('candidates-save');
     Route::get('/adm/users/save', 'AdmController@usersSave')->name('users-save');

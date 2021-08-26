@@ -15,19 +15,127 @@ use App\Unit;
 use App\Field;
 use App\User;
 use App\State;
+use App\Video;
 use App\Subscribed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AdmController extends Controller
 {
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'field_id' => ['required', 'integer', 'gte:1'],
+        ],[
+            'field_id.required'=>'É necessário selecionar uma área para a vaga.',
+            'field_id.integer'=>'É necessário selecionar uma área para a vaga.',
+            'field_id.gte'=>'É necessário selecionar uma área para a vaga.',
+        ]);
+    }
+
+
 
     public function config(Request $request) {
         $banners=Banner::get();
         return view('adm.config')->with([
             'banners'=>$banners,
         ]);
+    }
+
+    public function configData(Request $request){
+        $data['about_us']=AboutUs::first();
+        $data['our_numbers']=OurNumbers::orderBy('created_at','desc')->get();
+        foreach($data['our_numbers'] as $k=>$d)
+            $data['our_numbers'][$k]->removal=0;
+        $data['our_team']=OurTeam::orderBy('created_at','desc')->get();
+        $data['video']=Video::first();
+        return json_encode($data);
+    }
+
+    public function saveOtherConf(Request $request){
+        $arr=$request->all();
+        $which=$arr['which'];
+
+        if ($which=='about_us'){
+            $data=json_decode($arr['data'],true);
+
+            $id=$data['id'];
+            unset($data['id']);
+        
+            if ($request->hasFile('testimonial_author_picture')){
+                $extension=$request->testimonial_author_picture->extension();
+                $background_filename=date('U').".".$extension;
+                $tmp=$request->testimonial_author_picture->path();
+                copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/img/'.$background_filename);
+                $data['testimonial_author_picture']=$background_filename;
+            }    
+            DB::table($which)->where('id','=',$id)->update($data);
+        }
+        else if ($which=='our_numbers'){
+            $data=json_decode($arr['data'],true);
+            foreach($data as $d){
+                if (!empty($d['removal']) && $d['removal']==1)
+                    DB::table($which)->where('id','=',$d['id'])->delete();
+                else if (empty($d['id'])){
+                    unset($d['id']);
+                    DB::table($which)->insert($d);
+                }
+                else{
+                    $id=$d['id'];
+                    unset($d['removal']);
+                    unset($d['id']);
+                    DB::table($which)->where('id','=',$id)->update($d);
+                }
+            }
+        }
+        else if ($which=='our_team'){
+            $data=json_decode($arr['data'],true);
+            foreach($data as $k=>$d){
+                $save_data=$d;
+                if ($request->hasFile('team_pic_picker_'.$k)){
+                    $picture_var='team_pic_picker_'.$k;
+
+                    $extension=$request->{$picture_var}->extension();
+                    $background_filename=$k.date('U').".".$extension;
+                    $tmp=$request->{$picture_var}->path();
+
+                    copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/img/'.$background_filename);
+
+                    $save_data['picture']='/img/'.$background_filename;
+                }
+                if (!empty($d['removal']) && $d['removal']==1)
+                    DB::table($which)->where('id','=',$d['id'])->delete();
+                else if (empty($d['id'])){
+                    unset($save_data['id']);
+                    DB::table($which)->insert($save_data);
+                }
+                else{
+                    $id=$d['id'];
+                    unset($save_data['removal']);
+                    unset($save_data['id']);
+                    DB::table($which)->where('id','=',$id)->update($save_data);
+                }
+            }
+        }
+        else if ($which=='video'){
+            $data=json_decode($arr['data'],true);
+
+            $id=$data['id'];
+            unset($data['id']);
+        
+            if ($request->hasFile('video_picture')){
+                $extension=$request->video_picture->extension();
+                $background_filename=date('U').".".$extension;
+                $tmp=$request->video_picture->path();
+                copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/img/'.$background_filename);
+                $data['face']=$background_filename;
+            }    
+            DB::table($which)->where('id','=',$id)->update($data);
+        }
+
     }
 
     public function recruiting (Request $request){
@@ -451,7 +559,8 @@ class AdmController extends Controller
         );
     }
 
-    public function jobsEdit ($id) {
+    public function jobsEdit (Request $request) {
+        $id=$request->id;
         $data=Job::where('id','=',$id)->first();
         $units=Unit::all();
         $fields=Field::all();
@@ -595,10 +704,25 @@ class AdmController extends Controller
     }
 
     public function jobsSave (Request $request) {
+
         $data=new Job;
         $arr=$request->toArray();
-        unset($arr['_token']);
 
+        $validator = $this->validator($request->all())->validate();
+           
+        if(!is_array($validator) && $validator->fails())
+            return Redirect::back()->withErrors($validator)->withInput($request->all());
+        
+        if ($request->hasFile('picture')){
+            $extension=$request->picture->extension();
+            $picture_filename=date('U').".".$extension;
+	    	$tmp=$request->picture->path();
+	    	copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/img/'.$picture_filename);
+            $arr['picture']='/img/'.$picture_filename;
+        }
+
+
+        unset($arr['_token']);
         if(!empty($arr['id']))
             $data=Job::where('id','=',$arr['id'])->first();
 
@@ -628,6 +752,8 @@ class AdmController extends Controller
         $data=new Candidate;
         $arr=$request->toArray();
         unset($arr['_token']);
+        unset($arr['schooling']);
+        unset($arr['experience']);
 
         if(!empty($arr['id']))
             $data=Candidate::where('id','=',$arr['id'])->first();

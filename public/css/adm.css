@@ -109,3 +109,31 @@ i.action-icon:hover {
 .red-color{
   color:rgb(148, 1, 1);
 }
+
+
+.config-block-image{
+  max-width:600px;
+}
+
+
+
+@media (max-width:600px){
+  .config-block-image{
+      max-width:400px
+  }
+}
+
+
+
+@media (max-width:450px){
+  .config-block-image{
+      max-width:300px
+  }
+}
+
+
+@media (max-width:350px){
+  .config-block-image{
+      max-width:250px
+  }
+}

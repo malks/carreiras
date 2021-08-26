@@ -235,6 +235,8 @@ function recruiting(){
                 let ret = this.runData.fields.find(obj=>{
                     return obj.id==id; 
                 })
+                if(ret==undefined)
+                    ret={'name':'Sem área definida'};
                 return ret;
             },
             inspectJob:function(job){
@@ -385,15 +387,16 @@ function recruiting(){
                                 contain=false;
                                 break;
                             }
-                            for (let t in tempJob['tags']){
-                                if (typeof tempJob['tags'][t] != undefined)
-                                    contain = tempJob['tags'][t]['name'].toLowerCase().includes(activeFilters[i].toLowerCase());
+                            if (tempJob['tags'] != undefined && tempJob['tags'].length>0){
+                                for (let t in tempJob['tags']){
+                                    if (tempJob['tags'][t] != undefined)
+                                        contain = tempJob['tags'][t]['name'].toLowerCase().includes(activeFilters[i].toLowerCase());
+                                    if (contain)
+                                        break;
+                                }
                                 if (contain)
                                     break;
                             }
-                            if (contain)
-                                break;
-
                         }
                     }
                     return contain;
@@ -414,7 +417,7 @@ function startData(){
 function statesList(){
     startData();
     ajaxUrl=$('#app').attr('action');
-    startList([1,2,3,4],[1,2,3,4]);
+    startList([1,2,3,4,5],[1,2,3,4,5]);
     $('#search').focus();
 }
 
@@ -595,6 +598,12 @@ function configurations(){
     form.append('_token',$('[name="_token"]').val());
     
     let bannerData=null;
+    let otherConfStarter={
+        about_us:{},
+        our_numbers:{},
+        our_team:{},
+        video:{},
+    };
 
     $.ajax({
         url:'/adm/banners-list',
@@ -605,6 +614,21 @@ function configurations(){
         success:function (data){
             bannerData=data['data'];
             admConf.banners=bannerData;
+        }
+    })
+
+    $.ajax({
+        url:'/adm/config-data',
+        type:"post",
+        processData: false,
+        contentType: false,
+        data:form,
+        success:function (data){
+            let otherConf=JSON.parse(data);
+            console.log(otherConf);
+            admConf.otherConf=otherConf;
+            $('#testimonial-author-pic').attr('src','/img/'+otherConf.about_us.testimonial_author_picture);
+            $('#video-pic').attr('src','/img/'+otherConf.video.face);
         }
     })
 
@@ -635,6 +659,7 @@ function configurations(){
     admConf = new Vue({
         el:'#configurations',
         data:{
+            otherConf:otherConfStarter,
             banners:null,
             movingBanner:null,
             saving:false,
@@ -655,6 +680,87 @@ function configurations(){
             }
         },
         methods:{
+            showNumber:function (what){
+                let that = this;
+                if (that.otherConf.our_numbers[what].removal!=undefined && that.otherConf.our_numbers[what].removal==1)
+                    return false;
+                return true;
+            },
+            removeNumber:function (which){
+                let that = this;
+                let tmpConf=[...that.otherConf.our_numbers];
+                tmpConf[which].removal=1;
+                console.log(tmpConf);
+                that.otherConf.our_numbers=tmpConf;
+                console.log(that.otherConf.our_numbers);
+            },
+            addNumber:function () {
+                let that = this;
+                that.otherConf.our_numbers.unshift({id:''});
+            },
+            showTeam:function (what){
+                let that = this;
+                if (that.otherConf.our_team[what].removal!=undefined && that.otherConf.our_team[what].removal==1)
+                    return false;
+                return true;
+            },
+            removeTeam:function (which){
+                let that = this;
+                let tmpConf=[...that.otherConf.our_team];
+                tmpConf[which].removal=1;
+                console.log(tmpConf);
+                that.otherConf.our_team=tmpConf;
+                console.log(that.otherConf.our_team);
+            },
+            addTeam:function () {
+                let that = this;
+                that.otherConf.our_team.unshift({id:''});
+            },
+            updateTeamPic:function(which){
+                let that = this;
+                that.otherConf.our_team[which].picture=URL.createObjectURL($('#team-pic-picker-'+which)[0].files[0]);
+            },
+            saveOtherConf:function(which){
+                this.saving=true;
+                let that = this;
+                form = new FormData();
+                form.append('_token',$('[name="_token"]').val());
+                form.append('which', which);
+                form.append('data', JSON.stringify(that.otherConf[which]));
+                if (which=='about_us'){
+                    form.append('testimonial_author_picture', document.getElementById('testimonial-author-picture').files[0]);
+                }
+                else if (which=='our_team'){
+                    $('.team-pic-picker').each(function ()  {
+                        let it=this;
+                        console.log($(it)[0].files[0]);
+                        form.append($(it).attr('id').replace(/-/g,"_"),$(it)[0].files[0]);
+                    })
+                    console.log(form);
+                }
+                else if (which=='video'){
+                    form.append('video_picture',document.getElementById('video-picture').files[0]);
+                }
+                $.ajax({
+                    url:'/adm/save-other-conf',
+                    type:'POST',
+                    processData: false,
+                    contentType: false,
+                    data:form,
+                    success:function(data){
+                        that.saving=false;
+                        let bannerIframe=document.getElementById('banner-iframe');
+                        bannerIframe.src=bannerIframe.src;
+                    }
+                })
+
+            },
+            updateTestimonialAuthorPicture:function(event){
+                $('#testimonial-author-pic').attr('src',URL.createObjectURL(event.target.files[0]));
+            },
+            updateVideoPicture:function(event){
+                $('#video-pic').attr('src',URL.createObjectURL(event.target.files[0]));
+            },
             addBanner:function (){
                 let nbanner={...defaultEditingBanner};
                 nbanner.id=0;
@@ -747,7 +853,7 @@ function configurations(){
                 form = new FormData();
                 form.append('_token',$('[name="_token"]').val());
                 form.append('banner', JSON.stringify(that.editingBanner));
-                console.log(form.get('background_file'));
+                form.append('background_file', document.getElementById('banner-background-picker').files[0]);
                 $.ajax({
                     url:'/adm/update-banner',
                     type:'POST',

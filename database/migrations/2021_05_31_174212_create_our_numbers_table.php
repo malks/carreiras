@@ -17,8 +17,8 @@ class CreateOurNumbersTable extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->string('number')->nullable();
-            $table->datetime('active_from')->nullable();
-            $table->datetime('active_to')->nullable();
+            $table->date('active_from')->nullable();
+            $table->date('active_to')->nullable();
             $table->timestamps();
         });
     }

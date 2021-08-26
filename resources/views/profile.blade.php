@@ -75,13 +75,13 @@
                                 <div class="row margin-top-10">
                                     <div class=" col-sm-12 col-lg-6">
                                         <label for="data-ddd-phone">Fone</label>
-                                        <input type='text' class='w-input text-field white-background' id='data-ddd-phone' name='ddd_phone' value='{{$data->ddd_phone}}'/>
-                                        <input type='text' class='w-input text-field white-background' id='data-phone' name='phone' value='{{$data->phone}}'/>
+                                        <input type='text' placeholder='DDD' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddd-phone' name='ddd_phone' value='{{$data->ddd_phone}}'/>
+                                        <input type='text' placeholder='9999999' style='margin-left:5px;width:80%;float:left;' class='w-input text-field white-background' id='data-phone' name='phone' value='{{$data->phone}}'/>
                                     </div>
                                     <div class=" col-sm-12 col-lg-6">
                                         <label for="data-ddd-mobile">Celular</label>
-                                        <input type='text' class='w-input text-field white-background' id='data-ddd-mobile' name='ddd_mobile' value='{{$data->ddd_mobile}}'/>
-                                        <input type='text' class='w-input text-field white-background' id='data-mobile' name='mobile' value='{{$data->mobile}}'/>
+                                        <input type='text' placeholder='DDD' style='width:10%;float:left;'  class='w-input text-field white-background' id='data-ddd-mobile' name='ddd_mobile' value='{{$data->ddd_mobile}}'/>
+                                        <input type='text' placeholder='9999999'  style='margin-left:5px;width:80%;float:left;'  class='w-input text-field white-background' id='data-mobile' name='mobile' value='{{$data->mobile}}'/>
                                     </div>
                                 </div>
                                 <div class="row margin-top-30">
@@ -144,25 +144,33 @@
                                     <div class=" col-sm-12 col-lg-3">
                                         <label for="data-civil-state">Estado Civil</label>
                                         <select name="civil_state" id="data-civil-state" class="w-input text-field white-background">
-                                            <option value="married">Casado</option>
+                                            <!--option value="married">Casado</option>
                                             <option value="single">Solteiro</option>
-                                            <option value="stable">União Estável</option>
+                                            <option value="stable">União Estável</option-->
+                                                <option value='1' @if ($data->civil_state=='1') selected @endif>Solteiro</option>
+                                                <option value='2' @if ($data->civil_state=='2') selected @endif>Casado</option>
+                                                <option value='3' @if ($data->civil_state=='3') selected @endif>Divorciado</option>
+                                                <option value='4' @if ($data->civil_state=='4') selected @endif>Viuvo</option>
+                                                <option value='5' @if ($data->civil_state=='5') selected @endif>Concubinato</option>
+                                                <option value='6' @if ($data->civil_state=='6') selected @endif>Separado</option>
+                                                <option value='7' @if ($data->civil_state=='7') selected @endif>Uniao estavel</option>
+                                                <option value='9' @if ($data->civil_state=='9') selected @endif>Outros</option>
                                         </select>
                                     </div>
                                     <div class=" col-sm-12 col-lg-3">
                                         <label for="data-gender">Genero</label>
                                         <select name="gender" id="data-gender" class="w-input text-field white-background">
-                                            <option value="male">Masculino</option>
-                                            <option value="female">Feminino</option>
-                                            <option value="other">Outro</option>
+                                            <option value="m" @if ($data->gender=='m') selected @endif>Masculino</option>
+                                            <option value="f" @if ($data->gender=='f') selected @endif>Feminino</option>
+                                            <option value="o" @if ($data->gender=='o') selected @endif>Outro</option>
                                         </select>
                                     </div>
                                     <div class=" col-sm-12 col-lg-3">
-                                        <label for="data-gender">Casa</label>
-                                        <select name="gender" id="data-gender" class="w-input text-field white-background">
-                                            <option value="owned">Própria</option>
-                                            <option value="rented">Alugada</option>
-                                            <option value="allowed">Cedida por parentes/amigos</option>
+                                        <label for="data-housing">Casa</label>
+                                        <select name="housing" id="data-housing" class="w-input text-field white-background">
+                                            <option value="owned" @if ($data->housing=='owned') selected @endif >Própria</option>
+                                            <option value="rented" @if ($data->housing=='rented') selected @endif >Alugada</option>
+                                            <option value="allowed" @if ($data->housing=='allowed') selected @endif >Cedida por parentes/amigos</option>
                                         </select>
                                     </div>
                                 </div>
@@ -212,6 +220,7 @@
                                     <div class=" col-sm-12 col-lg-4">
                                         <label for="data-deficiency-id">Tipo de deficiencia</label>
                                         <select class='w-input text-field white-background' id='data-deficiency-id' name='deficiency_id'>
+                                            <option value=''>Nenhuma</option>
                                             @foreach($deficiencies as $deficiency)
                                                 <option value='{{$deficiency->id}}' @if($data->deficiency_id==$deficiency->id) selected @endif>{{$deficiency->name}}</option>
                                             @endforeach

@@ -15,7 +15,7 @@ class CreateSeniorSync extends Migration
     {
         Schema::create('senior_sync', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->nullable();
+            $table->string('type')->nullable()->unique();
             $table->integer('active')->default(1);
             $table->datetime('last_sync')->nullable();
         });

@@ -22,8 +22,8 @@ class CreateOurTeamTable extends Migration
             $table->string('facebook_link')->nullable();
             $table->string('twitter_link')->nullable();
             $table->string('linkedin_link')->nullable();
-            $table->datetime('active_from')->nullable();
-            $table->datetime('active_to')->nullable();
+            $table->date('active_from')->nullable();
+            $table->date('active_to')->nullable();
             $table->timestamps();
         });
     }

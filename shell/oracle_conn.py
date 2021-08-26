@@ -20,11 +20,28 @@ condata['password']=fdata['password']
 def run_select(select,conn):
     result = []
     cursor = conn.cursor()
-    cursor.execute(select)
-    cursor.rowfactory = lambda *args: dict(zip([d[0] for d in cursor.description], args))
-    result=cursor.fetchall()
+    try:
+      cursor.execute(select)
+      cursor.rowfactory = lambda *args: dict(zip([d[0] for d in cursor.description], args))
+      result=cursor.fetchall()
+    except cx_Oracle.DatabaseError as exception:
+      print(exception)
+      result=[]
     return result
 
+def run_insert(insert,conn,primary_key):
+  ret=''
+  cursor=conn.cursor()
+  idvar=cursor.var(cx_Oracle.NUMBER)
+  insert=insert + " returning "+primary_key+" into :vrecord_id"
+  print(insert)
+  try:
+    cursor.execute(insert,vrecord_id=idvar)
+    ret=idvar.getvalue()
+    print(ret)
+  except cx_Oracle.DatabaseError as exception:
+    print(exception)
+  return ret
 
 def run_sql(sql,conn):
     cursor = conn.cursor()
@@ -42,4 +59,6 @@ def new_conn():
   )
   cursor = conn.cursor()
   cursor.execute('ALTER SESSION SET nls_date_Format = "YYYY-MM-DD:HH24:MI:SS"')
+  cursor.execute("ALTER SESSION SET NLS_SORT='WEST_EUROPEAN_AI'")
+  cursor.execute("ALTER SESSION SET NLS_COMP='LINGUISTIC'")
   return conn

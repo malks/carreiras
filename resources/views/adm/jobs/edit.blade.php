@@ -6,7 +6,10 @@
 @stop
 
 @section('content')
-	<form method='GET' action='/adm/jobs/save'>
+    @if ($errors->has('field_id'))
+        <div class="alert alert-danger alert-dismissible">{{ $errors->first('field_id') }}</div>
+    @endif
+	<form method='POST' action='/adm/jobs/save' enctype='multipart/form-data'>
 		@csrf
 	    <div class="card" check-jobs-edit>
 	    	<div class='card-header'>
@@ -21,6 +24,31 @@
 	        			<button class="btn btn-primary" id='save' type='submit' >Salvar</button>
 	        		</div>
 	        	</div>
+                <div class="row margin-top-10">
+                    <div class="col-lg-6">
+                        <label for="">Imagem para o Cargo</label><br>
+                        <input type="file" name='picture'><br><br>
+                        <img src='{{$data->picture}}' style='width:300px;height:300px;'>
+                    </div>
+	        	</div>
+                <div class="row margin-top-10">
+                    <div class="col-lg-2">
+                        <label for="">Código Cargo Senior</label>
+                        <input type="text" class='form-control text-right' readonly value='{{$data->cod_senior}}'>
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="">Código Requisição Senior</label>
+                        <input type="text" class='form-control text-right' readonly value='{{$data->cod_rqu_senior}}'>
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="">Código Estrutura do Cargo Senior</label>
+                        <input type="text" class='form-control text-right' readonly value='{{$data->cod_est_senior}}'>
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="">Código Hierarquia do Cargo Senior</label>
+                        <input type="text" class='form-control text-right' readonly value='{{$data->cod_hie_senior}}'>
+                    </div>
+                </div>
                 <div class="row margin-top-10">
                     <input type='hidden' name='id' value='{{$data->id}}'>
                     <div class=" col-sm-12 col-lg">
@@ -58,41 +86,41 @@
                 <div class="row margin-top-10">
                     <div class="col-sm-12 col-lg-6">
                         <label for="data-start">Data Início Recrutamento</label>
-                        <input type="date" class="form-control" id='data-start' name='start' value='{{$data->start}}'>
+                        <input type="date" class="form-control" id='data-start' name='start' value='{{ (!empty(old('start'))) ? old('start') : $data->start}}'>
                     </div>
                     <div class="col-sm-12 col-lg-6">
                         <label for="data-end">Data Fim Recrutamento</label>
-                        <input type="date" class="form-control" id='data-end' name='end' value='{{$data->end}}'>
+                        <input type="date" class="form-control" id='data-end' name='end' value='{{(!empty(old('end'))) ? old('end') : $data->end}}'>
                     </div>
                 </div>
                 <div class="row margin-top-10">
                     <div class=" col-sm-12 col-lg">
                         <label for="data-period">Período de Trabalho (Turno)</label>
-                        <input class='form-control' id='data-period' name='period' value='{{$data->period}}'/>
+                        <input class='form-control' id='data-period' name='period' value='{{(!empty(old('period'))) ? old('period') : $data->period}}'/>
                     </div>
                 </div>
                 <div class="row margin-top-10">
                     <div class=" col-sm-12 col-lg">
                         <label for="data-description">Descrição</label>
-                        <textarea class='form-control' id='data-description' name='description'>{{$data->description}}</textarea>
+                        <textarea class='form-control' id='data-description' name='description'>{{(!empty(old('description'))) ? old('description') : $data->description}}</textarea>
                     </div>
                 </div>
                 <div class="row margin-top-10">
                     <div class=" col-sm-12 col-lg">
                         <label for="data-activities">Atividades</label>
-                        <textarea class='form-control' id='data-activities' name='activities'>{{$data->activities}}</textarea>
+                        <textarea class='form-control' id='data-activities' name='activities'>{{(!empty(old('activities'))) ? old('activities') : $data->activities}}</textarea>
                     </div>
                 </div>
                 <div class="row margin-top-10">
                     <div class=" col-sm-12 col-lg">
                         <label for="data-name">Requisitos</label>
-                        <textarea class='form-control' name='required'>{{$data->required}}</textarea>
+                        <textarea class='form-control' name='required'>{{(!empty(old('required'))) ? old('required') : $data->required}}</textarea>
                     </div>
                 </div>
                 <div class="row margin-top-10">
                     <div class=" col-sm-12 col-lg">
                         <label for="data-name">Desejável</label>
-                        <textarea class='form-control' name='desirable'>{{$data->desirable}}</textarea>
+                        <textarea class='form-control' name='desirable'>{{(!empty(old('desirable'))) ? old('desirable') : $data->desirable}}</textarea>
                     </div>
                 </div>
 			</div>

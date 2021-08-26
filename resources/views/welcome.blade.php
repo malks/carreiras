@@ -107,6 +107,12 @@
                                                 </ul>
                                             @else 
                                                 <ul class="hedone-menu" id='welcoLogin'>
+                                                    @if($role=='admin')
+                                                        <li class="menu-item">
+                                                            <a href="/home">Admin</a>
+                                                        </li>
+                                                    @endif
+
                                                     <li class="menu-item">
                                                         <a href="/jobs">Vagas</a>
                                                     </li>
@@ -238,7 +244,7 @@
                                             @endif
                                         </ul>
                                     </div>
-                                    <img class="img-responsive team-img" src="{{ asset('/img/'.$member->picture) }}" alt="{{$member->name}}">
+                                    <img class="img-responsive team-img" src="{{ asset($member->picture) }}" alt="{{$member->name}}">
                                     <blockquote class='secondary-testimonials'>
                                         "{{$member->testimonial}}"
                                     </blockquote>
@@ -274,8 +280,8 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <!--iframe id='ytplayer' height='600px' width='800px' src="{{$video->file.'?origin=local.lunellicarreiras.com.br&autoplay=1'}}" frameborder="0">
-                            </iframe-->
+                            <iframe id='ytplayer' height='600px' width='800px' src="{{$video->file.'?origin=local.lunellicarreiras.com.br&autoplay=1'}}" frameborder="0">
+                            </iframe>
                         </div>
                     </div>
                 </div>
@@ -410,7 +416,7 @@
                                         <article>
                                             <div class="blog-page-post-wrapp animated">
                                                 @if(!empty($job->picture))
-                                                    <img class="blog-page-post-img" src="{{ asset('/img/'.$job->picture) }}" alt="{{$job->name}}"/>
+                                                    <img class="blog-page-post-img" src="{{ asset($job->picture) }}" alt="{{$job->name}}"/>
                                                 @endif
                                                 <h2 class="blog-page-post-head-h2"><a  href="#job" v-on:click="viewJob({{ $job->id }})">{{$job->name}}</a></h2>
                                                 <ul class="blog_post_category">
@@ -457,7 +463,7 @@
                                             <article>
                                                 <div class="blog-page-post-wrapp animated">
                                                     @if(!empty($job->picture))
-                                                        <img class="blog-page-post-img" src="{{ asset('/img/'.$job->picture) }}" alt="{{$job->name}}"/>
+                                                        <img class="blog-page-post-img" src="{{ asset($job->picture) }}" alt="{{$job->name}}"/>
                                                     @endif
                                                     <h2 class="blog-page-post-head-h2"><a href="standard-gallery-post.html">{{$job->name}}</a></h2>
                                                     <ul class="blog_post_category">
