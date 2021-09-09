@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Carbon;
 
 class AdmController extends Controller
 {
@@ -36,7 +37,15 @@ class AdmController extends Controller
         ]);
     }
 
+    public function addTag(Request $request){
+        if (!empty($request->name)){
+            $tag = new Tag;
+            $tag->name=strtolower($request->name);
+            $tag->save();
+        }
 
+		return redirect('/adm/tags/');
+    }
 
     public function config(Request $request) {
         $banners=Banner::get();
@@ -196,6 +205,10 @@ class AdmController extends Controller
         ->get()->toArray();*/
         $directLikeDone=0;
         $deepLikeDone=0;
+
+        $date_filter_start=Carbon::now('America/Sao_Paulo')->subMonths(4)->startOfDay()->format('Y-m-d');
+        $date_filter_end=Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
+
         $data['jobs']=Job::orderBy('updated_at','desc')
         ->when(!empty($request->filters['jobs']['direct']), function ($query) use ($request,$directLikeDone) {
             foreach($request->filters['jobs']['direct'] as $type_filter=>$filter_data){
@@ -215,6 +228,22 @@ class AdmController extends Controller
                             $query->whereIn($key,$value);
                         else if (!is_array($value) && $value!="")
                             $query->whereIn($key,[$value]);
+                    }
+                }
+                else if ($type_filter=='gt'){
+                    foreach($filter_data as $key=>$value){
+                        if($value!=''){
+                            $query->where($key,'>=',$value);
+                            $directLikeDone=1;
+                        }
+                    }
+                }
+                else if ($type_filter=='lt'){
+                    foreach($filter_data as $key=>$value){
+                        if($value!=''){
+                            $query->where($key,'<=',$value);
+                            $directLikeDone=1;
+                        }
                     }
                 }
             }
@@ -286,6 +315,8 @@ class AdmController extends Controller
         $data['states'] = State::all()->toArray();
         $data['units']  = Unit::all()->toArray();
         $data['fields'] = Field::all()->toArray();
+        $data['date_filter_start']=$date_filter_start;
+        $data['date_filter_end']=$date_filter_end;
 
         return json_encode($data);
     }
@@ -391,12 +422,29 @@ class AdmController extends Controller
             $query->where('name','like',"%$request->search%");
             $query->orWhere('description','like',"%$request->search%");
         })
+        ->when(!empty($request->filter_created_at_start), function ($query) use ($request) {
+            $query->where('created_at','>=',$request->filter_created_at_start);
+        })
+        ->when(!empty($request->filter_created_at_end), function ($query) use ($request) {
+            $query->where('created_at','<=',$request->filter_created_at_end);
+        })
+        ->when(!empty($request->filter_status),function ($query) use ($request) {
+            $query->whereIn('status',$request->filter_status);
+        })
+        ->with(['unit'])
         ->paginate(15);
+
+        $filter_status=[];
+        if (!empty($request->filter_status))
+            $filter_status=$request->filter_status;
 
         return view('adm.jobs.list')->with(
             [
                 'data'=>$data,
                 'search'=>$request->search,
+                'filter_created_at_end'=>$request->filter_created_at_end,
+                'filter_created_at_start'=>$request->filter_created_at_start,
+                'filter_status'=>$filter_status,
             ]
         );
     }
@@ -426,6 +474,12 @@ class AdmController extends Controller
             $query->orWhere('state','like',"%$request->search%");
             $query->orWhere('country','like',"%$request->search%");
         })
+        ->when(!empty($request->filter_updated_at_start), function ($query) use ($request) {
+            $query->where('updated_at','>=',$request->filter_updated_at_start);
+        })
+        ->when(!empty($request->filter_updated_at_end), function ($query) use ($request) {
+            $query->where('updated_at','<=',$request->filter_updated_at_end);
+        })
         ->with(['Schooling','Experience'])
         ->paginate(15);
 
@@ -443,6 +497,8 @@ class AdmController extends Controller
                 'data'=>$data,
                 'search'=>$request->search,
                 'schooling_grades'=>$schooling_grades,
+                'filter_updated_at_end'=>$filter_updated_at_end,
+                'filter_updated_at_start'=>$filter_updated_at_start,
             ]
         );
 
@@ -564,11 +620,13 @@ class AdmController extends Controller
         $data=Job::where('id','=',$id)->first();
         $units=Unit::all();
         $fields=Field::all();
+        $tags=Tag::all();
         return view('adm.jobs.edit')->with(
             [
                 'data'=>$data,
                 'units'=>$units,
                 'fields'=>$fields,
+                'tags'=>$tags,
             ]
         );
     }
@@ -583,7 +641,8 @@ class AdmController extends Controller
     }
 
     public function candidatesEdit ($id) {
-        $data=Candidate::where('id','=',$id)->first();
+        $data=Candidate::where('id','=',$id)->with(['subscriptions','subscriptions.subscriptions','subscriptions.subscriptions.states'])->first();
+        $states=State::all();
         $deficiencies = Deficiency::all();
 
         $schooling_grades=[
@@ -601,9 +660,13 @@ class AdmController extends Controller
             'incomplete'=>'Incompleto',
         ];
 
+        if (empty($data->updated_at))
+            $data->updated_at='2021-01-01';
+
         return view('adm.candidates.edit')->with(
             [
                 'data'=>$data,
+                'states'=>$states,
                 'deficiencies'=>$deficiencies,
                 'schooling_grades'=>$schooling_grades,
                 'schooling_status'=>$schooling_status,
@@ -707,7 +770,8 @@ class AdmController extends Controller
 
         $data=new Job;
         $arr=$request->toArray();
-
+       
+        $tags=json_decode($arr['tags'],true);
         $validator = $this->validator($request->all())->validate();
            
         if(!is_array($validator) && $validator->fails())
@@ -723,6 +787,7 @@ class AdmController extends Controller
 
 
         unset($arr['_token']);
+        unset($arr['tags']);
         if(!empty($arr['id']))
             $data=Job::where('id','=',$arr['id'])->first();
 
@@ -730,6 +795,22 @@ class AdmController extends Controller
             $data->{$k}=$value;
         }
         $data->save();
+
+
+        DB::table('jobs_tags')->where('job_id','=',$data->id)->delete();
+        foreach($tags as $data_tag){
+            if (empty($data_tag['id']) || $data_tag['id']=='null' || $data_tag['id']==null){
+                $tag = new Tag;
+                $tag->name=strtolower($data_tag['name']);
+                $tag->save();
+            }
+            else {
+                $tag=Tag::where('id','=',$data_tag['id'])->first();
+            }
+            DB::table('jobs_tags')->insert(['job_id'=>$data->id,'tag_id'=>$tag->id]);
+        }
+
+
 		return redirect('/adm/jobs/');
     }
 

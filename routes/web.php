@@ -40,6 +40,7 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::post('/adm/delete-banner', 'AdmController@deleteBanner')->name('delete-banner');
     Route::post('/adm/config-data', 'AdmController@configData')->name('config-data');
     Route::post('/adm/save-other-conf', 'AdmController@saveOtherConf')->name('save-other-conf');
+    Route::post('/adm/add-tag', 'AdmController@addTag')->name('add-tag');
 
     Route::get('/adm/config', 'AdmController@config')->name('config');
     Route::get('/adm/fields', 'AdmController@fieldsList')->name('fields-list');

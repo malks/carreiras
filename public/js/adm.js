@@ -28,7 +28,73 @@ $(document).ready(function () {
         recruiting();
     if ($('#configurations').length>0)
         configurations();
+    if ($('#jobs-tags').length>0)
+        editJobs();
 })
+
+function editJobs(){
+    let jobsEdit=new Vue({
+        el:'#jobs-tags',
+        data:{
+            currentInterest:"",
+            filteredTags:[],
+            tags:JSON.parse($('#all-tags').val()),
+            selectedTags:JSON.parse($('#initial-tags').val()),
+            interestInput:'',
+            currentInterestSize:0
+        },
+        computed:{
+            stringedTags:function () {
+                let that = this;
+                return JSON.stringify(that.selectedTags);
+            }
+        },
+        methods:{
+            filterTags:function(){
+                let ctag=this.currentInterest;
+                if (ctag.length==0)
+                    this.filteredTags=[{id:null,name:""}];
+                else
+                    this.filteredTags=this.tags.filter(obj=>{
+                        return obj.name.toLowerCase().startsWith(ctag.toLowerCase())==true;
+                    })
+            },
+            selectTag:function (){
+                let that=this;
+
+                if (that.currentInterest.length==0)
+                    return false;
+
+                let filter = that.filteredTags;
+                let tempTags=that.selectedTags;
+                let tag = null;
+                if (filter.length>0)
+                    tag=filter[0].id;
+                let newTag=that.tags.find(obj=>{ return obj.id==tag; });
+                if (newTag)
+                    tempTags.push(newTag);
+                else
+                    tempTags.push({id:null,name:that.currentInterest});
+                that.selectedTags=tempTags;
+                that.currentInterest="";
+            },
+            removeTag:function (idx){
+                let that=this;
+                let tempTags=that.selectedTags;
+                tempTags.splice(idx,1);
+            },
+            targetInterestsInputFocus: function () {
+                $('#interests-input').focus();
+            },
+            targetInterestsInputShow: function () {
+                this.interestInput=true;
+            },
+            targetInterestsInputHide: function () {
+                this.interestInput=false;
+            },
+        }
+    })
+}
 
 function recruiting(){
     let bootstrapData = {
@@ -64,6 +130,12 @@ function recruiting(){
                             field_id:"",
                             unit_id:"",
                             status:[]
+                        },
+                        gt:{
+                            created_at:''
+                        },
+                        lt:{
+                            created_at:''
                         }
                     },
                     deep:{
@@ -301,6 +373,10 @@ function recruiting(){
                         that.updateSelectedJob();
                         console.log(that.runData);
                         that.runData.updating=false;
+                        if(that.pushData.filters.jobs.direct.lt.created_at=='')
+                            that.pushData.filters.jobs.direct.lt.created_at=objData['date_filter_end'];
+                        if(that.pushData.filters.jobs.direct.gt.created_at=='')
+                            that.pushData.filters.jobs.direct.gt.created_at=objData['date_filter_start'];
                     }
                 });
             },
@@ -666,6 +742,7 @@ function configurations(){
             selectedBanner:null,
             editingBanner:{...defaultEditingBanner},
             bannerBackground:null,
+            currentTab:'banners',
         },
         computed:{
             savingText:function (){
@@ -680,6 +757,12 @@ function configurations(){
             }
         },
         methods:{
+            isItMe:function(id){
+                let that = this;
+                if (id==that.currentTab)
+                    return true;
+                return false;
+            },
             showNumber:function (what){
                 let that = this;
                 if (that.otherConf.our_numbers[what].removal!=undefined && that.otherConf.our_numbers[what].removal==1)
@@ -931,8 +1014,17 @@ function configurations(){
             }            
         },
         watch:{
-            selectedBanner:function(val){
-                console.log(val);
+            currentTab:function(val){
+                if (val=='banners')
+                    $('#banner-iframe')[0].contentWindow.scroll(0,0);
+                else if (val=='about_us')
+                    $('#banner-iframe')[0].contentWindow.scroll(0,$('#banner-iframe')[0].contentWindow.document.getElementById('about-home').offsetTop+150);
+                else if (val=='our_numbers')
+                    $('#banner-iframe')[0].contentWindow.scroll(0,$('#banner-iframe')[0].contentWindow.document.getElementById('about-home').offsetTop+240);
+                else if (val=='our_team')
+                    $('#banner-iframe')[0].contentWindow.scroll(0,$('#banner-iframe')[0].contentWindow.document.getElementById('our-team-home').offsetTop+100);
+                else if (val=='video')
+                    $('#banner-iframe')[0].contentWindow.scroll(0,$('#banner-iframe')[0].contentWindow.document.getElementById('video-home').offsetTop);
             }
         }
     })

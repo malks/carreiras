@@ -27,8 +27,8 @@
                 <div class="row margin-top-10">
                     <div class="col-lg-6">
                         <label for="">Imagem para o Cargo</label><br>
-                        <input type="file" name='picture'><br><br>
-                        <img src='{{$data->picture}}' style='width:300px;height:300px;'>
+                        <input type="file" name='picture' id='selected-picture' onchange="changedPicture()"><br><br>
+                        <img src='{{$data->picture}}' id='current-picture' style='width:300px;height:300px;'>
                     </div>
 	        	</div>
                 <div class="row margin-top-10">
@@ -123,13 +123,52 @@
                         <textarea class='form-control' name='desirable'>{{(!empty(old('desirable'))) ? old('desirable') : $data->desirable}}</textarea>
                     </div>
                 </div>
+                <div class="row margin-top-10" id='jobs-tags'>
+                    <div class=" col-sm-12 col-lg">
+                        <label for="data-name">Tags</label>
+                        <input type="hidden" id='initial-tags' value='{{json_encode($data->tags)}}'>
+                        <input type="hidden" id='all-tags' value='{{json_encode($tags)}}'>
+                        <input name='tags' type='hidden' v-model='stringedTags'>
+                        <ul class='interests-holder' 
+                            id='interests-holder' 
+                            v-on:mousedown.stop.prevent="targetInterestsInputShow" 
+                            v-on:mouseup.stop.prevent="targetInterestsInputFocus" 
+                            >
+                            <template v-for='(tag,idx) in selectedTags'>
+                                <li><span  class='badge'>@{{tag.name}} <i class="fa fa-times-circle" v-on:click="removeTag(idx)"></i></span></li>
+                            </template>
+                            <li  v-show='interestInput' >
+                                <input 
+                                    type="text" 
+                                    v-model="currentInterest" 
+                                    :style="currentInterestSize" 
+                                    class='interests-input' 
+                                    id='interests-input' 
+                                    v-on:blur='targetInterestsInputHide' 
+                                    v-on:keyup.prevent.stop="filterTags" 
+                                    v-on:keydown.stop.exact.backspace="if (currentInterest.length==0) removeTag(selectedTags.length-1)" 
+                                    v-on:keydown.prevent.stop.tab="selectTag()" 
+                                    v-on:keydown.prevent.stop.enter="selectTag()"
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
 			</div>
 		</div>
 	</form>
 @stop
 
 @section('adminlte_js')
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
     <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
     @stack('js')
     @yield('js')
 @stop
+
+<script type='text/javascript'>
+    function changedPicture(){
+        $('#current-picture').attr('src',URL.createObjectURL($('#selected-picture')[0].files[0]))
+    }
+</script>

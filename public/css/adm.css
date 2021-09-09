@@ -116,6 +116,50 @@ i.action-icon:hover {
 }
 
 
+.interests-holder{
+  width: 100%;
+  height: 150px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  cursor: text;
+  padding: 10px;
+  list-style: none;
+  overflow-y:scroll;
+  overflow-x:hidden;
+}
+
+.interests-holder > li{
+  margin: 5px;
+  float: left;
+}
+
+input#interests-input.interests-input, input#interests-input.interests-input:focus-visible{
+  outline:none!important;
+  border-radius:none!important;
+  border: 1px solid rgb(0, 132, 255)!important;
+  max-width:300px;
+  padding:8px;
+}
+
+
+.badge{
+  background-color: #666;
+  border-radius: 15px!important;
+  padding: 5px 10px!important;
+  color: #fff;
+  cursor:pointer;
+  line-height: 20px!important;
+}
+
+.badge i {
+  position: relative;
+  left: 5px;
+}
+
+.badge:hover > i{
+  top: 2px;
+  font-size: 12pt;
+}
 
 @media (max-width:600px){
   .config-block-image{

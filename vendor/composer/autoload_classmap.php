@@ -2008,6 +2008,7 @@ return array(
     'JeroenNoten\\LaravelAdminLte\\Menu\\Filters\\SearchFilter' => $vendorDir . '/jeroennoten/laravel-adminlte/src/Menu/Filters/SearchFilter.php',
     'JobSeeder' => $baseDir . '/database/seeds/JobSeeder.php',
     'JsonException' => $vendorDir . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
+    'LanguagesSeeder' => $baseDir . '/database/seeds/LanguagesSeeder.php',
     'Laravel\\Tinker\\ClassAliasAutoloader' => $vendorDir . '/laravel/tinker/src/ClassAliasAutoloader.php',
     'Laravel\\Tinker\\Console\\TinkerCommand' => $vendorDir . '/laravel/tinker/src/Console/TinkerCommand.php',
     'Laravel\\Tinker\\TinkerCaster' => $vendorDir . '/laravel/tinker/src/TinkerCaster.php',

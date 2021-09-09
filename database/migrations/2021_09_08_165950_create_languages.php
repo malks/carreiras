@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableExperience extends Migration
+class CreateLanguages extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,9 @@ class CreateTableExperience extends Migration
      */
     public function up()
     {
-        Schema::create('experience', function (Blueprint $table) {
+        Schema::create('languages', function (Blueprint $table) {
             $table->id();
-            $table->integer('candidate_id');
-            $table->string('business');
-            $table->string('job');
-            $table->text('activities');
-            $table->date('admission');
-            $table->date('demission');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ class CreateTableExperience extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('experience');
+        Schema::dropIfExists('languages');
     }
 }

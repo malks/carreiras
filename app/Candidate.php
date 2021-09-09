@@ -17,6 +17,11 @@ class Candidate extends Model
         return $this->hasMany('App\Experience');
     }
 
+    public function langs()
+    {
+        return $this->belongsToMany('App\Language', 'candidate_languages', 'candidate_id', 'language_id')->withPivot('level');
+    }
+
     public function subscriptions(){
         return $this->belongsToMany('App\Job', 'subscribed', 'candidate_id', 'job_id');
     }

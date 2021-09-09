@@ -8,6 +8,31 @@
 <input type='hidden' id='full-data' value='@php echo json_encode($data->toArray()['data']);@endphp'/>
 
 @section('content')
+	<div id='addtag-modal' class="modal hide" tabindex="-1">
+		<form action="/adm/add-tag" method='POST'>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Nova Tag</h5>
+						<button type="button" class="btn-close"  onclick="$('#addtag-modal').hide()" data-bs-dismiss="modal" aria-label="Close">X</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col">
+								@csrf
+								<label for="">Tag:</label>
+								<input type="text" name='name' class='form-control'>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type='submit'>Salvar</button>
+						<button class="btn btn-danger" type='button' onclick="$('#addtag-modal').hide()">Fechar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
 	<form method='GET' action='/adm/tags' id='app'>
 		@csrf
 	    <div class="card" check-tags-list>
@@ -17,11 +42,11 @@
 	        <div class="card-body">
 	        	<div class='row'>
 	        		<div class="col-1">
-	        			<a class="btn btn-primary" id='new' href='/adm/tags/create'>Nova</a>
+	        			<button type='button' class="btn btn-primary" id='new' onclick="$('#addtag-modal').show()">Nova</button>
 	        		</div>
-	        		<div class="col-1">
+	        		<!--div class="col-1">
 	        			<button class="btn btn-secondary" id='edit' v-on:click='edit()' type='button' v-bind:disabled='canEdit'>Editar</button>
-	        		</div>
+	        		</div-->
 	        		<div class="col-1">
 	        			<button class="btn btn-danger" id='destroy' v-on:click='destroy()' type='button' v-bind:disabled='canDestroy'>Excluir</button>
 	        		</div>

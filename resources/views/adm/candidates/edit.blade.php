@@ -27,8 +27,12 @@
 	        		</div>
 	        	</div>
                 <div class="row margin-top-20">
+                    <div class="col-sm-12 col-lg-12">
+                        <h5 class='' ><i>Candidato: &nbsp {{$data->name}}</i></h5>
+                        <h5 class='' ><i>NUMCAN do Senior: &nbsp {{$data->senior_num_can}}</i></h5>
+                    </div>
                     <div class=" col-sm-12 col-lg">
-                        <i>Última Atualização:</i><i style='margin-left:10px;'> {{$data->updated_at}}</i>
+                        <i>Última Atualização:</i><i style='margin-left:10px;'> {{date_format($data->updated_at,'d/m/Y')}}</i>
                     </div>
                 </div>
 
@@ -54,6 +58,10 @@
                     <li class="nav-item">
                         <a class='nav-link' v-bind:class="{  active: isItMe('questionary') }" v-on:click="currentTab='questionary'" >Questionário de Seleção</a>
                     </li>
+                    <li class="nav-item">
+                        <a class='nav-link' v-bind:class="{  active: isItMe('subscriptions') }" v-on:click="currentTab='subscriptions'" >Vagas Candidatadas</a>
+                    </li>
+
 
                     <!--li class="nav-item">
                         <a  v-bind:class="nav-link { active: isItMe('candidate-data') }" v-on:click="currentTab='candidate-data'" href="#" tabindex="-1" aria-disabled="alwaysTrue">Disabled</a>
@@ -399,9 +407,13 @@
                                 <label for="data-work-card">Carteira de Trabalho</label>
                                 <input type='text' class='form-control' id='data-work-card' name='work_card' value='{{$data->work_card}}'/>
                             </div>
-                            <div class=" col-sm-12 col-lg-4">
-                                <label for="data-serie">Serie</label>
-                                <input type='text' class='form-control' id='data-serie' name='serie' value='{{$data->serie}}'/>
+                            <div class=" col-sm-12 col-lg-2">
+                                <label for="data-work-card-series">Serie</label>
+                                <input type='text' class='form-control' id='data-work-card-series' name='work_card_series' value='{{$data->work_card_series}}'/>
+                            </div>
+                            <div class=" col-sm-12 col-lg-2">
+                                <label for="data-work-card-digit">Digito</label>
+                                <input type='text' class='form-control' id='data-work-card-digit' name='work_card_digit' value='{{$data->work_card_digit}}'/>
                             </div>
                         </div>
                         <div class="row margin-top-10">
@@ -435,7 +447,7 @@
                         <div class="row margin-top-10">
                             <div class=" col-sm-12">
                                 <label for="data-interests">Interesses</label>
-                                <ul style='list-style-type:none;  height: 150px;width: 100%;padding: 0px;'>
+                                <ul style='list-style-type:none;  height: 150px;width: 100%;padding: 0px;border:1px solid #666;border-radius:5px;'>
                                     @foreach($data->interests as $interest)
                                         <li style='float:left;margin-left:15px;'>
                                             {{$interest['name']}}
@@ -638,6 +650,31 @@
                             <div class="col-lg-12">
                                 <label for="data-what-irritates-you">20. O que o irrita?</label>
                                 <input class='form-control' value="{{$data->what_irritates_you}}" type='text' name='what_irritates_you' id='data-what-irritates-you'/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade padding-top-10'  v-bind:class="{ active: isItMe('subscriptions'), show: isItMe('subscriptions') }" id="subscriptions">
+                        <div class="row margin-top-30">
+                            <div class="col-xs-12 col-lg-12 table-responsive">
+                                <table class='table table-bordered dataTable'>
+                                    <thead>
+                                        <tr>
+                                            <th>Vaga</th>
+                                            <th>Último Status</th>
+                                            <th>Data Inscrição</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($data->subscriptions as $sub)
+                                            <tr>
+                                                <td>{{$sub->name}}</td>
+                                                <!--td>/*$state[$sub->states[-1]->state_id]->name*/</td-->
+                                                <td>{{$sub->subscriptions->where('candidate_id','=',$data->id)->first()->states->last()->name}}</td>
+                                                <td>{{date_format($sub->created_at,'d/m/Y')}}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>        
                             </div>
                         </div>
                     </div>

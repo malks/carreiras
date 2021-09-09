@@ -11,6 +11,8 @@
                 <input type="hidden" class="hide" id='schooling-status' value='{{ json_encode($schooling_status) }}'>
                 <input type="hidden" class="hide" id='schooling-grades' value='{{ json_encode($schooling_grades) }}'>
                 <input type="hidden" class="hide" id='schooling-formation' value='{{ json_encode($schooling_formation) }}'>
+                <input type="hidden" class="hide" id='selected-languages' value='{{ json_encode($selected_languages) }}'>
+                <input type="hidden" class="hide" id='languages' value='{{ json_encode($languages) }}'>
                 <input type="hidden" name='schoolings' :value='stringedSchoolings'>
                 <input type="hidden" name='experiences' :value='stringedExperiences'>
                 <input type="hidden" name='excluded_experiences' v-model='stringedExcludedExperiences'>
@@ -36,7 +38,10 @@
                             </li>
                             <li class="nav-item">
                                 <a  class='nav-link'  v-bind:class="{ active: isItMe('experience-data') }" v-on:click="currentTab='experience-data'" >Experiência</a>
-                            </li>        
+                            </li>
+                            <li class="nav-item">
+                                <a  class='nav-link'  v-bind:class="{ active: isItMe('language-data') }" v-on:click="currentTab='language-data'" >Línguas</a>
+                            </li>
                             <li class="nav-item">
                                 <a  class='nav-link'  v-bind:class="{ active: isItMe('family-data') }" v-on:click="currentTab='family-data'" >Família</a>
                             </li>
@@ -102,11 +107,15 @@
                                     </div>
                                 </div>
                                 <div class="row margin-top-10">
-                                    <div class=" col-sm-12 col-lg-4">
+                                    <div class=" col-sm-12 col-lg-3">
                                         <label for="data-address-city">Cidade</label>
                                         <input type='text' class='w-input text-field white-background' id='data-address-city' name='address_city' value='{{$data->address_city}}'/>
                                     </div>
-                                    <div class=" col-sm-12 col-lg-6">
+                                    <div class=" col-sm-12 col-lg-2">
+                                        <label for="data-address-district">Bairro</label>
+                                        <input type='text' class='w-input text-field white-background' id='data-address-district' name='address_district' value='{{$data->address_district}}'/>
+                                    </div>
+                                    <div class=" col-sm-12 col-lg-5">
                                         <label for="data-address-street">Rua</label>
                                         <input type='text' class='w-input text-field white-background' name='address_street' id='data-address-street' value='{{$data->address_street}}'/>
                                     </div>
@@ -371,6 +380,43 @@
                                 </template>
                             </div>
 
+                            <div class='tab-pane fade'   v-bind:class="{ active: isItMe('language-data') , show: isItMe('language-data') }" id="language-data">
+                                <div class="row">
+                                    <div class="col"><h5>Idiomas</h5></div>
+                                </div>
+                                <div class="row-margin-top-10">
+                                    <div class="col">
+                                        <button class="btn btn-secondary" v-on:click="addLang" type='button'>Adicionar</button>
+                                    </div>
+                                </div>
+                                <input type='hidden' name='selected_languages' :value='stringedLanguages'/>
+                                <template v-for="(sellang,idx) in selected_languages">
+                                    <div class="row margin-top-10">
+                                        <div class="col-lg-3">
+                                            <label>Lingua</label>
+                                            <select class="form-control" v-model='sellang.id'>
+                                                <option value="">Selecione</option>
+                                                <template v-for='lang in languages'>
+                                                    <option :value="lang.id">@{{lang.name}}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+    
+                                        <div class="col-lg-3">
+                                            <label>Nivel</label>
+                                            <select v-model='sellang.pivot.level' class='form-control'>
+                                                <option value="basic">Básico</option>
+                                                <option value="intermediary">Intermediário</option>
+                                                <option value="advanced">Avançado</option>
+                                                <option value="natural">Fluente</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 margin-top-20">
+                                            <button class="btn btn-danger" v-on:click="selected_languages.splice(idx,1)" type='button'>Remover</button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
                             <div class='tab-pane fade'   v-bind:class="{ active: isItMe('family-data') , show: isItMe('family-data') }" id="family-data">
                                 <div class="row">
                                     <div class="col"><h5>Conjuge e Filhos</h5></div>
@@ -442,15 +488,19 @@
                                         <label for="data-work-card">Carteira de Trabalho</label>
                                         <input type='text' class='w-input text-field white-background' id='data-work-card' name='work_card' value='{{$data->work_card}}'/>
                                     </div>
-                                    <div class=" col-sm-12 col-lg-4">
-                                        <label for="data-serie">Serie</label>
-                                        <input type='text' class='w-input text-field white-background' id='data-serie' name='serie' value='{{$data->serie}}'/>
+                                    <div class=" col-sm-12 col-lg-2">
+                                        <label for="data-work-card-series">Serie</label>
+                                        <input type='text' class='w-input text-field white-background' id='data-work-card-series' name='work_card_series' value='{{$data->work_card_series}}'/>
+                                    </div>
+                                    <div class=" col-sm-12 col-lg-2">
+                                        <label for="data-work-card-digit">Digito</label>
+                                        <input type='text' class='w-input text-field white-background' id='data-work-card-digit' name='work_card_digit' value='{{$data->work_card_digit}}'/>
                                     </div>
                                 </div>
                                 <div class="row margin-top-10">
                                     <div class=" col-sm-12 col-lg-4">
                                         <label for="data-pis">PIS</label>
-                                        <input type='text' class='w-input text-field white-background' id='data-pis' name='serie' value='{{$data->serie}}'/>
+                                        <input type='text' class='w-input text-field white-background' id='data-pis' name='pis' value='{{$data->pis}}'/>
                                     </div>
                                     <div class=" col-sm-12 col-lg-4">
                                         <label for="data-rg">RG</label>
@@ -512,14 +562,14 @@
                                 <div class="row margin-top-30">
                                     <div class=" col-sm-12">
                                         <label for="data-skills">Habilidades</label>
-                                        <textarea name="skills" id="data-skills"  style='width: 100%;border-radius: 5px;height:150px;'></textarea>
+                                        <textarea name="skills" id="data-skills"  style='width: 100%;border-radius: 5px;height:150px;'>{{$data->skills}}</textarea>
                                     </div>
                                 </div>
                                 
                                 <div class="row margin-top-30">
                                     <div class=" col-sm-12">
                                         <label for="data-others">Outros</label>
-                                        <textarea name="others" id="data-others"  style='width: 100%;border-radius: 5px;height:150px;'></textarea>
+                                        <textarea name="others" id="data-others"  style='width: 100%;border-radius: 5px;height:150px;'>{{$data->others}}</textarea>
                                     </div>
                                 </div>
 

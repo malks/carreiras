@@ -71,6 +71,8 @@ def carreiras_to_senior_candidate(data_carreiras):
     ret=[]
     for data in data_carreiras:
         helper={}
+        num_can=""
+
         helper['PAINAS']=get_country_code_from_name(data['natural_country'])
         helper['ESTNAS']=get_state_code_from_name(data['natural_state'])
         helper['CIDNAS']=get_city_code_from_name(data['natural_city'])
@@ -120,38 +122,65 @@ def carreiras_to_senior_candidate(data_carreiras):
         if (data['deficiency']==1):
             helper['CODDEF']=get_deficiency_senior_id_from_carreiras_code(data['deficiency_id'])
 
+        #if "senior_num_can" in data:
+        #    num_can=data['senior_num_can']
+
+        helper['carreiras_id']=data['id']
+        #helper['NUMCAN']=num_can
+
         #helper['ULTATU']=data['updated_at']
         ret.append(helper)
 
     return ret
 
+#Arruma valor, arrancando caracteres invalidos para inserir no banco
 def string_and_strip(what):
     if what==None:
         return ''
     return re.sub("'|\"|-|`","",str(what))
 
+#Monta update do on duplicate keys para o banco
 def mount_updates(key,value):
     return string_and_strip(key)+"='"+string_and_strip(value)+"'"
 
+#Atualiza dados do candidato no carreiras
 def update_candidate_carreiras(data):
-#            candidate['senior_num_can']=data['NUMCAN'];
-#            candidate['last_senior_synced']=NOW();
-#           sql_run("update carreiras")
+    carreiras_conn=sql_conn()
+    run_sql("UPDATE lunellicarreiras.candidates SET last_senior_synced=NOW(),senior_num_can='"+str(data['NUMCAN'])+"' WHERE id='"+str(data['carreiras_id'])+"'",carreiras_conn)
     return
 
+#Adiciona status de sincronizado ao banco do carreiras para a inscrição nessa vaga desse candidato
+def add_carreiras_subscribed_state(candidates,conn):
+    for candidate in candidates:
+        subscriptions=str(candidate['subscriptions']).split(",")
+        for subscription in subscriptions:
+            run_sql("INSERT INTO subscribed_has_states (subscribed_id,state_id,created_at,updated_at) VALUES('"+subscription+"',5,now(),now())",conn)
+    return
+
+#Na senior não tem autoincrement na PK, então eu obtenho o valor maximo dela aqui e somo 1 antes de inserir
 def get_senior_candidate_next_key(conn):
     last_id=oc_select("SELECT MAX(NUMCAN) FROM R122CEX",conn)
     if len(last_id)>0 and last_id[0]['MAX(NUMCAN)']!=None:
         return last_id[0]['MAX(NUMCAN)']+1
 
+#Insere/atualiza candidato na senior
 def export_candidates_to_senior(candidates,conn):
     for candidate in candidates:
+
         candidate['NUMCAN']=get_senior_candidate_next_key(conn)
+
+        carreiras_id=candidate.pop('carreiras_id', '0')
+
         keys = ",".join(map(string_and_strip,list(candidate.keys())))
         values = "','".join(map(string_and_strip,list(candidate.values())))
         #updates = ",".join(map(mount_updates,list(candidate.keys()),list(candidate.values())))
-        sql="INSERT INTO R122CEX ("+keys+") VALUES ('"+values+"') "
+        sql="INSERT  INTO R122CEX ("+keys+") VALUES ('"+values+"') "
         oc_sql(sql,conn)
+        
+        if carreiras_id!='0':
+            candidate['carreiras_id']=carreiras_id
+            update_candidate_carreiras(candidate)
+
         #candidate['NUMCAN']=oc_insert(sql,conn,'NUMCAN')
     return
 
@@ -166,13 +195,15 @@ if __name__ == "__main__":
         last_sync[0]['last_sync']=datetime.strptime('2021-05-01','%Y-%m-%d')
    
     #Candidatos do carreiras que estão inscritos em vagas ativas e última sincronização com senior foi anterior a ultima atualização/inscrição do candidato em
-    candidates_carreiras=sql_select("SELECT DISTINCT candidates.* FROM candidates JOIN subscribed ON subscribed.candidate_id=candidates.id JOIN subscribed_has_states ON subscribed_has_states.subscribed_id=subscribed.id LEFT JOIN subscribed_has_states AS denied_states ON denied_states.subscribed_id=subscribed.id AND denied_states.state_id IN (5,2) LEFT JOIN states ON states.id=subscribed_has_states.state_id  WHERE  states.sync_to_senior=1 AND denied_states.id IS NULL AND (candidates.last_senior_synced<=candidates.updated_at OR candidates.last_senior_synced<=subscribed.updated_at OR candidates.last_senior_synced<=subscribed_has_states.updated_at) ",main_sql_conn)
-    print(candidates_carreiras)
-    #candidates_senior=carreiras_to_senior_candidate(candidates_carreiras)
-    #export_candidates_to_senior(candidates_senior,main_oc_conn)
-    #oc_sql("delete from R122CEX WHERE NUMCAN=7196",main_oc_conn)
-    candidates_senior=oc_select("select * from R122CEX ORDER BY NUMCAN DESC FETCH NEXT 1 ROWS ONLY",main_oc_conn)
-    print(candidates_senior)
+    candidates_carreiras=sql_select("SELECT DISTINCT candidates.*,group_concat(subscribed_has_states.subscribed_id) as subscriptions  FROM candidates JOIN subscribed ON subscribed.candidate_id=candidates.id JOIN subscribed_has_states ON subscribed_has_states.subscribed_id=subscribed.id LEFT JOIN subscribed_has_states AS denied_states ON denied_states.subscribed_id=subscribed.id AND denied_states.state_id IN (5,2) LEFT JOIN states ON states.id=subscribed_has_states.state_id  WHERE  states.sync_to_senior=1 AND denied_states.id IS NULL AND (candidates.last_senior_synced<=candidates.updated_at OR candidates.last_senior_synced<=subscribed.updated_at OR candidates.last_senior_synced<=subscribed_has_states.updated_at) GROUP BY candidates.id",main_sql_conn)
+
+    candidates_senior=carreiras_to_senior_candidate(candidates_carreiras)
+    export_candidates_to_senior(candidates_senior,main_oc_conn)
+    add_carreiras_subscribed_state(candidates_carreiras,main_sql_conn)
+    #test=oc_select("SELECT NOMCAN,COUNT(NUMCAN) as CONNTA from R122CEX  GROUP BY NOMCAN ORDER BY CONNTA DESC  FETCH NEXT 3 ROWS ONLY ",main_oc_conn)
+    test=oc_select("select * from R122CEX WHERE NOMCAN LIKE '%KARL%'",main_oc_conn)
+    #candidates_senior=oc_select("select * from R122CEX ORDER BY NUMCAN DESC FETCH NEXT 1 ROWS ONLY",main_oc_conn)
+    print(test)
 
     #Candidatos
     #candidate_senior=oc_select("SELECT * from R122CEX WHERE DATINC >= '"+last_sync[0]['last_sync'].strftime('%Y-%m-%d')+"' ",main_oc_conn)

@@ -12,6 +12,7 @@ use App\Experience;
 use App\News;
 use App\OurNumbers;
 use App\Job;
+use App\Language;
 use App\OurTeam;
 use App\Video;
 use App\Schooling;
@@ -95,8 +96,12 @@ class LandingController extends Controller
 
     public function profile(){
         $logged_in=Auth::user();
-        $data=Candidate::where('user_id','=',$logged_in->id)->with(['Schooling','Experience','interests'])->first();
+        $data=Candidate::where('user_id','=',$logged_in->id)->with(['Schooling','Experience','interests','langs'])->first();
+        if (empty($data))
+            $data=new Candidate;
         $deficiencies = Deficiency::all();
+        $languages=Language::all();
+        $selected_languages=$data->langs->toArray();
         $tags = Tag::all();
         $schooling_grades=[
             'technology' => 'Tecnólogo',
@@ -130,9 +135,11 @@ class LandingController extends Controller
             'data'=>$data,
             'logged_in'=>$logged_in,
             'deficiencies'=>$deficiencies,
+            'languages'=>$languages,
             'schooling_grades'=>$schooling_grades,
             'schooling_status'=>$schooling_status,
             'schooling_formation'=>$schooling_formation,
+            'selected_languages'=>$selected_languages,
         ]);
     }
 
@@ -183,6 +190,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
         else
             $candidate=new Candidate;
 
+        $selected_languages=json_decode($dados['selected_languages'],true);
         $schoolings=json_decode($dados['schoolings'],true);
         $excluded_schoolings=json_decode($dados['excluded_schoolings'],true);
         $experiences=json_decode($dados['experiences'],true);
@@ -200,6 +208,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
         unset($dados['excluded_experiences']);
         unset($dados['experience']);
         unset($dados['interests']);
+        unset($dados['selected_languages']);
         foreach($dados as $k => $d){
             $candidate->{$k}=$d;
         }
@@ -217,6 +226,11 @@ $arr['what_irritates_you']="20. O que o irrita?";
                 $tag=Tag::where('id','=',$interest['id'])->first();
             }
             DB::table('candidates_tags')->insert(['candidate_id'=>$candidate->id,'tag_id'=>$tag->id]);
+        }
+
+        DB::table('candidate_languages')->where(['candidate_id'=>$candidate->id])->delete();
+        foreach ($selected_languages as $lang){
+            DB::table('candidate_languages')->insert(['candidate_id'=>$candidate->id,'language_id'=>$lang['id'],'level'=>$lang['pivot']['level']]);
         }
 
         foreach ($schoolings as $schooling_data){
@@ -297,6 +311,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
         $fields = Field::get();
         $units = Unit::get();
 
+        $candidate_id=0;
         if (!empty($candidate)){
             $subscriptions = Subscribed::where('candidate_id','=',$candidate->id)->with(['states'=>function ($states_query) {
                 $states_query->where('candidate_visible','=','1');
@@ -317,7 +332,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
             'user_id'=>$user_id,
             'fields'=>$fields,
             'units'=>$units,
-            'candidate_id'=>$candidate->id,
+            'candidate_id'=>$candidate_id,
         ]);
     }
 

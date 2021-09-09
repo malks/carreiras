@@ -235,7 +235,7 @@ return [
             'icon' => 'fas fa-external-link-alt',
         ],
         [
-            'text' => 'Configurações',
+            'text' => 'Configurar Home',
             'url'  => 'adm/config',
             'icon' => 'fas fa-tools',
         ],
@@ -246,24 +246,9 @@ return [
         ],
         ['header' => 'GERENCIAR'],
         [
-            'text' => 'Unidades',
-            'url'  => 'adm/units',
-            'icon' => 'fas fa-building',
-        ],
-        [
-            'text' => 'Áreas',
-            'url'  => 'adm/fields',
-            'icon' => 'fas fa-users-cog',
-        ],
-        [
-            'text' => 'Vagas',
-            'url'  => 'adm/jobs',
-            'icon' => 'fas fa-briefcase',
-        ],
-        [
-            'text' => 'Candidatos',
-            'url'  => 'adm/candidates',
-            'icon' => 'fas fa-user-tie',
+            'text' => 'Seleção e Recrutamento',
+            'url'  => 'adm/recruiting',
+            'icon' => 'fas fa-clipboard-list',
         ],
         [
             'text' => 'Estados de Recrutamento',
@@ -271,9 +256,24 @@ return [
             'icon' => 'fas fa-dice-d6',
         ],
         [
-            'text' => 'Seleção e Recrutamento',
-            'url'  => 'adm/recruiting',
-            'icon' => 'fas fa-clipboard-list',
+            'text' => 'Áreas de Vagas',
+            'url'  => 'adm/fields',
+            'icon' => 'fas fa-users-cog',
+        ],
+        [
+            'text' => 'Candidatos',
+            'url'  => 'adm/candidates',
+            'icon' => 'fas fa-user-tie',
+        ],
+        [
+            'text' => 'Unidades',
+            'url'  => 'adm/units',
+            'icon' => 'fas fa-building',
+        ],
+        [
+            'text' => 'Vagas',
+            'url'  => 'adm/jobs',
+            'icon' => 'fas fa-briefcase',
         ],
         [
             'text' => 'Tags',

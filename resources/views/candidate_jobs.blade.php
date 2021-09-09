@@ -56,13 +56,23 @@
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <label for="" class="control-label">Área</label>
-                                                    <span> @{{fields[viewingJob.field_id].name}}</span>
+                                                    <span> @{{getField(viewingJob.field_id).name}}</span>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <label for="" class="control-label">Unidade</label>
-                                                    <span> @{{units[viewingJob.unit_id].name}}</span>
+                                                    <span> @{{getUnit(viewingJob.unit_id).name}}</span>
                                                 </div>
                                             </div>
+                                            <div class="row margin-top-30">
+                                                <div class="col-lg-6">
+                                                    <label for="" class="control-label">Cidade</label>
+                                                    <span> @{{getUnit(viewingJob.unit_id).city}}</span>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <label for="" class="control-label">Estado</label>
+                                                    <span> @{{getUnit(viewingJob.unit_id).state}}</span>
+                                                </div>
+                                            </div>        
                                             <div class="row margin-top-30">
                                                 <div class="col-lg-12">
                                                     <label for="" class="control-label">Vaga:</label>

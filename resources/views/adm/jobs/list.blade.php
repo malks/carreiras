@@ -28,6 +28,33 @@
 
 	        	</div>
 	        	<div class='row margin-top-10'>
+					<div class="col-lg-3">
+						<input type="checkbox" value='1' name='filter_status[]' @if(in_array('1',$filter_status)) checked @endif>
+						<label style='margin-left:5px' for="">Ativas</label>
+					</div>
+					<div class="col-lg-3">
+						<input type="checkbox" value='0' name='filter_status[]' @if(in_array('0',$filter_status)) checked @endif >
+						<label style='margin-left:5px' for="">Inativas</label>
+					</div>
+				</div>
+				<div class='row margin-top-10'>
+					<div class="col-lg-3">
+						<label for="">
+							Data de Criação Início:
+						</label>
+						<input type="date" class="form-control" name='filter_created_at_start' value='{{$filter_created_at_start}}'>
+					</div>
+					<div class="col-lg-3">
+						<label for="">
+							Data de Criação Fim:
+						</label>
+						<input type="date" class="form-control" name='filter_created_at_end' value='{{$filter_created_at_end}}'>
+					</div>
+					<div class="col-lg-1 margin-top-30">
+						<button class='btn btn-primary' type='submit'>Buscar</button>
+					</div>
+				</div>
+					<div class='row margin-top-10'>
 	        		<div class='col'>
 	        			<input class='form-control' placeholder='Busca...' id='search' name='search' @if(!empty($search)) value='{{$search}}' @endif>
 	        		</div>
@@ -40,12 +67,16 @@
 									<th style='width:40px;'><input type='checkbox' id='check-all' v-on:click='reverseSelection()'></th>
 			        				<th>Id</th>
 			        				<th>Nome</th>
+			        				<th>Unidade</th>
+			        				<th>Data de Criação</th>
+			        				<th>Código Senior</th>
+			        				<th>Código RQU Senior</th>
 			        				<th>Status</th>
 			        			</tr>
 			        		</thead>
 			        		<tbody>
                                 @if($data->total()<=0)
-                                    <tr><td colspan='3'>Nenhum registro encontrado</td></tr>
+                                    <tr><td colspan='8'>Nenhum registro encontrado</td></tr>
                                 @endif
 								@foreach($data as $d)
 									<tr class='hoverable' v-on:click='addItem({{$d->id}})' > 
@@ -53,6 +84,10 @@
 											<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
 										<td>{{$d->id}}</td>
 										<td>{{$d->name}}</td>
+										<td>{{$d->unit->name}}</td>
+										<td>{{(!empty($d->created_at)) ? date_format($d->created_at,"d/m/Y") : ""}}</td>
+										<td>{{$d->cod_senior}}</td>
+										<td>{{$d->cod_rqu_senior}}</td>
 										<td>{{($d->status) ? "Ativa" : "Inativa"}}</td>
 									</tr>
 								@endforeach

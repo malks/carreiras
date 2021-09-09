@@ -78,6 +78,18 @@ function candidateSubscription(){
 
         },
         methods:{
+            getField:function (field_id){
+                let ret = this.fields.find(obj=>{
+                    return obj.id==field_id;
+                });
+                return ret;
+            },
+            getUnit:function (unit_id){
+                let ret = this.units.find(obj=>{
+                    return obj.id==unit_id;
+                });
+                return ret;
+            },
             getSubscriptionState:function (job){
                 let that = this;
                 for (let i in that.subscriptions){
@@ -229,6 +241,18 @@ function candidateJobs(){
             }
         },
         methods:{
+            getField:function (field_id){
+                let ret = this.fields.find(obj=>{
+                    return obj.id==field_id;
+                });
+                return ret;
+            },
+            getUnit:function (unit_id){
+                let ret = this.units.find(obj=>{
+                    return obj.id==unit_id;
+                });
+                return ret;
+            },
             getSubscriptionState:function (job){
                 let that = this;
                 for (let i in that.subscriptions){
@@ -422,6 +446,18 @@ function homeJobs(){
             }
         },
         methods:{
+            getField:function (field_id){
+                let ret = this.fields.find(obj=>{
+                    return obj.id==field_id;
+                });
+                return ret;
+            },
+            getUnit:function (unit_id){
+                let ret = this.units.find(obj=>{
+                    return obj.id==unit_id;
+                });
+                return ret;
+            },
             isSubscribed:function (job){
                 let that = this;
                 let ret = false;
@@ -530,6 +566,10 @@ function startProfile(screenNameHelper='',firstTab=''){
                 that=this;
                 return JSON.stringify(that.excluded_schoolings);
             },
+            stringedLanguages:function () {
+                that=this;
+                return JSON.stringify(that.selected_languages);
+            },
             stringedExcludedExperiences:function () {
                 that=this;
                 return JSON.stringify(that.excluded_experiences);
@@ -550,6 +590,9 @@ function startProfile(screenNameHelper='',firstTab=''){
             },
         },
         methods:{
+            addLang:function () {
+                this.selected_languages.push({id:"",pivot:{id:null,level:'basic'}})
+            },
             isItMe:function (who) {
                 if (this.currentTab==who)
                     return true;
@@ -672,7 +715,10 @@ function getCustomData(screenNameHelper,firstTab){
         customData.schooling_grades=JSON.parse(document.getElementById('schooling-grades').value);
         customData.schooling_status=JSON.parse(document.getElementById('schooling-status').value);
         customData.schooling_formation=JSON.parse(document.getElementById('schooling-formation').value);
+        customData.selected_languages=JSON.parse(document.getElementById('selected-languages').value);
+        customData.languages=JSON.parse(document.getElementById('languages').value);
     }
+    console.log(customData);
     return customData;
 }
 

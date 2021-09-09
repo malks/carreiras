@@ -166,8 +166,9 @@ def senior_to_carreiras_units(data_senior):
 def senior_fill_job_data(jobs,oc_conn):
     all_jobs=[]
     for job in jobs:
-        job_details=oc_select("SELECT TITCAR FROM R024CAR WHERE CODCAR='"+str(job["CODCAR"])+"' AND ESTCAR='"+str(job["ESTCAR"])+"'",oc_conn)
+        job_details=oc_select("SELECT TITCAR,CODHIE FROM R024CAR WHERE CODCAR='"+str(job["CODCAR"])+"' AND ESTCAR='"+str(job["ESTCAR"])+"'",oc_conn)
         job['TITCAR']=job_details[0]['TITCAR']
+        job['CODHIE']=job_details[0]['CODHIE']
         all_jobs.append(job)
 
     return all_jobs
