@@ -65,7 +65,8 @@ class LandingController extends Controller
 
         $video = Video::where('active','=',1)->first();
 
-        $jobs = Job::where('status','=',1)->where('start','<=',$today)->where('end','>=',$today)->with(['tags','field'])->orderBy('created_at','desc')->get();
+        //$jobs = Job::where('status','=',1)->where('start','<=',$today)->where('end','>=',$today)->with(['tags','field'])->orderBy('created_at','desc')->get();
+        $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
         return view('welcome')->with(
             [
                 'banners'=>$banners,
@@ -209,6 +210,19 @@ $arr['what_irritates_you']="20. O que o irrita?";
         unset($dados['experience']);
         unset($dados['interests']);
         unset($dados['selected_languages']);
+
+        $dados['cpf'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['cpf']),0,11);
+        $dados['pis'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['pis']),0,11);
+        $dados['rg'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['rg']),0,16);
+        $dados['weight'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['weight']),0,6);
+        $dados['height'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['height']),0,5);
+        $dados['work_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card']),0,9);
+        $dados['work_card_series'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card_series']),0,5);
+        $dados['work_card_digit'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card_digit']),0,2);
+        $dados['elector_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['elector_card']),0,13);
+        $dados['veteran_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['veteran_card']),0,13);
+        $dados['cid'] = str_replace(['.','-',',','_','!',';'],'',$dados['cid']);
+
         foreach($dados as $k => $d){
             $candidate->{$k}=$d;
         }
@@ -287,7 +301,8 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
         $today=Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
 
-        $jobs = Job::where('status','=',1)->where('start','<=',$today)->where('end','>=',$today)->with(['tags','field'])->orderBy('created_at','desc')->get();
+        $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
+        //$jobs = Job::where('status','=',1)->where('start','<=',$today)->where('end','>=',$today)->with(['tags','field'])->orderBy('created_at','desc')->get();
         $fields = Field::get();
         $units = Unit::get();
         $user_id=0;

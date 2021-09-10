@@ -225,11 +225,11 @@
 				'<i class="fa fa-angle-left"></i>',
 				'<i class="fa fa-angle-right"></i>'
 			],
-			navRewind: true,
+			navRewind: false,
 			autoplay: true,
 			autoplayTimeout: 4000,
 			autoplayHoverPause: true,
-			rewind: true,
+			rewind: false,
 			callbacks: true,
 			//animation duration default: 1500ms
 			animateOut: 'fadeOut',

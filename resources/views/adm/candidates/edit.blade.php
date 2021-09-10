@@ -50,6 +50,9 @@
                         <a  class='nav-link'  v-bind:class="{ active: isItMe('family-data') }" v-on:click="currentTab='family-data'" >Família</a>
                     </li>
                     <li class="nav-item">
+                        <a  class='nav-link'  v-bind:class="{ active: isItMe('languages-data') }" v-on:click="currentTab='languages-data'" >Idiomas</a>
+                    </li>
+                    <li class="nav-item">
                         <a class='nav-link' v-bind:class="{  active: isItMe('documents') }" v-on:click="currentTab='documents'" >Documentos</a>
                     </li>
                     <li class="nav-item">
@@ -245,7 +248,23 @@
 
                         </div>
                     </div>
-    
+                    <div class='tab-pane fade'   v-bind:class="{ active: isItMe('languages-data') , show: isItMe('languages-data') }" id="languages-data">
+                        @php
+                            $langlevels=[
+                                'basic'=>'Básico',
+                                'intermediary'=>'Intermediário',
+                                'advanced'=>'Avançado',
+                                'natural'=>'Fluente',
+                             ];
+                        @endphp
+                        @foreach($data->langs as $lang)
+                            <div class="row margin-top-10">
+                                <div class="col-lg-3">
+                                    {{$lang->name}} : {{$langlevels[$lang->pivot->level]}}
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                     <div class='tab-pane fade'   v-bind:class="{ active: isItMe('family-data') , show: isItMe('family-data') }" id="family-data">
                         <div class="row margin-top-30">
                             <div class="col"><h6>Conjuge e Filhos</h6></div>

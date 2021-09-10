@@ -177,7 +177,7 @@
                                                 </div>
                                                 <div class="col-12 margin-top-10">
                                                     <label class='label-form' for="">Foto</label><br>
-                                                    <img class='config-block-image' :src="member.picture" alt=""><br>
+                                                    <img class='config-block-image' :src="member.picture" alt="" style='max-width: 385px;'><br>
                                                     <label class='label-form' for="" class='margin-top-20'>Alterar Foto:</label><br>
                                                     <input type="file" :id="'team-pic-picker-'+idx" class="form-control team-pic-picker" v-on:change="updateTeamPic(idx)">
                                                 </div>

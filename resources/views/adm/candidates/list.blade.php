@@ -27,6 +27,20 @@
 	        		</div>
 
 	        	</div>
+                <div class="row margin-top-10">
+                    <div class="col-sm-12 col-lg-3">
+                        <label for="data-start">Início Última Atualização:</label>
+                        <input type="date" class="form-control" id='data-start' name='filter_updated_at_start' value='{{$filter_updated_at_start}}'>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <label for="data-end">Fim Última Atualização:</label>
+                        <input type="date" class="form-control" id='data-end' name='filter_updated_at_end' value='{{$filter_updated_at_end}}'>
+                    </div>
+					<div class="col-sm-12 col-lg-2 margin-top-30">
+						<button class="btn btn-primary" type='submit'>Buscar</button>
+					</div>
+                </div>
+
 	        	<div class='row margin-top-10'>
 	        		<div class='col'>
 	        			<input class='form-control' placeholder='Busca...' id='search' name='search' @if(!empty($search)) value='{{$search}}' @endif>
@@ -40,6 +54,7 @@
 									<th style='width:40px;'><input type='checkbox' id='check-all' v-on:click='reverseSelection()'></th>
 			        				<th>Id</th>
 			        				<th>Nome</th>
+			        				<th>Última Atualização</th>
 			        			</tr>
 			        		</thead>
 			        		<tbody>
@@ -52,6 +67,7 @@
 											<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
 										<td>{{$d->id}}</td>
 										<td>{{$d->name}}</td>
+										<td>{{(!empty($d->updated_at)) ? date_format($d->updated_at,'d/m/Y') : ''}}</td>
 									</tr>
 								@endforeach
 							</tbody>

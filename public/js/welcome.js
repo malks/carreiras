@@ -425,22 +425,22 @@ function homeJobs(){
                 return true;
             },
             printDescription:function (){
-                if (this.viewingJob.id!=null)
+                if (this.viewingJob.id!=null && this.viewingJob.description!=undefined)
                     return this.viewingJob.description.split("\r\n").join("<br>");
                 return "";
             },
             printActivities:function (){
-                if (this.viewingJob.id!=null)
+                if (this.viewingJob.id!=null && this.viewingJob.activities!=undefined)
                     return this.viewingJob.activities.split("\r\n").join("<br>");
                 return "";
             },
             printRequired:function (){
-                if (this.viewingJob.id!=null)
+                if (this.viewingJob.id!=null && this.viewingJob.required!=undefined)
                     return this.viewingJob.required.split("\r\n").join("<br>");
                 return "";
             },
             printDesirable:function (){
-                if (this.viewingJob.id!=null)
+                if (this.viewingJob.id!=null && this.viewingJob.desirable!=undefined)
                     return this.viewingJob.desirable.split("\r\n").join("<br>");
                 return "";
             }
@@ -450,12 +450,16 @@ function homeJobs(){
                 let ret = this.fields.find(obj=>{
                     return obj.id==field_id;
                 });
+                if (ret==null || ret==undefined || ret=='')
+                    ret = {id:null,name:''};
                 return ret;
             },
             getUnit:function (unit_id){
                 let ret = this.units.find(obj=>{
                     return obj.id==unit_id;
                 });
+                if (ret==null || ret==undefined || ret=='')
+                    ret = {id:null,name:''};
                 return ret;
             },
             isSubscribed:function (job){
@@ -526,7 +530,7 @@ function homeJobs(){
                 })
             },
             closeModal:function () {
-                this.viewingJob={id:null};
+                this.viewingJob={id:null,name:''};
                 $('#job-modal').hide();
             },
             closeObsModal:function () {

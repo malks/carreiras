@@ -107,7 +107,7 @@
                                 <table class='table dataTable'>
                                     <thead>
                                         <tr>
-                                            <th>Nome</th>
+                                            <th>Vaga</th>
                                             <th>Unidade</th>
                                             <th>Área</th>
                                             <th class='text-center'>Status</th>
@@ -124,7 +124,7 @@
                                         </tr>
                                         <template v-for="job in runData.jobs">
                                             <tr v-show='inFilter(job) && inJobNameFilter(job)' v-on:click="inspectJob(job)" class='hoverable' :class="{ 'active':runData.selectedJob.id==job.id }">
-                                                <td>@{{ job.name }}</td>
+                                                <td><a :href="'/adm/jobs/edit/'+job.id" target='_blank'> @{{ job.name }}</a></td>
                                                 <td>@{{ getUnitById(job.unit_id).name }}</td>
                                                 <td>@{{ getFieldById(job.field_id).name }}</td>
                                                 <td class='text-center'>@{{ runData.jobStatusNames[job.status] }}</td>

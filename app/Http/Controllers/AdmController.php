@@ -497,8 +497,8 @@ class AdmController extends Controller
                 'data'=>$data,
                 'search'=>$request->search,
                 'schooling_grades'=>$schooling_grades,
-                'filter_updated_at_end'=>$filter_updated_at_end,
-                'filter_updated_at_start'=>$filter_updated_at_start,
+                'filter_updated_at_end'=>$request->filter_updated_at_end,
+                'filter_updated_at_start'=>$request->filter_updated_at_start,
             ]
         );
 
@@ -641,7 +641,7 @@ class AdmController extends Controller
     }
 
     public function candidatesEdit ($id) {
-        $data=Candidate::where('id','=',$id)->with(['subscriptions','subscriptions.subscriptions','subscriptions.subscriptions.states'])->first();
+        $data=Candidate::where('id','=',$id)->with(['subscriptions','subscriptions.subscriptions','subscriptions.subscriptions.states','langs'])->first();
         $states=State::all();
         $deficiencies = Deficiency::all();
 

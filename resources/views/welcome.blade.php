@@ -280,7 +280,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <iframe id='ytplayer' height='600px' width='800px' src="{{$video->file.'?origin=local.lunellicarreiras.com.br&autoplay=1'}}" frameborder="0">
+                            <iframe id='ytplayer' height='600px' width='800px' src="{{$video->file.'?origin=local.lunellicarreiras.com.br&autoplay=1&mute=1'}}" frameborder="0">
                             </iframe>
                         </div>
                     </div>
@@ -300,8 +300,8 @@
                                     @if ($job->home_slider==1)
                                         <div class="item">
                                             <div class="brand-logo-holder">
-                                                <span class='job-item' style='cursor:pointer;' v-on:click="viewJob({{ $job->id }})">
-                                                    {{$job->name}}
+                                                <span class='job-item' style='cursor:pointer;text-transform:capitalize' v-on:click="viewJob({{ $job->id }})">
+                                                    {{strtolower($job->name)}}
                                                 </span>
                                             </div>
                                         </div>
@@ -425,7 +425,7 @@
                                     <div class="col-sm-6 col-md-4">
                                         <article>
                                             <div class="blog-page-post-wrapp animated">
-                                                @if(!empty($job->picture))
+                                                @if(!empty($job->picture) && $job->picture!='/img/gallery.png')
                                                     <img class="blog-page-post-img" src="{{ asset($job->picture) }}" alt="{{$job->name}}"/>
                                                 @endif
                                                 <h2 class="blog-page-post-head-h2"><a  href="#job" v-on:click="viewJob({{ $job->id }})">{{$job->name}}</a></h2>
@@ -472,7 +472,7 @@
                                         <div class="col-sm-6 col-md-3">
                                             <article>
                                                 <div class="blog-page-post-wrapp animated">
-                                                    @if(!empty($job->picture))
+                                                    @if(!empty($job->picture)  && $job->picture!='/img/gallery.png')
                                                         <img class="blog-page-post-img" src="{{ asset($job->picture) }}" alt="{{$job->name}}"/>
                                                     @endif
                                                     <h2 class="blog-page-post-head-h2"><a href="standard-gallery-post.html">{{$job->name}}</a></h2>
