@@ -55,6 +55,8 @@
 			        				<th>Id</th>
 			        				<th>Nome</th>
 			        				<th>Última Atualização</th>
+			        				<th>Candidaturas</th>
+			        				<th>Última Candidatura</th>
 			        			</tr>
 			        		</thead>
 			        		<tbody>
@@ -68,6 +70,8 @@
 										<td>{{$d->id}}</td>
 										<td>{{$d->name}}</td>
 										<td>{{(!empty($d->updated_at)) ? date_format($d->updated_at,'d/m/Y') : ''}}</td>
+										<td>{{$d->subscription_amount}}</td>
+										<td>{{(!empty($d->subscriptions[0]->created_at)) ? date_format($d->subscriptions[0]->created_at,'d/m/Y') : ''}}</td>
 									</tr>
 								@endforeach
 							</tbody>
