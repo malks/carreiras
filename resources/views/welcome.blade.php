@@ -280,7 +280,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <iframe id='ytplayer' height='600px' width='800px' src="{{$video->file.'?origin=local.lunellicarreiras.com.br&autoplay=1&mute=1'}}" frameborder="0">
+                            <iframe id='ytplayer' height='600px' width='800px' src="{{$video->file.'?origin=local.lunellicarreiras.com.br'}}" frameborder="0">
                             </iframe>
                         </div>
                     </div>
