@@ -133,11 +133,11 @@
                                             </div>
                                         </div>
                                         <div class="row margin-top-20">
-                                            <div class="col fixed-height-50"  v-html='job.description.split("\r\n").join("<br>")'>
+                                            <div class="col fixed-height-50"  v-html='(job.description!=null) ? job.description.split("\r\n").join("<br>") : ""'>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
-                                            <div class="col fixed-height-50" v-html='job.required.split("\r\n").join("<br>")'>
+                                            <div class="col fixed-height-50" v-html='(job.required!=null) ? job.required.split("\r\n").join("<br>") : ""'>
                                             </div>
                                         </div>
                                         <div class="row margin-top-20">
