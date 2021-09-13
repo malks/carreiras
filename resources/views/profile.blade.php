@@ -384,7 +384,7 @@
                                 <div class="row">
                                     <div class="col"><h5>Idiomas</h5></div>
                                 </div>
-                                <div class="row-margin-top-10">
+                                <div class="row margin-top-10">
                                     <div class="col">
                                         <button class="btn btn-default" v-on:click="addLang" type='button'>Adicionar</button>
                                     </div>
