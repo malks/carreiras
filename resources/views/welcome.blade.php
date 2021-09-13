@@ -157,7 +157,7 @@
                                     <div class="row">
                                         <div class="upSection animated slideOutUp">
                                             <div class="text-top {{$banner->title_big_outline}}" style='color:{{$banner->title_big_color}};'>{{$banner->title_big}}</div>
-                                            <div style='line-height:50px;' class="text-mid  {{$banner->title_small_outline}}" style='color:{{$banner->title_small_color}};'>{{$banner->title_small}}</div>
+                                            <div class="text-mid  {{$banner->title_small_outline}}" style='line-height:50px;color:{{$banner->title_small_color}};'>{{$banner->title_small}}</div>
                                             <div class="slider-line"></div>
                                         </div>
                                         <div class="downSection animated slideOutDown">
