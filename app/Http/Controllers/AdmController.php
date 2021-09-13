@@ -519,12 +519,11 @@ class AdmController extends Controller
         ->when(!empty($request->filter_updated_at_end), function ($query) use ($request) {
             $query->where('candidates.updated_at','<=',$request->filter_updated_at_end);
         })
-
+        ->distinct()
         ->with(['Schooling','Experience'])
         ->withCount('subscriptions as subscription_amount')
         ->leftJoin('subscribed','subscribed.candidate_id','=','candidates.id')
         ->orderBy('subscribed.created_at','desc')
-        ->groupBy('candidates.id')
         ->paginate(15);
 
         
