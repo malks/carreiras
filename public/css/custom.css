@@ -54,6 +54,10 @@
     -webkit-text-stroke-color:#999;
 }
 
+.text-mid{
+    line-height: 60px!important;
+}
+
 .quote-author {
     font-family:"dancing-script";
     font-size:20pt;
@@ -315,6 +319,10 @@ input#interests-input.interests-input, input#interests-input.interests-input:foc
 .fixed-height-50{
     height: 50px;
     overflow-y: hidden;
+}
+
+.head-subtitle{
+    margin-top:0px!important;
 }
 
 .maxed-height-100{
