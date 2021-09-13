@@ -269,24 +269,24 @@
                         </div>
                     </div>
                 </div>
+                <!-- OUR SERVICES -->
+                <section class="padding-top-bottom-120px white-background animation-overflow" id='video-home'>
+                    <div class="container">
+                        <div class="row">
+                            <div class="animatedParent animateOnce">
+                                <h3 class="head-h3 animated">{{$video->title}}</h3>
+                                <p class="head-subtitle">{{$video->title_background}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <iframe id='ytplayer' height='600px' width='800px' src="{{$video->file.'?origin=local.lunellicarreiras.com.br'}}" frameborder="0">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             @endif
-            <!-- OUR SERVICES -->
-            <section class="padding-top-bottom-120px white-background animation-overflow" id='video-home'>
-                <div class="container">
-                    <div class="row">
-                        <div class="animatedParent animateOnce">
-                            <h3 class="head-h3 animated">{{$video->title}}</h3>
-                            <p class="head-subtitle">{{$video->title_background}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <iframe id='ytplayer' height='600px' width='800px' src="{{$video->file.'?origin=local.lunellicarreiras.com.br'}}" frameborder="0">
-                            </iframe>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <div  id='home-jobs-app'>
                 <!-- BRANDING SLIDER -->
