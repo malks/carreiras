@@ -524,6 +524,7 @@ class AdmController extends Controller
         ->withCount('subscriptions as subscription_amount')
         ->leftJoin('subscribed','subscribed.candidate_id','=','candidates.id')
         ->orderBy('subscribed.created_at','desc')
+        ->groupBy('candidates.id')
         ->paginate(15);
 
         
