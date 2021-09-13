@@ -17,6 +17,7 @@ use App\User;
 use App\State;
 use App\Video;
 use App\Subscribed;
+use App\Subscriber;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -449,6 +450,44 @@ class AdmController extends Controller
         );
     }
 
+
+    public function subscribersList (Request $request){
+        $data=Subscriber:: when(!empty($request->search),function($query) use ($request) {
+            $query->where('email','like',"%$request->search%");
+        })
+        ->paginate(15);
+
+        if (empty($request->export)){
+            return view('adm.subscribers.list')->with(
+                [
+                    'data'=>$data,
+                    'search'=>$request->search,
+                ]
+            );
+        }
+    	else{
+		    $headers = array(
+		        "Content-type" => "text/csv; charset=UTF-8",
+		        "Content-Disposition" => "attachment; filename=file.csv",
+		        "Pragma" => "no-cache",
+		        "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+		        "Expires" => "0"
+		    );
+		    $columns = Array("Email");
+
+	        $file = fopen(public_path('newsletter.csv'), 'w');
+	        fputcsv($file, $columns);
+	        foreach ($data as $d){
+	        	fputcsv($file,array(
+	        		$d->email,
+	        	));
+	        }
+		    fclose($file);
+		    return response()->download(public_path('newsletter.csv'), 'newsletter.csv', $headers);
+    	}
+
+    }
+
     public function tagsList (Request $request){
         $data=Tag:: when(!empty($request->search),function($query) use ($request) {
             $query->where('name','like',"%$request->search%");
@@ -705,6 +744,11 @@ class AdmController extends Controller
 
     public function jobsDestroy (Request $request) {
         Job::whereIn('id',explode(",",$request->ids))->delete();
+        return;
+    }
+
+    public function subscribersDestroy (Request $request) {
+        Subscriber::whereIn('id',explode(",",$request->ids))->delete();
         return;
     }
 

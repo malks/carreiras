@@ -47,6 +47,7 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::get('/adm/states', 'AdmController@statesList')->name('states-list');
     Route::get('/adm/units', 'AdmController@unitsList')->name('units-list');
     Route::get('/adm/jobs', 'AdmController@jobsList')->name('jobs-list');
+    Route::get('/adm/subscribers', 'AdmController@subscribersList')->name('subscribers-list');
     Route::get('/adm/tags', 'AdmController@tagsList')->name('tags-list');
     Route::get('/adm/candidates', 'AdmController@candidatesList')->name('candidates-list');
     Route::get('/adm/users', 'AdmController@usersList')->name('users-list');
@@ -74,6 +75,7 @@ $router->group(['middleware' => ['auth','is.admin','role:admin']], function() {
     Route::post('/adm/states/destroy', 'AdmController@statesDestroy')->name('states-destroy');
     Route::post('/adm/units/destroy', 'AdmController@unitsDestroy')->name('units-destroy');
     Route::post('/adm/jobs/destroy', 'AdmController@jobsDestroy')->name('jobs-destroy');
+    Route::post('/adm/subscribers/destroy', 'AdmController@subscribersDestroy')->name('subscribers-destroy');
     Route::post('/adm/tags/destroy', 'AdmController@tagsDestroy')->name('tags-destroy');
     Route::post('/adm/candidates/destroy', 'AdmController@candidatesDestroy')->name('candidates-destroy');
     Route::post('/adm/users/destroy', 'AdmController@usersDestroy')->name('users-destroy');

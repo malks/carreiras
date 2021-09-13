@@ -10,6 +10,8 @@ let form = new FormData();
 $(document).ready(function () {
     if ($('[check-fields-list]').length>0)
         fieldsList();
+    if ($('[check-subscribers-list]').length>0)
+        subscribersList();
     if ($('[check-states-list]').length>0)
         statesList();
     if ($('[check-candidates-list]').length>0)
@@ -499,6 +501,13 @@ function statesList(){
 
 
 function fieldsList(){
+    startData();
+    ajaxUrl=$('#app').attr('action');
+    startList();
+    $('#search').focus();
+}
+
+function subscribersList(){
     startData();
     ajaxUrl=$('#app').attr('action');
     startList();

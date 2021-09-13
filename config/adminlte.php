@@ -280,6 +280,11 @@ return [
             'url'  => 'adm/tags',
             'icon' => 'fas fa-tags',
         ],
+        [
+            'text' => 'Inscritos Newsletter',
+            'url'  => 'adm/subscribers',
+            'icon' => 'fas fa-envelope',
+        ],
     ],
 
     /*
