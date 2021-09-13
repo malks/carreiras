@@ -386,7 +386,7 @@
                                 </div>
                                 <div class="row-margin-top-10">
                                     <div class="col">
-                                        <button class="btn btn-secondary" v-on:click="addLang" type='button'>Adicionar</button>
+                                        <button class="btn btn-default" v-on:click="addLang" type='button'>Adicionar</button>
                                     </div>
                                 </div>
                                 <input type='hidden' name='selected_languages' :value='stringedLanguages'/>
