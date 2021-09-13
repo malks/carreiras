@@ -55,7 +55,7 @@
                         <div class="container-fluid">
                             <div class="container" style='max-width: 1200px;'>
                                 <div class="row">
-                                    <div class="col-6 hedone-menu-header">
+                                    <div class="col-4 hedone-menu-header">
                                         <div class="nav-button">
                                             <i class="fa fa-bars"></i>
                                         </div>
@@ -69,10 +69,13 @@
                                             </a>
                                         </div>      
                                     </div>
-                                    <div id="Hedone" class="col-6 hedone-menu-container">
+                                    <div id="Hedone" class="col-8 hedone-menu-container">
                                         <div class="navbar-right">
                                             @if(empty($logged_in))
                                                 <ul class="hedone-menu" id='welcoLogin'>
+                                                    <li class="menu-item">
+                                                        <a href="/policy">Termos</a>
+                                                    </li>
                                                     <li class="menu-item">
                                                         <a href="/jobs">Vagas</a>
                                                     </li>
@@ -97,7 +100,7 @@
                                                         <button  v-if='login_user_ok==0'  v-on:click="checkLogin" type='button' class='btn btn-default' id='ok'>OK</button>
                                                         <button  v-if='checkPass()' type='button' v-on:click="goToLogin" class='btn btn-default' id="login">login</button>
                                                     </li>
-                                                    <li class="menu-item margin-left-30" >
+                                                    <li class="menu-item margin-left-20" >
                                                         <a href='/register' class="btn btn-green"  id='register'>Registre-se</a>
                                                     </li>
                                                 </ul>
@@ -107,13 +110,16 @@
                                                         <a href="/subscriptions">Candidaturas</a>
                                                     </li>
                                                     <li class="menu-item">
+                                                        <a href="/policy">Termos</a>
+                                                    </li>
+                                                    <li class="menu-item">
                                                         <a href="/jobs">Vagas</a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="/profile">Perfil</a>
                                                     </li>
                                                     <li>
-                                                        <span class='small margin-left-30'>
+                                                        <span class='small margin-left-20'>
                                                             Bem Vindo, {{$logged_in->name}} (<a href="/logout" style='color:#9b0303;display:inline;padding:2px!important;'>Sair</a>)
                                                         </span>
                                                     </li>

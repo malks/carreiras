@@ -95,6 +95,13 @@ class LandingController extends Controller
 		return '';
     }
 
+    public function policy() {
+        $logged_in=Auth::user();
+        return view('policy')->with([
+            'logged_in'=>$logged_in,
+        ]);
+    }
+
     public function profile(){
         $logged_in=Auth::user();
         $data=Candidate::where('user_id','=',$logged_in->id)->with(['Schooling','Experience','interests','langs'])->first();

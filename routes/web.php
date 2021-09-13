@@ -19,6 +19,7 @@ Route::get('/', 'LandingController@index')->name('home');
 Route::get('/login', 'LandingController@index')->name('login');
 Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/jobs', 'LandingController@jobsList');
+Route::get('/policy', 'LandingController@policy');
 Route::post('/newsletter-subscribe', 'LandingController@newsletterSubscribe');
 
 $router->group(['middleware' => ['auth']], function() {

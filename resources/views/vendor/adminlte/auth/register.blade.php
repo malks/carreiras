@@ -63,7 +63,16 @@
                                     </div>
                                 @endif
                             </div>
-
+                            <div class="input-group mb-3">
+                                <input type="checkbox" name='policy_accept' value='1' style='margin-top:5px;'>
+                                <label for="">Estou ciente e aceito os <a href='/policy' target='_blank'>termos e condições</a> de privacidade do Lunelli Carreiras</label>
+                                @if($errors->has('policy_accept'))
+                                    <div class="invalid-feedback">
+                                        <strong>Você precisa aceitar os termos para se registrar</strong>
+                                    </div>
+                                @endif
+                            </div>
+                    
                             {{-- Register button --}}
                             <button type="submit" class="btn btn-block btn-default">
                                 CRIAR CONTA
