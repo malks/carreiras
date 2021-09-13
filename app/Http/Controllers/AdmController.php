@@ -509,9 +509,9 @@ class AdmController extends Controller
             $query->orWhere('cpf','like',"%$request->search%");
             $query->orWhere('phone','like',"%$request->search%");
             $query->orWhere('address_street','like',"%$request->search%");
-            $query->orWhere('city','like',"%$request->search%");
-            $query->orWhere('state','like',"%$request->search%");
-            $query->orWhere('country','like',"%$request->search%");
+            $query->orWhere('address_city','like',"%$request->search%");
+            $query->orWhere('address_state','like',"%$request->search%");
+            $query->orWhere('address_country','like',"%$request->search%");
         })
         ->when(!empty($request->filter_updated_at_start), function ($query) use ($request) {
             $query->where('updated_at','>=',$request->filter_updated_at_start);
