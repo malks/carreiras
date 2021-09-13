@@ -258,17 +258,18 @@
             </section>
 
             <!-- VIDEO BACKGROUND SECTION -->
-            <div class="padding-top-bottom-120px video-section" style="background-image:url({{'/img/'.$video->face}})">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <a  class="lightbox-on-sep popup-video">
-                            </a>
+            @if (!empty($video))
+                <div class="padding-top-bottom-120px video-section" style="background-image:url({{'/img/'.$video->face}})">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a  class="lightbox-on-sep popup-video">
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
+            @endif
             <!-- OUR SERVICES -->
             <section class="padding-top-bottom-120px white-background animation-overflow" id='video-home'>
                 <div class="container">
