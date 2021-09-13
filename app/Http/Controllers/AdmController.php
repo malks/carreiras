@@ -508,7 +508,7 @@ class AdmController extends Controller
             $query->where('name','like',"%$request->search%");
             $query->orWhere('cpf','like',"%$request->search%");
             $query->orWhere('phone','like',"%$request->search%");
-            $query->orWhere('address','like',"%$request->search%");
+            $query->orWhere('address_street','like',"%$request->search%");
             $query->orWhere('city','like',"%$request->search%");
             $query->orWhere('state','like',"%$request->search%");
             $query->orWhere('country','like',"%$request->search%");
