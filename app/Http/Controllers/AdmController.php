@@ -514,10 +514,10 @@ class AdmController extends Controller
             $query->orWhere('address_country','like',"%$request->search%");
         })
         ->when(!empty($request->filter_updated_at_start), function ($query) use ($request) {
-            $query->where('updated_at','>=',$request->filter_updated_at_start);
+            $query->where('candidates.updated_at','>=',$request->filter_updated_at_start);
         })
         ->when(!empty($request->filter_updated_at_end), function ($query) use ($request) {
-            $query->where('updated_at','<=',$request->filter_updated_at_end);
+            $query->where('candidates.updated_at','<=',$request->filter_updated_at_end);
         })
 
         ->with(['Schooling','Experience'])
