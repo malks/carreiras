@@ -394,9 +394,7 @@
                             <div class="row margin-top-10">
                                 <div class=" col-sm-12 col-lg">
                                     <label for="experience-activities">Atividades</label>
-                                    <textarea type='text' class='form-control' id='experience-activities' name='experience[].activities'>
-                                        {{$experience->activities}}
-                                    </textarea>
+                                    <textarea type='text' class='form-control' id='experience-activities' name='experience[].activities'>{{$experience->activities}}</textarea>
                                 </div>
                             </div>
                             <div class="row margin-top-10">
@@ -479,14 +477,14 @@
                         <div class="row margin-top-30">
                             <div class=" col-sm-12">
                                 <label for="data-skills">Habilidades</label>
-                                <textarea name="skills" id="data-skills"  style='width: 100%;border-radius: 5px;height:150px;'></textarea>
+                                <textarea name="skills" id="data-skills"  style='width: 100%;border-radius: 5px;height:150px;'>{{$data->skills}}</textarea>
                             </div>
                         </div>
                         
                         <div class="row margin-top-30">
                             <div class=" col-sm-12">
                                 <label for="data-others">Outros</label>
-                                <textarea name="others" id="data-others"  style='width: 100%;border-radius: 5px;height:150px;'></textarea>
+                                <textarea name="others" id="data-others"  style='width: 100%;border-radius: 5px;height:150px;'>{{$data->other}}</textarea>
                             </div>
                         </div>
 

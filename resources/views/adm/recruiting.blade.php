@@ -153,6 +153,8 @@
                                 <input type="text" placeholder="Buscar candidato por nome" class='form-control' id='candidate-search' v-model='otherData.candidateNameSearch' >
                                 <h6 class='margin-top-10'>Filtro por Interesses</h6>
                                 <input type="text" placeholder="Buscar candidato por interesses ex: vendas comercial" class='form-control' id='candidate-tag-search' v-model='otherData.candidateTagSearch'>
+                                <h6 class='margin-top-10'>Filtro por Atividades de Trabalhos Anteriores</h6>
+                                <input type="text" placeholder="Buscar candidato por atividades passadas ex: merchandising" class='form-control' id='candidate-tag-search' v-model='otherData.candidateExpSearch'>
                             </div>
                         </div>
                     </div>
@@ -200,7 +202,7 @@
                                         </tr>
         
                                         <template v-for="(subscription,subx) in runData.subscriptions">
-                                            <tr v-show="candidateNameFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription)" class='select-sized'>
+                                            <tr v-show="candidateNameFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription)" class='select-sized'>
                                                 <td>@{{ getCandidate(subscription).name }}</td>
                                                 <td class='text-center'>
                                                     <select class="form-control" v-on:change="addSubscriptionState(getCandidate(subscription).id,runData.selectedJob.id,getState(runData.subscriptions[subx].current_state).name)" v-model="runData.subscriptions[subx].current_state">

@@ -309,7 +309,7 @@ class AdmController extends Controller
             };
             $query->with($arr_deep_filters);
         })
-        ->with(['tags','subscribers','subscribers.interests','field','unit'])
+        ->with(['tags','subscribers','subscribers.interests','subscribers.experience','field','unit'])
         ->withCount('subscriptions as subscription_amount')
         ->get()->toArray();
 

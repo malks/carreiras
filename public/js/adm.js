@@ -147,14 +147,14 @@ function recruiting(){
                                     in: {
                                         state_id:[1],
                                     }
-                                }
+                                },
                             }
                         },
                         tags:{
                             like:{
                                 name:''
                             }
-                        }
+                        },
                     },
                 },
             },
@@ -168,6 +168,7 @@ function recruiting(){
             jobTagSearch:'',
             candidateNameSearch:'',
             candidateTagSearch:'',
+            candidateExpSearch:'',
             tagFilters:'',
         }
     };
@@ -434,6 +435,30 @@ function recruiting(){
                         }
                         for (let j in dudeTags){
                             if (dudeTags[j].name.toLowerCase().includes(activeFilters[i].toLowerCase())){
+                                contain=true;
+                                break;
+                            }
+                        }
+                        if (contain)
+                            break;
+                    }
+                }
+                return contain;
+            },
+            candidateExpFilter:function (candidate){
+                let contain=true;
+                let activeFilters="";
+                let dudeExps=candidate['experience'];
+                if(this.otherData.candidateExpSearch.length>0){
+                    contain=false;
+                    activeFilters = this.otherData.candidateExpSearch.split(" ");
+                    for (let i in activeFilters){
+                        if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                            contain = false;
+                            break;
+                        }
+                        for (let j in dudeExps){
+                            if (dudeExps[j].activities.toLowerCase().includes(activeFilters[i].toLowerCase())){
                                 contain=true;
                                 break;
                             }
