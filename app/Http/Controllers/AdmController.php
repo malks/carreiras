@@ -544,9 +544,15 @@ class AdmController extends Controller
             'phd' => 'PHD',
         ];
 
+        $data_list=[];
+        foreach ($data as $cand){
+            array_push($data_list,['id'=>$cand->id]);
+        }
+
         return view('adm.candidates.list')->with(
             [
                 'data'=>$data,
+                'data_list'=>$data_list,
                 'search'=>$request->search,
                 'schooling_grades'=>$schooling_grades,
                 'filter_updated_at_end'=>$request->filter_updated_at_end,
