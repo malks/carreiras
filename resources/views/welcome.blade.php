@@ -145,10 +145,10 @@
         <!-- HEADER END -->
 
         <div>
-            <input type="hidden" value='@php echo json_encode($jobs->toArray());@endphp' id='jobs-data' check-jobs-home>
-            <input type="hidden" value='@php echo json_encode($fields->toArray());@endphp' id='fields-data'>
-            <input type="hidden" value='@php echo json_encode($units->toArray());@endphp' id='units-data'>
-            <input type="hidden" value='@php echo json_encode($subscriptions);@endphp' id='subscriptions-data'>
+            <input type="hidden" value='@php echo urlencode(json_encode($jobs->toArray()));@endphp' id='jobs-data' check-jobs-home>
+            <input type="hidden" value='@php echo urlencode(json_encode($fields->toArray()));@endphp' id='fields-data'>
+            <input type="hidden" value='@php echo urlencode(json_encode($units->toArray()));@endphp' id='units-data'>
+            <input type="hidden" value='@php echo urlencode(json_encode($subscriptions));@endphp' id='subscriptions-data'>
             <input type="hidden" value='@php echo $user_id;@endphp' id='user-id'>
             <input type="hidden" value='@php echo $candidate_id;@endphp' id='candidate-id'>
             <!-- HERO SECTION SLIDER-->

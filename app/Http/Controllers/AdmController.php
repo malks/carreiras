@@ -159,8 +159,15 @@ class AdmController extends Controller
             'phd' => 'PHD',
         ];
 
+        $schooling_status=[
+            'complete'=>'Concluído',
+            'coursing'=>'Cursando',
+            'incomplete'=>'Incompleto',
+        ];
+
         return view('adm.recruiting')->with([
             'schooling_grades'=>$schooling_grades,
+            'schooling_status'=>$schooling_status,
         ]);
     }
 
@@ -544,6 +551,12 @@ class AdmController extends Controller
             'phd' => 'PHD',
         ];
 
+        $schooling_status=[
+            'complete'=>'Concluído',
+            'coursing'=>'Cursando',
+            'incomplete'=>'Incompleto',
+        ];
+
         $data_list=[];
         foreach ($data as $cand){
             array_push($data_list,['id'=>$cand->id]);
@@ -555,6 +568,7 @@ class AdmController extends Controller
                 'data_list'=>$data_list,
                 'search'=>$request->search,
                 'schooling_grades'=>$schooling_grades,
+                'schooling_status'=>$schooling_status,
                 'filter_updated_at_end'=>$request->filter_updated_at_end,
                 'filter_updated_at_start'=>$request->filter_updated_at_start,
             ]
@@ -612,9 +626,15 @@ class AdmController extends Controller
 
     public function jobsCreate (Request $request) {
         $data=new Job;
+        $fields=Field::all();
+        $units=Unit::all();
+        $tags=Tag::all();
         return view('adm.jobs.edit')->with(
             [
                 'data'=>$data,
+                'fields'=>$fields,
+                'units'=>$units,
+                'tags'=>$tags,
             ]
         );
     }
@@ -630,9 +650,31 @@ class AdmController extends Controller
 
     public function candidatesCreate (Request $request) {
         $data=new Candidate;
+        $states=State::all();
+        $deficiencies = Deficiency::all();
+
+        $schooling_grades=[
+            'technology' => 'Tecnólogo',
+            'graduation' => 'Graduação',
+            'postgrad' => 'Pós Graduação',
+            'masters' => 'Mestrado',
+            'doctor' => 'Doutorado',
+            'phd' => 'PHD',
+        ];
+
+        $schooling_status=[
+            'complete'=>'Concluído',
+            'coursing'=>'Cursando',
+            'incomplete'=>'Incompleto',
+        ];
+
         return view('adm.candidates.edit')->with(
             [
                 'data'=>$data,
+                'states'=>$states,
+                'deficiencies'=>$deficiencies,
+                'schooling_status'=>$schooling_status,
+                'schooling_grades'=>$schooling_grades,
             ]
         );
     }

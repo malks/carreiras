@@ -4,10 +4,10 @@
     <div class='row margin-top-30'>
         <div class="col-12 margin-bottom-30" id='app' candidate-jobs>
             @csrf
-            <input type="hidden" value="{{ json_encode($subscriptions) }}" id='subscriptions-data'>
-            <input type="hidden" class="hide" id='jobs-data' value='{{ json_encode($jobs) }}'>
-            <input type="hidden" class="hide" id='fields-data' value='{{ json_encode($fields) }}'>
-            <input type="hidden" class="hide" id='units-data' value='{{ json_encode($units) }}'>
+            <input type="hidden" value="{{ urlencode(json_encode($subscriptions)) }}" id='subscriptions-data'>
+            <input type="hidden" class="hide" id='jobs-data' value='{{ urlencode(json_encode($jobs)) }}'>
+            <input type="hidden" class="hide" id='fields-data' value='{{ urlencode(json_encode($fields)) }}'>
+            <input type="hidden" class="hide" id='units-data' value='{{ urlencode(json_encode($units)) }}'>
             <input type="hidden" class="hide" id='user-id' value='{{ $user_id }}'>
             <input type="hidden" class="hide" id='candidate-id' value='{{ $candidate_id }}'>
 

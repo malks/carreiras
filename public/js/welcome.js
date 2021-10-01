@@ -729,10 +729,10 @@ function getCustomData(screenNameHelper,firstTab){
 function getJobsData(){
     let customData={};
     customData.candidate_id=document.getElementById('candidate-id').value;
-    customData.jobs=JSON.parse(document.getElementById('jobs-data').value);
-    customData.fields=JSON.parse(document.getElementById('fields-data').value);
-    customData.units=JSON.parse(document.getElementById('units-data').value);
-    customData.subscriptions=JSON.parse(document.getElementById('subscriptions-data').value);
+    customData.jobs=JSON.parse(decodeURIComponent(document.getElementById('jobs-data').value).replace(/\+/g," "));
+    customData.fields=JSON.parse(decodeURIComponent(document.getElementById('fields-data').value).replace(/\+/g," "));
+    customData.units=JSON.parse(decodeURIComponent(document.getElementById('units-data').value).replace(/\+/g," "));
+    customData.subscriptions=JSON.parse(decodeURIComponent(document.getElementById('subscriptions-data').value));
     customData.filters='';
     customData.observation='';
     customData.user_id=document.getElementById('user-id').value;
@@ -750,10 +750,10 @@ function getJobsData(){
 function getSubscriptionsData(){
     let customData={};
     customData.candidate_id=document.getElementById('candidate-id').value;
-    customData.subscriptions=JSON.parse(document.getElementById('subscriptions-data').value);
-    customData.jobs=JSON.parse(document.getElementById('jobs-data').value);
-    customData.fields=JSON.parse(document.getElementById('fields-data').value);
-    customData.units=JSON.parse(document.getElementById('units-data').value);
+    customData.subscriptions=JSON.parse(decodeURIComponent(document.getElementById('subscriptions-data').value).replace(/\+/g," "));
+    customData.jobs=JSON.parse(decodeURIComponent(document.getElementById('jobs-data').value).replace(/\+/g," "));
+    customData.fields=JSON.parse(decodeURIComponent(document.getElementById('fields-data').value).replace(/\+/g," "));
+    customData.units=JSON.parse(decodeURIComponent(document.getElementById('units-data').value).replace(/\+/g," "));
     customData.filters='';
     customData.viewingJob={
         id:null,

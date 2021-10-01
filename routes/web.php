@@ -21,6 +21,7 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/jobs', 'LandingController@jobsList');
 Route::get('/policy', 'LandingController@policy');
 Route::post('/newsletter-subscribe', 'LandingController@newsletterSubscribe');
+Route::get('/landing-data', 'LandingController@landingData');
 
 $router->group(['middleware' => ['auth']], function() {
     Route::get('/profile', 'LandingController@profile');

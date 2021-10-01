@@ -88,6 +88,37 @@ class LandingController extends Controller
         );
     }
 
+    public function landingData(){
+
+        $logged_in=Auth::user();
+        $user_id=0;
+        $candidate_id=0;
+        $role='';
+        $subscriptions=Array();
+
+        if (!empty($logged_in)){
+            $user_id=$logged_in->id;
+            $role=User::where('id','=',$user_id)->with('roles')->first()->roles[0]->name;
+            $candidate_helper=Candidate::where('user_id','=',$logged_in->id)->first();
+            if (!empty($candidate_helper))
+                $candidate_id=$candidate_helper->id;
+            $subscriptions=Subscribed::where('candidate_id','=',$candidate_id)->get()->toArray();
+        }
+
+        $start_date=Carbon::parse(Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d H:i:s'))->setTimezone('UTC');
+        $final_date=Carbon::parse(Carbon::now('America/Sao_Paulo')->endOfDay()->format('Y-m-d H:i:s'))->setTimezone('UTC');
+        $fields=Field::all();
+        $units=Unit::all();
+        $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
+
+        $data['fields']=$fields;
+        $data['units']=$units;
+        $data['jobs']=$jobs;
+        $data['subscriptions']=$subscriptions;
+
+        return json_encode($data,true);
+    }
+
     public function newsletterSubscribe(Request $request){
         $subscriber=new Subscriber;
         $subscriber->email=$request->email;

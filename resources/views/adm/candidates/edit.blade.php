@@ -32,7 +32,7 @@
                         <h5 class='' ><i>NUMCAN do Senior: &nbsp {{$data->senior_num_can}}</i></h5>
                     </div>
                     <div class=" col-sm-12 col-lg">
-                        <i>Última Atualização:</i><i style='margin-left:10px;'> {{date_format($data->updated_at,'d/m/Y')}}</i>
+                        <i>Última Atualização:</i><i style='margin-left:10px;'>{{ (!empty($data->updated_at)) ? date_format($data->updated_at,'d/m/Y') : ''}}</i>
                     </div>
                 </div>
 
