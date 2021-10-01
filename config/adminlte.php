@@ -251,7 +251,7 @@ return [
             'icon' => 'fas fa-clipboard-list',
         ],
         [
-            'text' => 'Estados de Recrutamento',
+            'text' => 'Status de Recrutamento',
             'url'  => 'adm/states',
             'icon' => 'fas fa-dice-d6',
         ],
