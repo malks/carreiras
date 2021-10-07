@@ -6,12 +6,17 @@
 @stop
 
 @section('content')
+
 	<form method='GET' id='app' action='/adm/candidates/save'>
         <input type="hidden" class="hide" id='schooling-data' value='{{ json_encode($data->schooling) }}'>
         <input type="hidden" class="hide" id='experience-data' value='{{ json_encode($data->experience) }}'>
         <input type="hidden" class="hide" id='schooling-grades' value='{{ json_encode($schooling_grades) }}'>
         <input type="hidden" class="hide" id='schooling-status' value='{{ json_encode($schooling_status) }}'>
 		@csrf
+        @if ($errors->has('email'))
+            <div class="alert alert-danger alert-dismissible">{{ $errors->first('email') }}</div>
+        @endif
+
 	    <div class="card" check-candidates-edit>
 	    	<div class='card-header'>
 	    		<h5>Edição de Candidato</h5>

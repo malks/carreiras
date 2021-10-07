@@ -27,7 +27,7 @@ use Illuminate\Support\Carbon;
 class AdmController extends Controller
 {
 
-    protected function validator(array $data)
+    protected function jobValidator(array $data)
     {
         return Validator::make($data, [
             'field_id' => ['required', 'integer', 'gte:1'],
@@ -42,6 +42,14 @@ class AdmController extends Controller
         ]);
     }
 
+    protected function candidateValidator(array $data)
+    {
+        return Validator::make($data, [
+            'email' => ['required'],
+        ],[
+            'email.required'=>'É necessário informar o e-mail.',
+        ]);
+    }
     public function addTag(Request $request){
         if (!empty($request->name)){
             $tag = new Tag;
@@ -881,7 +889,7 @@ class AdmController extends Controller
         $arr=$request->toArray();
        
         $tags=json_decode($arr['tags'],true);
-        $validator = $this->validator($request->all())->validate();
+        $validator = $this->jobValidator($request->all())->validate();
            
         if(!is_array($validator) && $validator->fails())
             return Redirect::back()->withErrors($validator)->withInput($request->all());
@@ -941,6 +949,11 @@ class AdmController extends Controller
     public function candidatesSave (Request $request) {
         $data=new Candidate;
         $arr=$request->toArray();
+
+        $validator = $this->candidateValidator($request->all())->validate();
+        if(!is_array($validator) && $validator->fails())
+            return Redirect::back()->withErrors($validator)->withInput($request->all());
+
         unset($arr['_token']);
         unset($arr['schooling']);
         unset($arr['experience']);
