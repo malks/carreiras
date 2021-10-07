@@ -9,6 +9,9 @@
     @if ($errors->has('field_id'))
         <div class="alert alert-danger alert-dismissible">{{ $errors->first('field_id') }}</div>
     @endif
+    @if ($errors->has('unit_id'))
+        <div class="alert alert-danger alert-dismissible">{{ $errors->first('unit_id') }}</div>
+    @endif
 	<form method='POST' action='/adm/jobs/save' enctype='multipart/form-data'>
 		@csrf
 	    <div class="card" check-jobs-edit>
@@ -53,7 +56,7 @@
                     <input type='hidden' name='id' value='{{$data->id}}'>
                     <div class=" col-sm-12 col-lg">
                         <label for="data-name">Nome</label>
-                        <input type='text' class='form-control' name='name' value='{{$data->name}}'/>
+                        <input type='text' class='form-control' name='name' value='{{(old('name')) ? old('name') : $data->name}}'/>
                     </div>
                     <div class=" col-sm-12 col-lg">
                         <label for="status-selector">Status</label>
@@ -69,7 +72,7 @@
                         <select name="field_id" id="field-selector" class='form-control'>
                             <option value="0">Área</option>
                             @foreach($fields as $field)
-                                <option value="{{$field->id}}" @if($data->field_id==$field->id) selected @endif>{{$field->name}}</option>
+                                <option value="{{$field->id}}" @if($data->field_id==$field->id  || (!empty(old('field_id')) && old('field_id')==$field->id)) selected @endif>{{$field->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -78,10 +81,10 @@
                         <select name="unit_id" id="unit-selector" class='form-control'>
                             <option value="0">Unidade</option>
                             @foreach($units as $unit)
-                                <option value="{{$unit->id}}"  @if($data->unit_id==$unit->id) selected @endif>{{$unit->name}}</option>
+                                <option value="{{$unit->id}}"  @if($data->unit_id==$unit->id || (!empty(old('unit_id')) && old('unit_id')==$unit->id) ) selected @endif>{{$unit->name}}</option>
                             @endforeach
                         </select>
-                    </div>                    
+                    </div>
                 </div>
                 <div class="row margin-top-10">
                     <div class="col-sm-12 col-lg-6">

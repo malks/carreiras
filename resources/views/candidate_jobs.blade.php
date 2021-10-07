@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button v-show="!isSubscribed(viewingJob.id)" class="btn btn-default" :class=" { 'hide':canApply } " v-on:click="applyForJob(viewingJob.id)"> 
+                                        <button class="btn btn-default"  v-on:click="applyForJob(viewingJob.id)"> 
                                             Inscrever-se na Vaga
                                         </button>
                                         <button v-show="isSubscribed(viewingJob.id)" class="btn btn-warning" v-on:click="cancelApplication(viewingJob.id)" > 

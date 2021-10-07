@@ -31,10 +31,14 @@ class AdmController extends Controller
     {
         return Validator::make($data, [
             'field_id' => ['required', 'integer', 'gte:1'],
+            'unit_id' => ['required', 'integer', 'gte:1'],
         ],[
             'field_id.required'=>'É necessário selecionar uma área para a vaga.',
             'field_id.integer'=>'É necessário selecionar uma área para a vaga.',
             'field_id.gte'=>'É necessário selecionar uma área para a vaga.',
+            'unit_id.required'=>'É necessário selecionar uma unidade para a vaga.',
+            'unit_id.integer'=>'É necessário selecionar uma unidade para a vaga.',
+            'unit_id.gte'=>'É necessário selecionar uma unidade para a vaga.',
         ]);
     }
 

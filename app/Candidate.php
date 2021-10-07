@@ -99,6 +99,59 @@ class Candidate extends Model
         $this->attributes['father_dob'] = $carbon;
     }
 
+    public function setMobileAttribute($value)
+    {
+        $this->attributes['mobile'] = str_replace(["-","."],"",$value);
+    }
 
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = str_replace(["-","."],"",$value);
+    }
+
+    public function setCpfAttribute($value)
+    {
+        $this->attributes['cpf'] = str_replace(["-","."],"",$value);
+    }
+
+    public function setPisAttribute($value)
+    {
+        $this->attributes['pis'] = str_replace(["-","."],"",$value);
+    }
+
+    public function setRgAttribute($value)
+    {
+        $this->attributes['rg'] = str_replace(["-","."],"",$value);
+    }
+
+    public function setWorkCardAttribute($value)
+    {
+        $this->attributes['work_card'] = str_replace(["-","."],"",$value);
+    }
+
+    public function setWorkCardSeriesAttribute($value)
+    {
+        $this->attributes['work_card_series'] = str_replace(["-","."],"",$value);
+    }
+
+    public function setElectorCardAttribute($value)
+    {
+        $this->attributes['elector_card'] = str_replace(["-","."],"",$value);
+    }
+
+    public function setVeteranCardAttribute($value)
+    {
+        $this->attributes['veteran_card'] = str_replace(["-","."],"",$value);
+    }
+
+    public function setCidAttribute($value)
+    {
+        $this->attributes['cid'] = str_replace(["-","."],"",$value);
+    }
+
+    public function setZipAttribute($value)
+    {
+        $this->attributes['zip'] = str_replace(["-","."],"",$value);
+    }
 
 }
