@@ -562,6 +562,8 @@ function profile(){
 }
 
 function startProfile(screenNameHelper='',firstTab=''){
+    Vue.use(VueMask.VueMaskPlugin);
+    
     edit = new Vue({
         el:'#app',
         data: getCustomData(screenNameHelper,firstTab),
@@ -721,6 +723,7 @@ function getCustomData(screenNameHelper,firstTab){
         customData.schooling_formation=JSON.parse(document.getElementById('schooling-formation').value);
         customData.selected_languages=JSON.parse(document.getElementById('selected-languages').value);
         customData.languages=JSON.parse(document.getElementById('languages').value);
+        customData.holdingData=JSON.parse(decodeURIComponent(profile_data).replace(/\+/g," "));
     }
     console.log(customData);
     return customData;
