@@ -10,10 +10,13 @@ use App\AboutUs;
 use App\OurNumbers;
 use App\OurTeam;
 use App\Job;
+use App\JobTemplate;
 use App\Tag;
 use App\Unit;
 use App\Field;
 use App\User;
+use App\Permission;
+use App\Role;
 use App\State;
 use App\Video;
 use App\Subscribed;
@@ -23,9 +26,21 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class AdmController extends Controller
 {
+
+    protected function jobTemplateValidator(array $data)
+    {
+        return Validator::make($data, [
+            'field_id' => ['required', 'integer', 'gte:1'],
+        ],[
+            'field_id.required'=>'É necessário selecionar uma área para a vaga.',
+            'field_id.integer'=>'É necessário selecionar uma área para a vaga.',
+            'field_id.gte'=>'É necessário selecionar uma área para a vaga.',
+        ]);
+    }
 
     protected function jobValidator(array $data)
     {
@@ -50,6 +65,15 @@ class AdmController extends Controller
             'email.required'=>'É necessário informar o e-mail.',
         ]);
     }
+
+    public function templateFromJob(Request $request){
+
+    }
+
+    public function jobFromTemplate(Request $request){
+        
+    }
+
     public function addTag(Request $request){
         if (!empty($request->name)){
             $tag = new Tag;
@@ -184,7 +208,7 @@ class AdmController extends Controller
     }
 
     public function addSubscriptionState(Request $request){
-        $state = State::where('name','like',"%".$request->status."%")->first();
+        $state = State::where('name','like',$request->status."%")->first();
         $subscribed = Subscribed::
         where('candidate_id','=',$request->candidate_id)
         ->where('job_id','=',$request->job_id)
@@ -408,6 +432,21 @@ class AdmController extends Controller
         );
     }
 
+    public function rolesList (Request $request){
+        $data=Role::
+        when(!empty($request->search),function($query) use ($request) {
+            $query->where('name','like',"%$request->search%");
+        })
+        ->paginate(15);
+
+        return view('adm.roles.list')->with(
+            [
+                'data'=>$data,
+                'search'=>$request->search,
+            ]
+        );
+    }
+
     public function unitsList (Request $request){
         $data=Unit:: when(!empty($request->search),function($query) use ($request) {
             $query->where('name','like',"%$request->search%");
@@ -469,6 +508,41 @@ class AdmController extends Controller
         );
     }
 
+    public function jobsTemplatesList (Request $request){
+        $data=JobTemplate::when(!empty($request->search),function($query) use ($request) {
+            $query->where('name','like',"%$request->search%");
+            $query->orWhere('description','like',"%$request->search%");
+        })
+        ->when(!empty($request->filter_created_at_start), function ($query) use ($request) {
+            $query->where('created_at','>=',$request->filter_created_at_start);
+        })
+        ->when(!empty($request->filter_created_at_end), function ($query) use ($request) {
+            $query->where('created_at','<=',$request->filter_created_at_end);
+        })
+        ->when(!empty($request->filter_field),function ($query) use ($request) {
+            $query->where('field_id','=',$request->filter_field);
+        })
+        ->paginate(15);
+
+        $filter_status=[];
+        if (!empty($request->filter_status))
+            $filter_status=$request->filter_status;
+
+
+        $fields=Field::all();
+
+        return view('adm.jobs_templates.list')->with(
+            [
+                'data'=>$data,
+                'search'=>$request->search,
+                'fields'=>$fields,
+                'filter_field'=>$request->filter_field,
+                'filter_created_at_end'=>$request->filter_created_at_end,
+                'filter_created_at_start'=>$request->filter_created_at_start,
+                'filter_status'=>$filter_status,
+            ]
+        );
+    }
 
     public function subscribersList (Request $request){
         $data=Subscriber:: when(!empty($request->search),function($query) use ($request) {
@@ -591,17 +665,23 @@ class AdmController extends Controller
     public function usersList (Request $request){
         $logged_in=Auth::user();
         $data=User::leftJoin('model_has_roles','model_has_roles.model_id','=','users.id')
-        ->where('model_has_roles.role_id','=','1')
+        ->when(!empty($request->filter_role),function($query) use ($request) {
+            $query->where('model_has_roles.role_id','=',$request->filter_role);
+        })
         ->when(!empty($request->search),function($query) use ($request) {
             $query->where('name','like',"%$request->search%");
             $query->orWhere('email','like',"%$request->search%");
         })
         ->paginate(15);
+
+        $roles=Role::all();
+
         return view('adm.users.list')->with(
             [
                 'data'=>$data,
                 'search'=>$request->search,
                 'logged_id'=>$logged_in->id,
+                'roles'=>$roles,
             ]
         );
     }
@@ -611,6 +691,19 @@ class AdmController extends Controller
         return view('adm.fields.edit')->with(
             [
                 'data'=>$data,
+            ]
+        );
+
+    }
+
+    public function rolesCreate (Request $request) {
+        $data=new Role;
+        $permissions = Permission::where('id','>','2')->orderBy('desc')->get();
+        return view('adm.roles.edit')->with(
+            [
+                'data'=>$data,
+                'permissions'=>$permissions,
+                'selected_permissions'=>[],
             ]
         );
 
@@ -636,11 +729,44 @@ class AdmController extends Controller
 
     }
 
+    public function jobsTemplatesCreate (Request $request) {
+        $data=new JobTemplate;
+        $fields=Field::all();
+        $units=Unit::all();
+        $tags=Tag::all();
+
+        if (!empty($request->job)){
+            $job=Job::where('id','=',$request->job)->with(['tags'])->first()->toArray();
+            foreach ($job as $k => $job_data){
+                if ($k!='id')
+                    $data[$k]=$job_data;
+            }
+        }
+
+        return view('adm.jobs_templates.edit')->with(
+            [
+                'data'=>$data,
+                'fields'=>$fields,
+                'units'=>$units,
+                'tags'=>$tags,
+            ]
+        );
+    }
+
     public function jobsCreate (Request $request) {
         $data=new Job;
         $fields=Field::all();
         $units=Unit::all();
         $tags=Tag::all();
+
+        if (!empty($request->template)){
+            $template=JobTemplate::where('id','=',$request->template)->with(['tags'])->first()->toArray();
+            foreach ($template as $k => $template_data){
+                if ($k!='id')
+                    $data[$k]=$template_data;
+            }
+        }
+
         return view('adm.jobs.edit')->with(
             [
                 'data'=>$data,
@@ -693,9 +819,11 @@ class AdmController extends Controller
 
     public function usersCreate (Request $request) {
         $data=new User;
+        $roles=Role::where('id','!=',2)->get();
         return view('adm.users.edit')->with(
             [
                 'data'=>$data,
+                'roles'=>$roles,
             ]
         );
     }
@@ -705,6 +833,23 @@ class AdmController extends Controller
         return view('adm.fields.edit')->with(
             [
                 'data'=>$data,
+            ]
+        );
+    }
+
+    public function rolesEdit ($id) {
+        $data=Role::where('id','=',$id)->with(['permissions'])->first();
+        $selected_permissions=Array();
+        foreach($data->permissions->toArray() as $perm){
+            array_push($selected_permissions,$perm['id']);
+        }
+        $permissions = Permission::where('id','>','2')->orderBy('desc')->get();
+
+        return view('adm.roles.edit')->with(
+            [
+                'data'=>$data,
+                'permissions'=>$permissions,
+                'selected_permissions'=>$selected_permissions,
             ]
         );
     }
@@ -727,12 +872,46 @@ class AdmController extends Controller
         );
     }
 
+    public function jobsTemplatesEdit (Request $request) {
+        $id=$request->id;
+        $data=JobTemplate::where('id','=',$id)->first();
+        $units=Unit::all();
+        $fields=Field::all();
+        $tags=Tag::all();
+
+        if (!empty($request->job)){
+            $job=Job::where('id','=',$request->job)->with(['tags'])->first()->toArray();
+            foreach ($job as $k => $job_data){
+                if ($k!='id')
+                    $data[$k]=$job_data;
+            }
+        }
+
+        return view('adm.jobs_templates.edit')->with(
+            [
+                'data'=>$data,
+                'units'=>$units,
+                'fields'=>$fields,
+                'tags'=>$tags,
+            ]
+        );
+    }
+
     public function jobsEdit (Request $request) {
         $id=$request->id;
         $data=Job::where('id','=',$id)->first();
         $units=Unit::all();
         $fields=Field::all();
         $tags=Tag::all();
+
+        if (!empty($request->template)){
+            $template=JobTemplate::where('id','=',$request->template)->first()->toArray();
+            foreach ($template as $k => $template_data){
+                if ($k!='id')
+                    $data[$k]=$template_data;
+            }
+        }
+
         return view('adm.jobs.edit')->with(
             [
                 'data'=>$data,
@@ -788,15 +967,22 @@ class AdmController extends Controller
 
     public function usersEdit ($id) {
         $data=User::where('id','=',$id)->first();
+        $roles=Role::where('id','!=',2)->get();
         return view('adm.users.edit')->with(
             [
                 'data'=>$data,
+                'roles'=>$roles,
             ]
         );
     }
 
     public function fieldsDestroy (Request $request) {
         Field::whereIn('id',explode(",",$request->ids))->delete();
+        return;
+    }
+
+    public function rolesDestroy (Request $request) {
+        Role::whereIn('id',explode(",",$request->ids))->delete();
         return;
     }
 
@@ -815,12 +1001,18 @@ class AdmController extends Controller
         return;
     }
 
+    public function jobsTemplatesDestroy (Request $request) {
+        JobTemplate::whereIn('id',explode(",",$request->ids))->delete();
+        return;
+    }
+
     public function subscribersDestroy (Request $request) {
         Subscriber::whereIn('id',explode(",",$request->ids))->delete();
         return;
     }
 
     public function tagsDestroy (Request $request) {
+        DB::table('jobs_templates_tags')->whereIn('tag_id',explode(",",$request->ids))->delete();
         DB::table('jobs_tags')->whereIn('tag_id',explode(",",$request->ids))->delete();
         DB::table('candidates_tags')->whereIn('tag_id',explode(",",$request->ids))->delete();
         Tag::whereIn('id',explode(",",$request->ids))->delete();
@@ -868,6 +1060,26 @@ class AdmController extends Controller
 		return redirect('/adm/fields/');
     }
 
+    public function rolesSave (Request $request) {
+        $data=new Role;
+        $arr=$request->toArray();
+        unset($arr['_token']);
+
+        if(!empty($arr['id']))
+            $data=Role::where('id','=',$arr['id'])->first();
+
+        $data->name=$arr['name'];
+        $data->guard_name='web';
+        $data->save();
+
+        DB::table('role_has_permissions')->where('role_id','=',$data->id)->delete();
+        foreach($arr['permissions'] as $permission){
+            DB::table('role_has_permissions')->insert(['role_id'=>$data->id,'permission_id'=>$permission]);
+        }
+
+		return redirect('/adm/roles/');
+    }
+
     public function unitsSave (Request $request) {
         $data=new Unit;
         $arr=$request->toArray();
@@ -881,6 +1093,54 @@ class AdmController extends Controller
         }
         $data->save();
 		return redirect('/adm/units/');
+    }
+
+    public function jobsTemplatesSave (Request $request) {
+
+        $data=new JobTemplate;
+        $arr=$request->toArray();
+       
+        $tags=json_decode($arr['tags'],true);
+        $validator = $this->jobTemplateValidator($request->all())->validate();
+           
+        if(!is_array($validator) && $validator->fails())
+            return Redirect::back()->withErrors($validator)->withInput($request->all());
+
+        if ($request->hasFile('picture')){
+            $extension=$request->picture->extension();
+            $picture_filename=date('U').".".$extension;
+	    	$tmp=$request->picture->path();
+	    	copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/img/'.$picture_filename);
+            $arr['picture']='/img/'.$picture_filename;
+        }
+
+        unset($arr['_token']);
+        unset($arr['tags']);
+        if(!empty($arr['id']))
+            $data=JobTemplate::where('id','=',$arr['id'])->first();
+
+        foreach ($arr as $k=>$value){
+            $data->{$k}=$value;
+        }
+        $data->save();
+
+
+        DB::table('jobs_templates_tags')->where('job_id','=',$data->id)->delete();
+        if (!empty($tags)){
+            foreach($tags as $data_tag){
+                if (empty($data_tag['id']) || $data_tag['id']=='null' || $data_tag['id']==null){
+                    $tag = new Tag;
+                    $tag->name=strtolower($data_tag['name']);
+                    $tag->save();
+                }
+                else {
+                    $tag=Tag::where('id','=',$data_tag['id'])->first();
+                }
+                DB::table('jobs_templates_tags')->insert(['job_id'=>$data->id,'tag_id'=>$tag->id]);
+            }
+        }
+
+		return redirect('/adm/jobs-templates/');
     }
 
     public function jobsSave (Request $request) {
@@ -915,18 +1175,19 @@ class AdmController extends Controller
 
 
         DB::table('jobs_tags')->where('job_id','=',$data->id)->delete();
-        foreach($tags as $data_tag){
-            if (empty($data_tag['id']) || $data_tag['id']=='null' || $data_tag['id']==null){
-                $tag = new Tag;
-                $tag->name=strtolower($data_tag['name']);
-                $tag->save();
+        if (!empty($tags)){
+            foreach($tags as $data_tag){
+                if (empty($data_tag['id']) || $data_tag['id']=='null' || $data_tag['id']==null){
+                    $tag = new Tag;
+                    $tag->name=strtolower($data_tag['name']);
+                    $tag->save();
+                }
+                else {
+                    $tag=Tag::where('id','=',$data_tag['id'])->first();
+                }
+                DB::table('jobs_tags')->insert(['job_id'=>$data->id,'tag_id'=>$tag->id]);
             }
-            else {
-                $tag=Tag::where('id','=',$data_tag['id'])->first();
-            }
-            DB::table('jobs_tags')->insert(['job_id'=>$data->id,'tag_id'=>$tag->id]);
         }
-
 
 		return redirect('/adm/jobs/');
     }
@@ -971,7 +1232,10 @@ class AdmController extends Controller
     public function usersSave (Request $request) {
         $user=new User; 
         $arr=$request->toArray();
+        $role=$arr['role'];
+    
         unset($arr['_token']);
+        unset($arr['role']);
 
         if(!empty($arr['id']))
             $user=User::where('id','=',$arr['id'])->first();
@@ -984,7 +1248,9 @@ class AdmController extends Controller
             $user->{$k}=$value;
         }
         $user->save();
-        DB::table('model_has_roles')->insertOrIgnore([['role_id'=>1,'model_id'=>$user->id,'model_type'=>'App\User']]);
+        DB::table('model_has_roles')->where('model_id','=',$user->id)->delete();
+        DB::table('model_has_roles')->insertOrIgnore([['role_id'=>$role,'model_id'=>$user->id,'model_type'=>'App\User']]);
+        Cache::flush();
 		return redirect('/adm/users/');
     }
 

@@ -25,7 +25,9 @@
 	        		<div class="col-1">
 	        			<button class="btn btn-danger" id='destroy' v-on:click='destroy()' type='button' v-bind:disabled='canDestroy'>Excluir</button>
 	        		</div>
-
+	        		<div class="col-2">
+	        			<button class="btn btn-success" id='job-from-template' v-on:click='templateFromJob()' type='button' v-bind:disabled='canEdit'>Criar Template</button>
+	        		</div>
 	        	</div>
 	        	<div class='row margin-top-10'>
 					<div class="col-lg-3">

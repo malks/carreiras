@@ -32,7 +32,7 @@
                     <div class="card-body">
                         <hr>
         
-                        <ul class="nav nav-tabs nav-justified margin-left-20">
+                        <ul class="nav nav-tabs margin-left-20">
                             <li class="nav-item">
                                 <a  class='nav-link'  v-bind:class="{ active: isItMe('candidate-data') }" v-on:click="currentTab='candidate-data'" >Pessoal</a>
                             </li>

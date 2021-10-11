@@ -18,6 +18,10 @@ $(document).ready(function () {
         candidatesList();
     if ($('[check-jobs-list]').length>0)
         jobsList();
+    if ($('[check-roles-list]').length>0)
+        rolesList();
+    if ($('[check-jobs-templates-list]').length>0)
+        jobsTemplatesList();
     if ($('[check-units-list]').length>0)
         unitsList();
     if ($('[check-users-list]').length>0)
@@ -32,6 +36,9 @@ $(document).ready(function () {
         configurations();
     if ($('#jobs-tags').length>0)
         editJobs();
+    if ($('#jobs-templates-tags').length>0)
+        editJobsTemplates();
+
 })
 
 function editJobs(){
@@ -97,6 +104,71 @@ function editJobs(){
         }
     })
 }
+
+function editJobsTemplates(){
+    let jobsTemplatesEdit=new Vue({
+        el:'#jobs-templates-tags',
+        data:{
+            currentInterest:"",
+            filteredTags:[],
+            tags:JSON.parse($('#all-tags').val()),
+            selectedTags:JSON.parse($('#initial-tags').val()),
+            interestInput:'',
+            currentInterestSize:0
+        },
+        computed:{
+            stringedTags:function () {
+                let that = this;
+                return JSON.stringify(that.selectedTags);
+            }
+        },
+        methods:{
+            filterTags:function(){
+                let ctag=this.currentInterest;
+                if (ctag.length==0)
+                    this.filteredTags=[{id:null,name:""}];
+                else
+                    this.filteredTags=this.tags.filter(obj=>{
+                        return obj.name.toLowerCase().startsWith(ctag.toLowerCase())==true;
+                    })
+            },
+            selectTag:function (){
+                let that=this;
+
+                if (that.currentInterest.length==0)
+                    return false;
+
+                let filter = that.filteredTags;
+                let tempTags=that.selectedTags;
+                let tag = null;
+                if (filter.length>0)
+                    tag=filter[0].id;
+                let newTag=that.tags.find(obj=>{ return obj.id==tag; });
+                if (newTag)
+                    tempTags.push(newTag);
+                else
+                    tempTags.push({id:null,name:that.currentInterest});
+                that.selectedTags=tempTags;
+                that.currentInterest="";
+            },
+            removeTag:function (idx){
+                let that=this;
+                let tempTags=that.selectedTags;
+                tempTags.splice(idx,1);
+            },
+            targetInterestsInputFocus: function () {
+                $('#interests-input').focus();
+            },
+            targetInterestsInputShow: function () {
+                this.interestInput=true;
+            },
+            targetInterestsInputHide: function () {
+                this.interestInput=false;
+            },
+        }
+    })
+}
+
 
 function recruiting(){
     let bootstrapData = {
@@ -524,6 +596,12 @@ function statesList(){
     $('#search').focus();
 }
 
+function rolesList(){
+    startData();
+    ajaxUrl=$('#app').attr('action');
+    startList([1,2],[1,2]);
+    $('#search').focus();
+}
 
 function fieldsList(){
     startData();
@@ -568,6 +646,13 @@ function usersList(){
 }
 
 function jobsList(){
+    startData();
+    ajaxUrl=$('#app').attr('action');
+    startList();
+    $('#search').focus();
+}
+
+function jobsTemplatesList(){
     startData();
     ajaxUrl=$('#app').attr('action');
     startList();
@@ -652,6 +737,12 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                 }
    
             },
+            jobFromTemplate:function (){
+                window.open('/adm/jobs/create?template='+this.selectedIds[0],'_blank');
+            },
+            templateFromJob:function (){
+                window.open('/adm/jobs-templates/create?job='+this.selectedIds[0],'_blank');
+            }
         }
     });
 }

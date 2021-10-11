@@ -22,6 +22,16 @@
 	        		</div>
 	        	</div>
                 <div class="row margin-top-10">
+                    <div class="col-lg-4">
+                        <label for="">Função</label>
+                        <select name="role" id="user-role" class='form-control'>
+                            @foreach($roles as $role)
+                            <option value=" {{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="row margin-top-10">
                     <input type='hidden' name='id' value='{{$data->id}}'>
                     <div class="col-lg col-sm-12">
                         <label for="data-name">Nome</label>
