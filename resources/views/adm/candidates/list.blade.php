@@ -54,6 +54,8 @@
 									<th style='width:40px;'><input type='checkbox' id='check-all' v-on:click='reverseSelection()'></th>
 			        				<th>Id</th>
 			        				<th>Nome</th>
+			        				<th>Cidade</th>
+			        				<th>Estado</th>
 			        				<th>Última Atualização</th>
 			        				<th>Candidaturas</th>
 			        				<th>Última Candidatura</th>
@@ -69,6 +71,8 @@
 											<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
 										<td>{{$d->id}}</td>
 										<td>{{$d->name}}</td>
+										<td>{{$d->address_city}}</td>
+										<td>{{$d->address_state}}</td>
 										<td>{{(!empty($d->updated_at)) ? date_format($d->updated_at,'d/m/Y') : ''}}</td>
 										<td>{{$d->subscription_amount}}</td>
 										<td>{{(!empty($d->subscriptions[0]->created_at)) ? date_format($d->subscriptions[0]->created_at,'d/m/Y') : ''}}</td>

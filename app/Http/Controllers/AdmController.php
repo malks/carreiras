@@ -213,12 +213,31 @@ class AdmController extends Controller
         where('candidate_id','=',$request->candidate_id)
         ->where('job_id','=',$request->job_id)
         ->first();
+
         DB::connection('mysql')->table('subscribed_has_states')->insert(
             [
                 'subscribed_id'=>$subscribed->id,
                 'state_id'=>$state->id,
             ]
         );
+
+        if (strtolower(trim($request->status))=='contratado'){
+            $other_subscribed=Subscribed::
+            where('job_id','=',$request->job_id)
+            ->where('candidate_id','!=',$request->candidate_id)
+            ->get();
+
+            foreach ($other_subscribed as $sub){
+                DB::connection('mysql')->table('subscribed_has_states')->insert(
+                    [
+                        'subscribed_id'=>$sub->id,
+                        'state_id'=>2,
+                    ]
+                );
+        
+            }
+        }
+
         return '';
     }
 
@@ -490,8 +509,13 @@ class AdmController extends Controller
         ->when(!empty($request->filter_status),function ($query) use ($request) {
             $query->whereIn('status',$request->filter_status);
         })
+        ->when(!empty($request->filter_unit),function ($query) use ($request) {
+            $query->where('unit_id','=',$request->filter_unit);
+        })
         ->with(['unit'])
         ->paginate(15);
+
+        $units=Unit::all();
 
         $filter_status=[];
         if (!empty($request->filter_status))
@@ -501,9 +525,11 @@ class AdmController extends Controller
             [
                 'data'=>$data,
                 'search'=>$request->search,
+                'units'=>$units,
                 'filter_created_at_end'=>$request->filter_created_at_end,
                 'filter_created_at_start'=>$request->filter_created_at_start,
                 'filter_status'=>$filter_status,
+                'filter_unit'=>$request->filter_unit,
             ]
         );
     }
@@ -682,6 +708,7 @@ class AdmController extends Controller
                 'search'=>$request->search,
                 'logged_id'=>$logged_in->id,
                 'roles'=>$roles,
+                'filter_role'=>$request->filter_role,
             ]
         );
     }

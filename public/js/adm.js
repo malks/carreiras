@@ -241,6 +241,7 @@ function recruiting(){
             candidateNameSearch:'',
             candidateTagSearch:'',
             candidateExpSearch:'',
+            candidateLocSearch:'',
             tagFilters:'',
         }
     };
@@ -252,13 +253,13 @@ function recruiting(){
         computed:{
             jobSize:function(){
                 if (this.runData.selectedJob.id!=null)
-                    return "col-4";
-                return "col-8";
+                    return "hide";
+                return "col-lg-8";
             },
             candidateSize: function(){
                 if (this.runData.selectedJob.id!=null)
-                    return "col-8";
-                return "col-4";
+                    return "col-lg-12";
+                return "col-lg-4";
             },
             notingObservation:function () {
                 let obs = "";
@@ -373,12 +374,17 @@ function recruiting(){
                 this.updateData();
             },
             getUnitById:function(id){
+                if (id==null || id ==undefined)
+                    return {'name':''};
                 let ret = this.runData.units.find(obj=>{
                     return obj.id==id; 
                 })
+                console.log(ret);
                 return ret;
             },
             getFieldById:function(id){
+                if (id!==null || id ==undefined)
+                    return {'name':''};
                 let ret = this.runData.fields.find(obj=>{
                     return obj.id==id; 
                 })
@@ -401,6 +407,11 @@ function recruiting(){
                     that.runData.selectedJob={...bootstrapData.selectedJob};
                     that.runData.subscriptions={...bootstrapData.subscriptions};
                 }
+            },
+            uninspectJob:function (){
+                let that = this;
+                that.runData.selectedJob={...bootstrapData.selectedJob};
+                that.runData.subscriptions={...bootstrapData.subscriptions};
             },
             updateSelectedJob:function (){
                 console.log("updateSelectedJob");
@@ -541,6 +552,31 @@ function recruiting(){
                 }
                 return contain;
             },
+            candidateLocFilter:function (candidate){
+                let contain=true;
+                let activeFilters="";
+                let dude=candidate;
+                console.log(dude);
+                if(this.otherData.candidateLocSearch.length>0){
+                    contain=false;
+                    activeFilters = this.otherData.candidateLocSearch.split(" ");
+                    for (let i in activeFilters){
+                        if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                            contain = false;
+                            break;
+                        }
+                        if (dude.address_city!=null && dude.address_state!=null){
+                            if (dude.address_city.toLowerCase().includes(activeFilters[i].toLowerCase()) || dude.address_state.toLowerCase().includes(activeFilters[i].toLowerCase())){
+                                contain=true;
+                                break;
+                            }
+                        }
+                        if (contain)
+                            break;
+                    }
+                }
+                return contain;
+            },
             inFilter:function(job){
                 console.log(job);
                 let activeFilters ='';
@@ -583,7 +619,7 @@ function recruiting(){
 }
 
 function startData(){
-    fullData=JSON.parse($('#full-data').val());
+    fullData=JSON.parse(decodeURIComponent($('#full-data').val()).replace(/\+/g," "));
     ajaxUrl="";
     form.append('_token',$('[name="_token"]').val());
 }

@@ -37,19 +37,19 @@
                 <div class="row margin-top-10">
                     <div class="col-lg-2">
                         <label for="">Código Cargo Senior</label>
-                        <input type="text" class='form-control text-right' readonly value='{{$data->cod_senior}}'>
+                        <input type="text" class='form-control text-right' name='cod_senior' value='{{$data->cod_senior}}'>
                     </div>
                     <div class="col-lg-2">
                         <label for="">Código Requisição Senior</label>
-                        <input type="text" class='form-control text-right' readonly value='{{$data->cod_rqu_senior}}'>
+                        <input type="text" class='form-control text-right' name='cod_rqu_senior' value='{{$data->cod_rqu_senior}}'>
                     </div>
                     <div class="col-lg-2">
                         <label for="">Código Estrutura do Cargo Senior</label>
-                        <input type="text" class='form-control text-right' readonly value='{{$data->cod_est_senior}}'>
+                        <input type="text" class='form-control text-right' name='cod_est_senior' value='{{$data->cod_est_senior}}'>
                     </div>
                     <div class="col-lg-2">
                         <label for="">Código Hierarquia do Cargo Senior</label>
-                        <input type="text" class='form-control text-right' readonly value='{{$data->cod_hie_senior}}'>
+                        <input type="text" class='form-control text-right' name='cod_hie_senior' value='{{$data->cod_hie_senior}}'>
                     </div>
                 </div>
                 <div class="row margin-top-10">

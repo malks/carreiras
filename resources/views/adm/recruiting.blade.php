@@ -49,7 +49,7 @@
             </div>
         
 
-            <div :class="jobSize">
+            <div class='col-12' :class="jobSize">
                 
                 <div class="card">
                     <div class="card-header">
@@ -65,17 +65,17 @@
                             </div>
 
                             <div class="col-xs-12 col-lg-12">
-                                <h6 class='margin-top-10'>Filtro por Nome</h6>
+                                <h6 class='margin-top-10'>Filtrar por Nome</h6>
                                 <input type="text" placeholder="Buscar vaga por nome" class='form-control' id='job-search' v-model='otherData.jobNameSearch'>
                             </div>
                             <div class="col-12">
-                                <h6 class='margin-top-10'>Filtro por Tags</h6>
+                                <h6 class='margin-top-10'>Filtrar por Tags</h6>
                                 <input type="text" placeholder="Buscar vaga por tags ex: vendas comercial" class='form-control' id='job-tag-search' v-model='otherData.tagFilters'>
                             </div>
                         </div>
                         <div class="row margin-top-10">
                             <div class="col">
-                                <h6 >Filtro por Status:&nbsp</h6>
+                                <h6 >Filtrar por Status:&nbsp</h6>
                                 <input style='margin-left:10px' type="checkbox" id='active-status-filter' v-model='pushData.filters.jobs.direct.in.status' value='1' v-on:change='updateData'>
                                 <label class='control-label' style='margin-left:3px' for="active-status-filter">Ativas</label>
                                 <input type="checkbox" style='margin-left:10px' id='inactive-status-filter' v-model='pushData.filters.jobs.direct.in.status' value='0'  v-on:change='updateData'>
@@ -142,19 +142,44 @@
             </div>
 
 
-            <div  :class="candidateSize">
+            <div class='col-12' :class="candidateSize">
 
-                <div class="card">
+                <button class='btn btn-primary' v-show='runData.selectedJob.id!=null' v-on:click="uninspectJob()"><i class="fas fa-arrow-alt-circle-left"></i> Voltar</button>
+                <div  class="card margin-top-10"  v-if='runData.selectedJob.id!=null'>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h5 style='float:left;'>Vaga Selecionada:</h5>
+                                <span style='float:left;margin-left:10px;font-size:10pt;line-height:28px;'>@{{runData.selectedJob.name}} </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h5 style='float:left;'>Unidade:</h5>
+                                <span style='float:left;margin-left:10px;font-size:10pt;line-height:28px;'>@{{ getUnitById(runData.selectedJob.unit_id).name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card margin-top-10">
                     <div class="card-header">
                         <h4>Candidatos</h4>
                         <div class="row">
-                            <div class="col">
-                                <h6>Filtro por Nome</h6>
+                            <div class="col-lg-6 col-12">
+                                <h6 class='margin-top-10'>Filtrar por Nome</h6>
                                 <input type="text" placeholder="Buscar candidato por nome" class='form-control' id='candidate-search' v-model='otherData.candidateNameSearch' >
-                                <h6 class='margin-top-10'>Filtro por Interesses</h6>
+                            </div>
+                            <div class="col-lg-6 col-12">
+                                <h6 class='margin-top-10'>Filtrar por Interesses</h6>
                                 <input type="text" placeholder="Buscar candidato por interesses ex: vendas comercial" class='form-control' id='candidate-tag-search' v-model='otherData.candidateTagSearch'>
-                                <h6 class='margin-top-10'>Filtro por Atividades de Trabalhos Anteriores</h6>
-                                <input type="text" placeholder="Buscar candidato por atividades passadas ex: merchandising" class='form-control' id='candidate-tag-search' v-model='otherData.candidateExpSearch'>
+                            </div>
+                            <div class="col-lg-6 col-12">
+                                <h6 class='margin-top-10'>Filtrar por Atividades de Trabalhos Anteriores</h6>
+                                <input type="text" placeholder="Buscar candidato por atividades passadas ex: merchandising projetos" class='form-control' id='candidate-exp-search' v-model='otherData.candidateExpSearch'>
+                            </div>
+                            <div class="col-lg-6 col-12">
+                                <h6 class='margin-top-10'>Filtrar por Cidade/Estado</h6>
+                                <input type="text" placeholder="Buscar candidato por cidade/estado ex: guaramirim jaragua" class='form-control' id='candidate-location-search' v-model='otherData.candidateLocSearch'>
                             </div>
                         </div>
                     </div>
@@ -188,9 +213,11 @@
                                     <thead>
                                         <tr>
                                             <th>Nome</th>
-                                            <th class='text-center'>Status</th>
+                                            <th>Cidade</th>
+                                            <th>Estado</th>
                                             <th class='text-right'>Telefone</th>
                                             <th>Email</th>
+                                            <th class='text-center'>Status</th>
                                             <th></th>
                                             <th></th>
                                         </tr>
@@ -202,8 +229,12 @@
                                         </tr>
         
                                         <template v-for="(subscription,subx) in runData.subscriptions">
-                                            <tr v-show="candidateNameFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription)" class='select-sized'>
+                                            <tr v-show="candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription)" class='select-sized'>
                                                 <td>@{{ getCandidate(subscription).name }}</td>
+                                                <td>@{{ getCandidate(subscription).address_city }}</td>
+                                                <td>@{{ getCandidate(subscription).address_state }}</td>
+                                                <td class='text-right'>@{{ getCandidate(subscription).phone }}</td>
+                                                <td>@{{ getCandidate(subscription).email }}</td>
                                                 <td class='text-center'>
                                                     <select class="form-control" v-on:change="addSubscriptionState(getCandidate(subscription).id,runData.selectedJob.id,getState(runData.subscriptions[subx].current_state).name)" v-model="runData.subscriptions[subx].current_state">
                                                         <template v-for='state in runData.states'>
@@ -213,10 +244,7 @@
                                                             </option>
                                                         </template>
                                                     </select>
-                                                    
                                                 </td>
-                                                <td class='text-right'>@{{ getCandidate(subscription).phone }}</td>
-                                                <td>@{{ getCandidate(subscription).email }}</td>
                                                 <td class='text-right'>
                                                     <a :href="'/adm/candidates/edit/'+getCandidate(subscription).id" target='_blank' v-on:click="viewCandidate(subscription)"> 
                                                         <i class="fas fa-eye action-icon" title="Visualizar Candidato"></i> 

@@ -5,7 +5,7 @@
 @section('content_header')
 @stop
 
-<input type='hidden' id='full-data' value='@php echo json_encode($data->toArray()['data']);@endphp'/>
+<input type='hidden' id='full-data' value='@php echo urlencode(json_encode($data->toArray()['data']));@endphp'/>
 
 @section('content')
 	<form method='GET' action='/adm/jobs' id='app'>
@@ -29,7 +29,7 @@
 	        			<button class="btn btn-success" id='job-from-template' v-on:click='templateFromJob()' type='button' v-bind:disabled='canEdit'>Criar Template</button>
 	        		</div>
 	        	</div>
-	        	<div class='row margin-top-10'>
+	        	<div class='row margin-top-30'>
 					<div class="col-lg-3">
 						<input type="checkbox" value='1' name='filter_status[]' @if(in_array('1',$filter_status)) checked @endif>
 						<label style='margin-left:5px' for="">Ativas</label>
@@ -56,7 +56,17 @@
 						<button class='btn btn-primary' type='submit'>Buscar</button>
 					</div>
 				</div>
-					<div class='row margin-top-10'>
+				<div class="row margin-top-10">
+					<div class="col-lg-3">
+						<select name="filter_unit" id="filter-unit" class="form-control">
+							<option value="0">Filtrar Unidade</option>
+							@foreach($units as $unit)
+								<option value="{{$unit->id}}" @if($unit->id==$filter_unit) selected @endif>{{$unit->name}}</option>
+							@endforeach
+						</select>
+					</div>
+				</div>
+				<div class='row margin-top-10'>
 	        		<div class='col'>
 	        			<input class='form-control' placeholder='Busca...' id='search' name='search' @if(!empty($search)) value='{{$search}}' @endif>
 	        		</div>

@@ -34,7 +34,7 @@ $router->group(['middleware' => ['auth']], function() {
     Route::post('/adm/update-subscription-note', 'AdmController@updateSubscriptionNote');
 });
 
-$router->group(['middleware' => ['auth','can:access admin']], function() {
+$router->group(['middleware' => ['auth','is.admin','can:access admin']], function() {
     Route::get('/home', 'HomeController@index')->name('home-adm');
 
     Route::group(['middleware' => ['can:config']], function() {

@@ -32,7 +32,7 @@
 						<select name="filter_role" id="filter-role" class='form-control'>
 							<option value="">Filtrar Função</option>
                             @foreach($roles as $role)
-                            <option value=" {{ $role->id }}">{{ $role->name }}</option>
+                            <option value=" {{ $role->id }}" @if ($filter_role==$role->id) selected @endif>{{ $role->name }}</option>
                             @endforeach
                         </select>
 					</div>
