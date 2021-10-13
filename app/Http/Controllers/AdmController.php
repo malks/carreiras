@@ -227,6 +227,9 @@ class AdmController extends Controller
             ->where('candidate_id','!=',$request->candidate_id)
             ->get();
 
+            Job::where("id",'=',$request->job_id)
+            ->update(['status'=>0]);
+
             foreach ($other_subscribed as $sub){
                 DB::connection('mysql')->table('subscribed_has_states')->insert(
                     [
@@ -270,7 +273,7 @@ class AdmController extends Controller
         $deepLikeDone=0;
 
         $date_filter_start=Carbon::now('America/Sao_Paulo')->subMonths(4)->startOfDay()->format('Y-m-d');
-        $date_filter_end=Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
+        $date_filter_end=Carbon::tomorrow('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
 
         $data['jobs']=Job::orderBy('updated_at','desc')
         ->when(!empty($request->filters['jobs']['direct']), function ($query) use ($request,$directLikeDone) {
