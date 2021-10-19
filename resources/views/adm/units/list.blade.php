@@ -5,7 +5,7 @@
 @section('content_header')
 @stop
 
-<input type='hidden' id='full-data' value='@php echo json_encode($data->toArray()['data']);@endphp'/>
+<input type='hidden' id='full-data' value='@php echo urlencode(json_encode($data->toArray()['data']));@endphp'/>
 
 @section('content')
 	<form method='GET' action='/adm/units' id='app'>
