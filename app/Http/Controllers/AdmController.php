@@ -1201,12 +1201,6 @@ class AdmController extends Controller
 
     public function viewMail($id){
         $data=StateMail::where('id','=',$id)->first();
-        if($data->header_type=='text')
-            $data->header_value=implode("</p><p>", explode("\n",$data->header_value));
-        if($data->body_type=='text')
-            $data->body_value=implode("</p><p>", explode("\n",$data->body_value));
-        if($data->footer_type=='text')
-            $data->footer_value=implode("</p><p>", explode("\n",$data->footer_value));
         return view('adm.states_mails.mail')->with([
             'data'=>$data,
         ]);

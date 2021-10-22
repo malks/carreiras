@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use App\Candidate;
+use App\Mail\Register;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -92,6 +94,7 @@ class RegisterController extends Controller
         $candidate->email=$data['email'];
         $candidate->save();
 
+        Mail::to($candidate->email,$candidate->name)->send(new Register($candidate));
         $user->assignRole('candidate');
         return $user;
     }

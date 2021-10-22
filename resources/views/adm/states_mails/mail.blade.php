@@ -25,9 +25,15 @@
                                 <tr>
                                     <td width="435" valign="top" style='padding:5px;'>
                                         @if ($data->header_type=='image')
-                                            <img src="{{$data->header_value}}" width="500">
+                                            <img src="{{'https://lunellicarreiras.com.br/'.$data->header_value}}" width="500">
                                         @else
-                                            <p>{!! $data->header_value !!}</p>
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        {!! str_replace(["\n","\r"],"</tr><tr>",$data->header_value) !!}
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         @endif
                                     </td>
                                 </tr>
@@ -45,9 +51,15 @@
                                 <tr>
                                     <td width="435" valign="top" style='padding:5px;'>
                                         @if ($data->body_type=='image')
-                                            <img src="{{$data->body_value}}" width="500">
+                                            <img src="{{'https://lunellicarreiras.com.br/'.$data->body_value}}" width="500">
                                         @else   
-                                            <p>{!! $data->body_value !!}</p>
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        {!! str_replace(["\n","\r"],"</tr><tr>",$data->body_value) !!}
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         @endif
                                     </td>
                                 </tr>
@@ -65,9 +77,15 @@
                                 <tr>
                                     <td width="435" valign="top" style='padding:5px;'>
                                         @if ($data->footer_type=='image')
-                                            <img src="{{$data->footer_value}}" alt="" width="500" >
+                                            <img src="{{'https://lunellicarreiras.com.br/'.$data->footer_value}}" alt="" width="500" >
                                         @else
-                                            <p>{!! $data->footer_value !!}</p>
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        {!! str_replace(["\n","\r"],"</tr><tr>",$data->footer_value) !!}
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         @endif
                                     </td>
                                 </tr>
