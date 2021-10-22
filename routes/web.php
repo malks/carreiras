@@ -22,6 +22,7 @@ Route::get('/jobs', 'LandingController@jobsList');
 Route::get('/policy', 'LandingController@policy');
 Route::post('/newsletter-subscribe', 'LandingController@newsletterSubscribe');
 Route::get('/landing-data', 'LandingController@landingData');
+Route::get('/view-mail/{id}', 'AdmController@viewMail')->name('view-mail');
 
 $router->group(['middleware' => ['auth']], function() {
     Route::get('/profile', 'LandingController@profile');
@@ -57,11 +58,19 @@ $router->group(['middleware' => ['auth','is.admin','can:access admin']], functio
     });
 
     Route::group(['middleware' => ['can:recruiting status']], function() {
+        
         Route::get('/adm/states', 'AdmController@statesList')->name('states-list');
         Route::get('/adm/states/edit/{id}', 'AdmController@statesEdit')->name('states-edit');
         Route::get('/adm/states/create', 'AdmController@statesCreate')->name('states-create');
         Route::post('/adm/states/destroy', 'AdmController@statesDestroy')->name('states-destroy');
         Route::get('/adm/states/save', 'AdmController@statesSave')->name('states-save');
+
+        Route::get('/adm/states-mails', 'AdmController@statesMailsList')->name('states-list');
+        Route::get('/adm/states-mails/edit/{id}', 'AdmController@statesMailsEdit')->name('states-mails-edit');
+        Route::get('/adm/states-mails/create', 'AdmController@statesMailsCreate')->name('states-mails-create');
+        Route::post('/adm/states-mails/destroy', 'AdmController@statesMailsDestroy')->name('states-mails-destroy');
+        Route::post('/adm/states-mails/save', 'AdmController@statesMailsSave')->name('states-mails-save');
+
     });
 
     Route::group(['middleware' => ['can:units']], function() {

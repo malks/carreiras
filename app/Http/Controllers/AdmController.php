@@ -18,6 +18,7 @@ use App\User;
 use App\Permission;
 use App\Role;
 use App\State;
+use App\StateMail;
 use App\Video;
 use App\Subscribed;
 use App\Subscriber;
@@ -454,6 +455,21 @@ class AdmController extends Controller
         );
     }
 
+    public function statesMailsList (Request $request){
+        $data=StateMail::
+        when(!empty($request->search),function($query) use ($request) {
+            $query->where('name','like',"%$request->search%");
+        })
+        ->paginate(15);
+
+        return view('adm.states_mails.list')->with(
+            [
+                'data'=>$data,
+                'search'=>$request->search,
+            ]
+        );
+    }
+
     public function rolesList (Request $request){
         $data=Role::
         when(!empty($request->search),function($query) use ($request) {
@@ -726,6 +742,25 @@ class AdmController extends Controller
 
     }
 
+    public function statesMailsCreate (Request $request) {
+        $data=new StateMail;
+        $states=State::all();
+        $linked_states=[];
+        $all_states=[];
+        foreach($states as $state){
+            array_push($all_states,$state['id']);
+        }
+        return view('adm.states_mails.edit')->with(
+            [
+                'data'=>$data,
+                'linked_states'=>$linked_states,
+                'states'=>$states,
+                'all_states'=>$all_states,
+            ]
+        );
+
+    }
+
     public function rolesCreate (Request $request) {
         $data=new Role;
         $permissions = Permission::where('id','>','2')->orderBy('desc')->get();
@@ -863,6 +898,23 @@ class AdmController extends Controller
         return view('adm.fields.edit')->with(
             [
                 'data'=>$data,
+            ]
+        );
+    }
+
+    public function statesMailsEdit ($id) {
+        $data=StateMail::where('id','=',$id)->with('states')->first();
+        $states=$data->states->toArray();
+        $all_states=State::all();
+        $linked_states=[];
+        foreach($states as $state){
+            array_push($linked_states,$state['id']);
+        }
+        return view('adm.states_mails.edit')->with(
+            [
+                'data'=>$data,
+                'linked_states'=>$linked_states,
+                'all_states'=>$all_states,
             ]
         );
     }
@@ -1011,6 +1063,12 @@ class AdmController extends Controller
         return;
     }
 
+
+    public function statesMailsDestroy (Request $request) {
+        StateMail::whereIn('id',explode(",",$request->ids))->delete();
+        return;
+    }
+
     public function rolesDestroy (Request $request) {
         Role::whereIn('id',explode(",",$request->ids))->delete();
         return;
@@ -1088,6 +1146,70 @@ class AdmController extends Controller
         }
         $data->save();
 		return redirect('/adm/fields/');
+    }
+
+    public function statesMailsSave (Request $request) {
+        $data=new StateMail;
+        $arr=$request->toArray();
+        $linked_states=[];
+        if (!empty($arr['states'])){
+            $linked_states=$arr['states'];
+            unset($arr['states']);
+        }
+        unset($arr['_token']);
+
+        if ($request->header_type=='image' && $request->hasFile('header_value')){
+            $extension=$request->header_value->extension();
+            $header_file='h'.rand(0,100).date('U').".".$extension;
+	    	$tmp=$request->header_value->path();
+	    	copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/img/'.$header_file);
+            $arr['header_value']='/img/'.$header_file;
+        }
+
+        if ($request->body_type=='image' && $request->hasFile('body_value')){
+            $extension=$request->body_value->extension();
+            $body_file='b'.rand(0,100).date('U').".".$extension;
+	    	$tmp=$request->body_value->path();
+	    	copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/img/'.$body_file);
+            $arr['body_value']='/img/'.$body_file;
+        }
+
+        if ($request->footer_type=='image' && $request->hasFile('footer_value')){
+            $extension=$request->footer_value->extension();
+            $footer_file='f'.rand(0,100).date('U').".".$extension;
+	    	$tmp=$request->footer_value->path();
+	    	copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/img/'.$footer_file);
+            $arr['footer_value']='/img/'.$footer_file;
+        }
+
+
+        if(!empty($arr['id']))
+            $data=StateMail::where('id','=',$arr['id'])->first();
+
+        foreach ($arr as $k=>$value){
+            $data->{$k}=$value;
+        }
+        $data->save();
+        
+        DB::table('states_mails_states')->where('mail_id','=',$data->id)->delete();
+        foreach($linked_states as $state){
+            DB::table('states_mails_states')->insert(['mail_id'=>$data->id,'state_id'=>$state]);
+        }
+
+		return redirect('/adm/states-mails/');
+    }
+
+    public function viewMail($id){
+        $data=StateMail::where('id','=',$id)->first();
+        if($data->header_type=='text')
+            $data->header_value=implode("</p><p>", explode("\n",$data->header_value));
+        if($data->body_type=='text')
+            $data->body_value=implode("</p><p>", explode("\n",$data->body_value));
+        if($data->footer_type=='text')
+            $data->footer_value=implode("</p><p>", explode("\n",$data->footer_value));
+        return view('adm.states_mails.mail')->with([
+            'data'=>$data,
+        ]);
     }
 
     public function rolesSave (Request $request) {

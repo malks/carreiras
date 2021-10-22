@@ -267,6 +267,12 @@ return [
             'icon' => 'fas fa-dice-d6',
         ],
         [
+            'text' => 'E-mails de Status',
+            'url'  => 'adm/states-mails',
+            'can' => ['recruiting status'],
+            'icon' => 'fas fa-mail-bulk',
+        ],
+        [
             'text' => 'Áreas de Vagas',
             'url'  => 'adm/fields',
             'can' => ['fields'],

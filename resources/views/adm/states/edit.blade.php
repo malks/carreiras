@@ -10,7 +10,7 @@
 		@csrf
 	    <div class="card" check-states-edit>
 	    	<div class='card-header'>
-	    		<h5>Edição de Estados</h5>
+	    		<h5>Edição de Status</h5>
 	    	</div>
 	        <div class="card-body">
 	        	<div class='row'>

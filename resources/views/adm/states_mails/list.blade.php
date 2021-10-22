@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Estados de Recrutamento | Lunelli Carreiras')
+@section('title', 'E-mails de Status | Lunelli Carreiras')
 
 @section('content_header')
 @stop
@@ -8,16 +8,16 @@
 <input type='hidden' id='full-data' value='@php echo json_encode($data->toArray()['data']);@endphp'/>
 
 @section('content')
-	<form method='GET' action='/adm/states' id='app'>
+	<form method='GET' action='/adm/states-mails' id='app'>
 		@csrf
-	    <div class="card" check-states-list>
+	    <div class="card" check-states-mails-list>
 	    	<div class='card-header'>
-	    		<h5>Status de Recrutamento</h5>
+	    		<h5>E-mails de Status</h5>
 	    	</div>
 	        <div class="card-body">
 	        	<div class='row'>
 	        		<div class="col-1">
-	        			<a class="btn btn-primary" id='new' href='/adm/states/create'>Nova</a>
+	        			<a class="btn btn-primary" id='new' href='/adm/states-mails/create'>Nova</a>
 	        		</div>
 	        		<div class="col-1">
 	        			<button class="btn btn-secondary" id='edit' v-on:click='edit()' type='button' v-bind:disabled='canEdit'>Editar</button>
@@ -40,27 +40,18 @@
 									<th style='width:40px;'><input type='checkbox' id='check-all' v-on:click='reverseSelection()'></th>
 			        				<th>Id</th>
 			        				<th>Nome</th>
-			        				<th>Visível para Candidato?</th>
-			        				<th>Requerido pelo sistema</th>
-			        				<th>Sincronizar com Senior neste status?</th>
 			        			</tr>
 			        		</thead>
 			        		<tbody>
-								@php
-									$candidate_visible=['Não','Sim'];
-								@endphp
 								@if($data->total()<=0)
 									<tr><td colspan='3'>Nenhum registro encontrado</td></tr>
 								@endif
-								@foreach($data as $k => $d)
+								@foreach($data as $d)
 									<tr class='hoverable' v-on:click='addItem({{$d->id}})' > 
 										<td style='width:40px;' for='data-check-{{$d->id}}' class='checker'>
 											<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
 										<td>{{$d->id}}</td>
 										<td>{{$d->name}}</td>
-										<td>{{$candidate_visible[$d->candidate_visible]}}</td>
-										<td>{{($d->id<=5) ? 'Sim' : 'Não'}} </td>
-										<td>{{($d->sync_to_senior) ? 'Sim' : 'Não'}} </td>
 									</tr>
 								@endforeach
 							</tbody>

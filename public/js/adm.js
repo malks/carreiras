@@ -10,6 +10,10 @@ let form = new FormData();
 $(document).ready(function () {
     if ($('[check-fields-list]').length>0)
         fieldsList();
+    if ($('[check-states-mails-list]').length>0)
+        statesMailsList();
+    if ($('[check-states-mails-edit]').length>0)
+        editStatesMails();
     if ($('[check-subscribers-list]').length>0)
         subscribersList();
     if ($('[check-states-list]').length>0)
@@ -40,6 +44,89 @@ $(document).ready(function () {
         editJobsTemplates();
 
 })
+
+function editStatesMails(){
+    let statesMailsEdit=new Vue({
+        el:'#app',
+        data:{
+            id:null,
+            header_type:'text',
+            body_type:'text',
+            footer_type:'text',
+            header_value:'',
+            body_value:'',
+            footer_value:'',
+            header_background:'',
+            body_background:'',
+            footer_background:'',
+            states:[],
+            all_states:[],
+        },
+        mounted:function(){
+            let that=this;
+            let full_data={};
+            if($('#full-data').val()!=undefined){
+                full_data=JSON.parse(decodeURIComponent($('#full-data').val()).replace(/\+/g," "));
+                for ( let i in full_data ){
+                    if(i!='states')
+                        that[i]=full_data[i];
+                }    
+            }
+            if($('#linked-states').val()!=undefined){
+                that.states=JSON.parse(decodeURIComponent($('#linked-states').val()).replace(/\+/g," "));
+            }
+            if($('#all-states').val()!=undefined){
+                that.all_states=JSON.parse(decodeURIComponent($('#all-states').val()).replace(/\+/g," "));
+            }
+        },
+        methods:{
+            removeState:function(idx){
+                let that = this;
+                that.states.splice(idx,1);
+            },
+            addState:function (){
+                let that=this;
+                that.states.push(that.all_states[0]);
+                console.log(that.all_states[0]);
+                console.log(that.states);
+            },
+            changeHeaderImage:function(){
+                let that=this;
+                that.header_value=URL.createObjectURL($('#header-image-value')[0].files[0]);
+            },
+            changeBodyImage:function(){
+                let that=this;
+                that.body_value=URL.createObjectURL($('#body-image-value')[0].files[0]);
+            },
+            changeFooterImage:function(){
+                let that=this;
+                that.footer_value=URL.createObjectURL($('#footer-image-value')[0].files[0]);
+            },
+            getHeaderImage:function(){
+                let that = this;
+                let thefile='';
+                if (that.header_value!='' && that.header_type=='image'){
+                    thefile=URL.createObjectURL($('#header-image-value')[0].files[0]);
+                }
+                return thefile;
+            },
+            getFooterImage:function(){
+                let that = this;
+                if (that.footer_value!='' && that.footer_type=='image'){
+                    return URL.createObjectURL($('#footer-image-value')[0].files[0]);
+                }
+                return '';
+            },
+            getBodyImage:function(){
+                let that = this;
+                if (that.body_value!='' && that.body_type=='image'){
+                    return URL.createObjectURL($('#body-image-value')[0].files[0]);
+                }
+                return '';
+            },
+        }
+    })
+}
 
 function editJobs(){
     let jobsEdit=new Vue({
@@ -646,6 +733,13 @@ function fieldsList(){
     $('#search').focus();
 }
 
+function statesMailsList(){
+    startData();
+    ajaxUrl=$('#app').attr('action');
+    startList([],[1]);
+    $('#search').focus();
+}
+
 function subscribersList(){
     startData();
     ajaxUrl=$('#app').attr('action');
@@ -733,7 +827,7 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                 if (this.selectedIds.length>0)
                     return false;
                 return true;
-            }
+            },
         },
         methods:{
             addItem:function(id){
