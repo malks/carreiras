@@ -22,12 +22,14 @@ use App\StateMail;
 use App\Video;
 use App\Subscribed;
 use App\Subscriber;
+use App\Mail\StateChange;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 class AdmController extends Controller
 {
@@ -221,7 +223,15 @@ class AdmController extends Controller
                 'state_id'=>$state->id,
             ]
         );
+        $state_mail=DB::connection('mysql')->table('states_mails_states')->select('mail_id')->where('state_id','=',$state->id)->first();
 
+        if(!empty($state_mail)){
+            $candidate=Candidate::where('id','=',$request->candidate_id)->first();
+            $job=Job::where('id','=',$request->job_id)->first();
+            Mail::to($candidate->email,$candidate->name)->send(new StateChange($candidate,$job,$state));
+        }
+
+        //Se contratado, altera outros inscritos na vaga para não-selecionado
         if (strtolower(trim($request->status))=='contratado'){
             $other_subscribed=Subscribed::
             where('job_id','=',$request->job_id)

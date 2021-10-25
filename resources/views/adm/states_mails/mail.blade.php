@@ -25,12 +25,30 @@
                                 <tr>
                                     <td width="435" valign="top" style='padding:5px;'>
                                         @if ($data->header_type=='image')
-                                            <img src="{{'https://lunellicarreiras.com.br/'.$data->header_value}}" width="500">
+                                            @php
+                                                $data->header_value='https://www.lunellicarreiras.com.br/'.$data->header_value;
+                                            @endphp
+                                            <img src="{{$data->header_value}}" width="500" height="200" title='Topo' alt='Lunelli Carreiras'>
                                         @else
                                             <table>
                                                 <tbody>
-                                                    <tr>
-                                                        {!! str_replace(["\n","\r"],"</tr><tr>",$data->header_value) !!}
+                                                    <tr style='color:{{$data->header_fontcolor}};'>
+                                                        @if(!empty($candidate->name))
+                                                            @php
+                                                                $data->header_value=str_replace("@nome@",$candidate->name,$data->header_value);
+                                                            @endphp
+                                                        @endif
+                                                        @if(!empty($job->name))
+                                                            @php
+                                                                $data->header_value=str_replace("@vaga@",$job->name,$data->header_value);
+                                                            @endphp
+                                                        @endif
+                                                        @php
+                                                            $substitute="</td></tr><tr><td style='color:".$data->header_fontcolor.";'>";
+                                                        @endphp
+                                                        <td style='color:{{$data->header_fontcolor}};'>
+                                                            {!! str_replace(["\n","\r"],$substitute,$data->header_value) !!}
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -51,12 +69,30 @@
                                 <tr>
                                     <td width="435" valign="top" style='padding:5px;'>
                                         @if ($data->body_type=='image')
-                                            <img src="{{'https://lunellicarreiras.com.br/'.$data->body_value}}" width="500">
+                                            @php
+                                                $data->body_value='https://www.lunellicarreiras.com.br/'.$data->body_value;
+                                            @endphp
+                                            <img src="{{$data->body_value}}" width="500" height="500" title='Corpo' alt='Lunelli Carreiras'>
                                         @else   
                                             <table>
                                                 <tbody>
                                                     <tr>
-                                                        {!! str_replace(["\n","\r"],"</tr><tr>",$data->body_value) !!}
+                                                        @if(!empty($candidate->name))
+                                                            @php
+                                                                $data->body_value=str_replace("@nome@",$candidate->name,$data->body_value);
+                                                            @endphp
+                                                        @endif
+                                                        @if(!empty($job->name))
+                                                            @php
+                                                                $data->body_value=str_replace("@vaga@",$job->name,$data->body_value);
+                                                            @endphp
+                                                        @endif
+                                                        @php
+                                                            $substitute="</td></tr><tr><td style='color:".$data->body_fontcolor.";'>";
+                                                        @endphp
+                                                        <td style='color:{{$data->body_fontcolor}};'>
+                                                            {!! str_replace(["\n","\r"],$substitute,$data->body_value) !!}
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -72,17 +108,35 @@
                 </tr>
                 <tr>
                     <td>
-                        <table width="500" border="0" align="center" bgcolor="{{$data->footer_background}}" cellpadding="0" cellspacing="0" style="font-family:Arial, Helvetica, sans-serif;font-size:.7em;color:{{$data->footer_fontcolor}};line-height:1.4;background-color:{{$data->footer_background}};">
+                        <table width="500" border="0" align="center" bgcolor="{{$data->footer_background}}" cellpadding="0" cellspacing="0" style="font-family:Arial, Helvetica, sans-serif;color:{{$data->footer_fontcolor}};line-height:1.4;background-color:{{$data->footer_background}};">
                             <tbody>
                                 <tr>
                                     <td width="435" valign="top" style='padding:5px;'>
                                         @if ($data->footer_type=='image')
-                                            <img src="{{'https://lunellicarreiras.com.br/'.$data->footer_value}}" alt="" width="500" >
+                                            @php
+                                                $data->footer_value='https://www.lunellicarreiras.com.br/'.$data->footer_value;
+                                            @endphp
+                                            <img src="{{$data->footer_value}}" alt="" width="500" height="200"  title='Rodapé' alt='Lunelli Carreiras'>
                                         @else
                                             <table>
                                                 <tbody>
                                                     <tr>
-                                                        {!! str_replace(["\n","\r"],"</tr><tr>",$data->footer_value) !!}
+                                                        @if(!empty($candidate->name))
+                                                            @php
+                                                                $data->footer_value=str_replace("@nome@",$candidate->name,$data->footer_value);
+                                                            @endphp
+                                                        @endif
+                                                        @if(!empty($job->name))
+                                                            @php
+                                                                $data->footer_value=str_replace("@vaga@",$job->name,$data->footer_value);
+                                                            @endphp
+                                                        @endif
+                                                        @php
+                                                            $substitute="</td></tr><tr><td style='color:".$data->footer_fontcolor.";'>";
+                                                        @endphp
+                                                        <td style='color:{{$data->footer_fontcolor}};'>
+                                                            {!! str_replace(["\n","\r"],$substitute,$data->footer_value) !!}
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>

@@ -30,15 +30,23 @@
                                 </div>
                             </div>
                         @endif
-    
+                        <div class="row">
+                            <div class="col">
+                                <small>*Use @nome@ e @vaga@ nos textos para exibir o nome do candidato e a vaga, respectivamente.</small>
+                            </div>
+                        </div>
                         <div class="row margin-top-10">
                             <input type='hidden' name='id' value='{{$data->id}}'>
                             <input type='hidden' id='full-data'  value='{{urlencode(json_encode($data->toArray()))}}'>
                             <input type='hidden' id='all-states' value='{{urlencode(json_encode($all_states))}}'>
                             <input type='hidden' id='linked-states' value='{{urlencode(json_encode($linked_states))}}'>
-                            <div class=" col-sm-12">
+                            <div class=" col-sm-12 col-lg-6">
                                 <label for="data-name">Nome</label>
                                 <input type='text' class='form-control' name='name' value='{{$data->name}}'/>
+                            </div>
+                            <div class=" col-sm-12 col-lg-6">
+                                <label for="data-name">Assunto</label>
+                                <input type='text' class='form-control' name='subject' value='{{$data->subject}}'/>
                             </div>
                         </div>
                         <div class="row margin-top-50">
