@@ -23,6 +23,7 @@ Route::get('/policy', 'LandingController@policy');
 Route::post('/newsletter-subscribe', 'LandingController@newsletterSubscribe');
 Route::get('/landing-data', 'LandingController@landingData');
 Route::get('/view-mail/{id}', 'AdmController@viewMail')->name('view-mail');
+Route::post('/busca-cep', 'LandingController@buscaCep')->name('busca-cep');
 
 $router->group(['middleware' => ['auth']], function() {
     Route::get('/profile', 'LandingController@profile');

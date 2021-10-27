@@ -557,6 +557,134 @@ function homeJobs(){
     });
 }
 
+function validate(whichTab){
+    let ret=[];
+    let gotProblem={
+        'candidate-data':   false,
+        'schooling-data':   false,
+        'experience-data':  false,
+        'language-data':    false,
+        'family-data':      false,
+        'extra':            false,
+        'questionary':      false,
+    };
+    switch(whichTab){
+        case 'candidate-data':
+            if ($('#data-name').val().length<3){
+                ret.push({'candidate-data': 'Nome completo é necessário'});
+            }
+            if ($('#data-email').val().match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)==null){
+                ret.push({'candidate-data': 'E-mail precisa ser válido'});
+            }
+            if (($('#data-ddd-phone').val().length<2 || $('#data-phone').val().length<9) && ($('#data-ddd-mobile').val().length<2 || $('#data-mobile').val().length<10 ) ){
+                ret.push({'candidate-data': 'Telefone ou Celular são necessários'});
+            }
+            if ($('#data-dob').val().length<10){
+                ret.push({'candidate-data': 'Data de nascimento é obrigatório'});
+            }
+            if ($('#data-address-street').val().length<6 || $('#data-address-city').val().length<4 || $('#data-address-district').val().length<4 || $('#data-address-number').val().length==0 || $('#data-address-state').val().length<2 || $('#data-address-country').val().length<3 || $('#data-address-zip').val().length<10){
+                ret.push({'candidate-data': 'Endereço residencial é obrigatório'});
+            }
+            if ($('#data-cpf').val().length!=14 || $('#data-work-card').val().length<7 || $('#data-work-card-series').val().length<3 || $('#data-pis').val().length<10 || $('#data-rg').val().length<10 || $('#data-rg-emitter').val().length<3 || $('#data-elector-card').val().length<13 || $('#data-veteran-card').val().length<11 ){
+                ret.push({'candidate-data': 'Documentos são obrigatórios'});
+            }
+            if ( $('#data-natural-city').val().length<4 || $('#data-natural-state').val().length<2 || $('#data-natural-country').val().length<3 ){
+                ret.push({'candidate-data': 'Naturalidade é obrigatória'});
+            }
+            if ( $('#data-foreigner').val()==1){
+                if ($('#data-data-arrival-date').val().length<10 || $('#data-foreign-register').val().length<5 || $('#data-foreign-emitter').val().length<3 || $    ('#data-visa-expiration').val()<10 ){
+                    ret.push({'candidate-data': 'Se você é estrangeiro, os dados relacionados são obrigatórios'});
+                }
+            }
+            if ( $('#data-deficiency').val()==1){
+                if ($('#data-deficiency-type').val()==0 || $('#data-cid').val().length==0 ){
+                    ret.push({'candidate-data': 'Se você tem alguma deficiência, os dados relacionados são obrigatórios'});
+                }
+            }
+            break;
+        case 'schooling-data':
+            if ($('#schooling-formation0')[0]==undefined || 
+                $('#schooling-formation0').val()==null ||
+                $('#schooling-status0').val()==null ||
+                $('#schooling-course-0').val()==null ||
+                $('#schooling-grade0').val()==null ||
+                $('#schooling-institution0').val()==null ||
+                $('#schooling-start0').val()==null ||
+                $('#schooling-end0').val()==null
+            ){
+                ret.push({'schooling-data': 'Ao menos uma formação com dados completos é necessária'});
+            }
+            break;
+        case 'experience-data':
+            break;
+        case 'language-data':
+            break;
+        case 'family-data':
+            if ( $('#data-mother-name').val().length<3 || 
+                 $('#data-mother-dob').val().length<2 ){
+                ret.push({'family-data': 'Dados da mãe obrigatórios'});
+            }
+            break;
+        case 'extra':
+            if ($('#interests-holder .badge')[0]==undefined)
+                ret.push({'extra': 'Informe ao menos um interesse'});
+            break;
+        case 'questionary':
+            if ($('#data-pretended-salary').val()==''){
+                ret.push({'questionary': 'Pretensão salarial é obrigatória'});
+            }
+            break;
+    }
+
+    return ret;
+}
+
+function jumpTab(current){
+    let ret = current;
+    switch (current){
+        case 'candidate-data':
+            ret='schooling-data';
+            break;
+        case 'schooling-data':
+            ret='experience-data';
+            break;
+        case 'experience-data':
+            ret='language-data';
+            break;
+        case 'language-data':
+            ret='family-data';
+            break;
+        case 'family-data':
+            ret='extra';
+            break;
+        case 'extra':
+            ret='questionary';
+            break;
+        case 'questionary':
+            ret='success';
+            break;
+        }
+    window.scroll(0,0);
+
+    return ret;
+}
+
+function canTab(current,trial){
+    let ret = false;
+    let freeTabbing={
+        'candidate-data':   [],
+        'schooling-data':   ['candidate-data'],
+        'experience-data':  ['candidate-data','schooling-data'],
+        'language-data':    ['candidate-data','schooling-data','experience-data'],
+        'family-data':      ['candidate-data','schooling-data','experience-data','language-data'],
+        'extra':            ['candidate-data','schooling-data','experience-data','language-data','family-data'],
+        'questionary':      ['candidate-data','schooling-data','experience-data','language-data','family-data','extra'],
+    }
+    ret=freeTabbing[current].includes( trial );
+    console.log(ret);
+    return ret;
+}
+
 function profile(){
     startProfile('profile-edit','candidate-data');
 }
@@ -596,6 +724,23 @@ function startProfile(screenNameHelper='',firstTab=''){
             },
         },
         methods:{
+            tabTo:function (trialTab){
+                let that = this;
+                let stop = false;
+                that.errors=validate(that.currentTab);
+                for (i in that.errors){
+                    stop = Object.keys(that.errors[i]).includes(that.currentTab);
+                    if (stop)
+                        break;
+                }
+                console.log(Object.keys(that.errors));
+                console.log(stop);
+                if (!stop || canTab(that.currentTab,trialTab)){
+                    that.errors=[];
+                    that.currentTab=trialTab;
+                }
+                return;
+            },
             addLang:function () {
                 this.selected_languages.push({id:"",pivot:{id:null,level:'basic'}})
             },
@@ -617,6 +762,30 @@ function startProfile(screenNameHelper='',firstTab=''){
                     this.filteredTags=this.tags.filter(obj=>{
                         return obj.name.toLowerCase().startsWith(ctag.toLowerCase())==true;
                     })
+            },
+            getCep:function (){ 
+                let that=this;
+                if (that.holdingData.zip!=''){
+                    let form = new FormData();
+                    form.append('_token',$('[name="_token"]').val());
+                    form.append('cep',that.holdingData.zip);
+
+                    $.ajax({
+                        url:'/busca-cep',
+                        type:'POST',
+                        processData: false,
+                        contentType: false,            
+                        data: form,
+                        success:function (data){
+                            jdata= JSON.parse(data);
+                            for (let i in jdata){
+                                console.log(i);
+                                if (i!='zip')
+                                    that.holdingData['address_'+i]=jdata[i];
+                            }
+                        }
+                    })
+                }
             },
             selectTag:function (){
                 let that=this;
@@ -658,20 +827,25 @@ function startProfile(screenNameHelper='',firstTab=''){
                 this.experiences.unshift(loadDefault('experience'));
             },
             saveProfile:function(){
-                this.saving=true;
                 that=this;
                 let interests=JSON.stringify(that.selectedTags);
                 $('#data-interests').val(interests);
                 data=$('form').serialize();
-                $.ajax({
-                    url:'/save-profile',
-                    type:'POST',
-                    data:data,
-                    success:function (data){
-                        that.saving=false;
-                        console.log(data);
-                    }
-                })
+                that.errors=validate(that.currentTab);
+                if (that.errors.length==0){
+                    that.saving=true;
+                    $.ajax({
+                        url:'/save-profile',
+                        type:'POST',
+                        data:data,
+                        success:function (data){
+                            that.saving=false;
+                            that.currentTab=jumpTab(that.currentTab);
+                        }
+                    })
+                }
+                else
+                    window.scroll(0,0);
             },
             excludeSchooling: function(index) {
                 let tempSchoolings=this.schoolings;
@@ -706,6 +880,7 @@ function getCustomData(screenNameHelper,firstTab){
         saving:false,
         excluded_schoolings:[],
         excluded_experiences:[],
+        errors:[],
     };
     if (screenNameHelper=='profile-edit'){
         customData.schoolings=JSON.parse(document.getElementById('schooling-data').value);

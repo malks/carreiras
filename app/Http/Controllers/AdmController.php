@@ -684,7 +684,9 @@ class AdmController extends Controller
 
         
         $schooling_grades=[
+            'professional' => 'Profissionalizante',
             'technology' => 'Tecnólogo',
+            'technician' => 'Técnico',
             'graduation' => 'Graduação',
             'postgrad' => 'Pós Graduação',
             'masters' => 'Mestrado',

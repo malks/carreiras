@@ -348,3 +348,35 @@ input#interests-input.interests-input, input#interests-input.interests-input:foc
     overflow-y: scroll!important;
     overflow-x: hidden!important;
 }
+
+ul.errors{
+    margin-left:40px;
+    list-style:none;
+    background-color: rgb(233, 52, 52);
+    border-color: rgb(182, 18, 18);
+    color:#fff;
+    width:fit-content;
+    padding:0px;
+    cursor:pointer;
+}
+ul.errors:hover{
+    background-color: rgb(245, 69, 69);
+}
+ul.errors > li {
+    padding:5px;
+    margin-left:20px;
+    padding-right:20px;
+    font-weight:bold;
+}
+
+ul.errors > li:first-child {
+    background-color: rgb(182, 18, 18);
+    color:rgb(255, 223, 117);
+    margin-left: 0px;
+    padding-left: 10px;
+    font-weight:bolder;
+}
+
+ul.errors:hover > li:first-child {
+    background-color: rgb(197, 25, 25);
+}

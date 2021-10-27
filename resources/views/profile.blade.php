@@ -31,38 +31,49 @@
                     
                     <div class="card-body">
                         <hr>
-        
-                        <ul class="nav nav-tabs margin-left-20">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item"></li>
                             <li class="nav-item">
-                                <a  class='nav-link'  v-bind:class="{ active: isItMe('candidate-data') }" v-on:click="currentTab='candidate-data'" >Pessoal</a>
+                                <a  class='nav-link'  v-bind:class="{ active: isItMe('candidate-data') }" v-on:click="tabTo('candidate-data')" >Pessoal</a>
                             </li>
                             <li class="nav-item">
-                                <a  class='nav-link'  v-bind:class="{ active: isItMe('schooling-data') }" v-on:click="currentTab='schooling-data'" >Escolaridade</a>
+                                <a  class='nav-link'  v-bind:class="{ active: isItMe('schooling-data') }" v-on:click="tabTo('schooling-data')" >Escolaridade</a>
                             </li>
                             <li class="nav-item">
-                                <a  class='nav-link'  v-bind:class="{ active: isItMe('experience-data') }" v-on:click="currentTab='experience-data'" >Experiência</a>
+                                <a  class='nav-link'  v-bind:class="{ active: isItMe('experience-data') }" v-on:click="tabTo('experience-data')" >Experiência</a>
                             </li>
                             <li class="nav-item">
-                                <a  class='nav-link'  v-bind:class="{ active: isItMe('language-data') }" v-on:click="currentTab='language-data'" >Idiomas</a>
+                                <a  class='nav-link'  v-bind:class="{ active: isItMe('language-data') }" v-on:click="tabTo('language-data')" >Idiomas</a>
                             </li>
                             <li class="nav-item">
-                                <a  class='nav-link'  v-bind:class="{ active: isItMe('family-data') }" v-on:click="currentTab='family-data'" >Família</a>
+                                <a  class='nav-link'  v-bind:class="{ active: isItMe('family-data') }" v-on:click="tabTo('family-data')" >Família</a>
                             </li>
                             <li class="nav-item">
-                                <a class='nav-link' v-bind:class="{  active: isItMe('documents') }" v-on:click="currentTab='documents'" >Documentos</a>
+                                <a class='nav-link' v-bind:class="{  active: isItMe('extra') }" v-on:click="tabTo('extra')" >Adicionais</a>
                             </li>
                             <li class="nav-item">
-                                <a class='nav-link' v-bind:class="{  active: isItMe('extra') }" v-on:click="currentTab='extra'" >Adicionais</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class='nav-link' v-bind:class="{  active: isItMe('questionary') }" v-on:click="currentTab='questionary'" >Questionário</a>
+                                <a class='nav-link' v-bind:class="{  active: isItMe('questionary') }" v-on:click="tabTo('questionary')" >Questionário</a>
                             </li>
                             <li class="nav-item"></li>
-                            <!--li class="nav-item">
-                                <a  v-bind:class="nav-link { active: isItMe('candidate-data') }" v-on:click="currentTab='candidate-data'" href="#" tabindex="-1" aria-disabled="alwaysTrue">Disabled</a>
-                            </li-->
                         </ul>
                         <hr>
+                        <div v-if='errors.length>0' class="row">
+                            <div class="col-lg-6 col-12">
+                                <ul class='errors' v-on:click='errors=[]'>
+                                    <li>
+                                        Antes de continuarmos...
+                                    </li>
+                                    <template v-for='(errorTab,idx) in errors'>
+                                        <template  v-if="idx!='gotProblem'" v-for='error in errorTab'>
+                                            <li>
+                                                @{{error}}
+                                            </li>
+                                        </template>
+                                    </template>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div class="tab-content">
         
                             <div class='tab-pane fade padding-top-10'  v-bind:class="{ active: isItMe('candidate-data'), show: isItMe('candidate-data') }" id="candidate-data">
@@ -74,7 +85,7 @@
                                             <input type='hidden' name='id' value='{{$data->id}}'>
                                             <div class=" col-sm-12 col-lg-6">
                                                 <label for="data-name">Nome</label>
-                                                <input type='text' class='w-input text-field white-background' name='name' id='data-name' value='{{$data->name}}'/>
+                                                <input type='text' required class='w-input text-field white-background' name='name' id='data-name' value='{{$data->name}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-6">
                                                 <label for="data-email">E-mail</label>
@@ -103,37 +114,91 @@
                                         <div class="row">
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-address-zip">CEP</label>
-                                                <input type='text' v-mask="'##.###-###'" v-model="holdingData.zip" placeholder="89.250-000" class='w-input text-field white-background' name='zip' id='data-address-zip' value='{{$data->zip}}'/>
+                                                <input type='text' v-mask="'##.###-###'" v-model="holdingData.zip" placeholder="89.250-000" class='w-input text-field white-background' v-on:change='getCep()' name='zip' id='data-address-zip' value='{{$data->zip}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-address-state">Estado</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-address-state' name='address_state' value='{{$data->address_state}}'/>
+                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_state" id='data-address-state' name='address_state' value='{{$data->address_state}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-address-country">País</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-address-country' name='address_country' value='{{$data->address_country}}'/>
+                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_country" id='data-address-country' name='address_country' value='{{$data->address_country}}'/>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class=" col-sm-12 col-lg-3">
                                                 <label for="data-address-city">Cidade</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-address-city' name='address_city' value='{{$data->address_city}}'/>
+                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_city" id='data-address-city' name='address_city' value='{{$data->address_city}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-2">
                                                 <label for="data-address-district">Bairro</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-address-district' name='address_district' value='{{$data->address_district}}'/>
+                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_district" id='data-address-district' name='address_district' value='{{$data->address_district}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-5">
                                                 <label for="data-address-street">Rua</label>
-                                                <input type='text' class='w-input text-field white-background' name='address_street' id='data-address-street' value='{{$data->address_street}}'/>
+                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_street" name='address_street' id='data-address-street' value='{{$data->address_street}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-2">
                                                 <label for="data-address-number">Numero</label>
-                                                <input type='text' class='w-input text-field white-background' name='address_number' id='data-address-number' value='{{$data->address_number}}'/>
+                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_number" name='address_number' id='data-address-number' value='{{$data->address_number}}'/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="card elegant shadow large-header margin-top-30" >
+                                    <h5>Documentos</h5>
+                                    <div class="card-body">
+
+                                        <div class="row margin-top-10">
+                                            <div class=" col-sm-12 col-lg-4">
+                                                <label for="data-cpf">CPF</label>
+                                                <input type='text' v-mask="'###.###.###-##'" v-model="holdingData.cpf" placeholder="111.111.111-11" class='w-input text-field white-background' id='data-cpf' name='cpf' value='{{$data->cpf}}'/>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-4">
+                                                <label for="data-work-card">Carteira de Trabalho</label>
+                                                <input type='text'  v-mask="'#######'" v-model="holdingData.work_card" placeholder="1234567" class='w-input text-field white-background' id='data-work-card' name='work_card' value='{{$data->work_card}}'/>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-2">
+                                                <label for="data-work-card-series">Serie</label>
+                                                <input type='text' v-mask="'####'" v-model="holdingData.work_card_series" placeholder="1234" class='w-input text-field white-background' id='data-work-card-series' name='work_card_series' value='{{$data->work_card_series}}'/>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-2">
+                                                <label for="data-work-card-digit">Digito</label>
+                                                <input type='text'   v-mask="'##'" v-model="holdingData.work_card_digit" placeholder="12" class='w-input text-field white-background' id='data-work-card-digit' name='work_card_digit' value='{{$data->work_card_digit}}'/>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class=" col-sm-12 col-lg-4">
+                                                <label for="data-pis">PIS</label>
+                                                <input type='text'   v-mask="'###.#####.##-#'" v-model="holdingData.pis" placeholder="123.12345.12-1" class='w-input text-field white-background' id='data-pis' name='pis' value='{{$data->pis}}'/>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-4">
+                                                <label for="data-rg">RG</label>
+                                                <input type='text'  v-mask="'##.###.###-#'" v-model="holdingData.rg" placeholder="12.123.123-1" class='w-input text-field white-background' id='data-rg' name='rg' value='{{$data->rg}}'/>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-4">
+                                                <label for="data-rg-emitter">Órgão Expedidor</label>
+                                                <input type='text' class='w-input text-field white-background' id='data-rg-emitter' name='rg_emitter' value='{{$data->rg_emitter}}'/>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class=" col-sm-12 col-lg-4">
+                                                <label for="data-drivers-license">CNH</label>
+                                                <input type='text'  v-mask="'#### #### ####'" v-model="holdingData.drivers_license" placeholder="12345678901" class='w-input text-field white-background' id='data-drivers-license' name='drivers_license' value='{{$data->drivers_license}}'/>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-4">
+                                                <label for="data-elector-card">Título de Eleitor</label>
+                                                <input type='text'  v-mask="'#### #### ####'" v-model="holdingData.elector_card" placeholder="1234 1234 1234" class='w-input text-field white-background' id='data-elector-card' name='elector_card' value='{{$data->elector_card}}'/>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-4">
+                                                <label for="data-veteran-card">Certificado de Reservista</label>
+                                                <input type='text'   v-mask="'##.###.#####-#'" v-model="holdingData.veteran_card" placeholder="12.123.12345-1" class='w-input text-field white-background' id='data-veteran-card' name='veteran_card' value='{{$data->veteran_card}}'/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <div class="card elegant shadow large-header margin-top-30">
                                     <h5>Naturalidade</h5>
@@ -158,27 +223,11 @@
                                     <h5>Dados Pessoais</h5>
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class=" col-sm-12 col-lg-3">
+                                            <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-dob">Data de Nascimento</label>
                                                 <input type='date' class='w-input text-field white-background' id='data-dob' name='dob' value='{{$data->dob}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-3">
-                                                <label for="data-civil-state">Estado Civil</label>
-                                                <select name="civil_state" id="data-civil-state" class="w-input text-field white-background">
-                                                    <!--option value="married">Casado</option>
-                                                    <option value="single">Solteiro</option>
-                                                    <option value="stable">União Estável</option-->
-                                                        <option value='1' @if ($data->civil_state=='1') selected @endif>Solteiro</option>
-                                                        <option value='2' @if ($data->civil_state=='2') selected @endif>Casado</option>
-                                                        <option value='3' @if ($data->civil_state=='3') selected @endif>Divorciado</option>
-                                                        <option value='4' @if ($data->civil_state=='4') selected @endif>Viuvo</option>
-                                                        <option value='5' @if ($data->civil_state=='5') selected @endif>Concubinato</option>
-                                                        <option value='6' @if ($data->civil_state=='6') selected @endif>Separado</option>
-                                                        <option value='7' @if ($data->civil_state=='7') selected @endif>Uniao estavel</option>
-                                                        <option value='9' @if ($data->civil_state=='9') selected @endif>Outros</option>
-                                                </select>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-3">
+                                            <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-gender">Genero</label>
                                                 <select name="gender" id="data-gender" class="w-input text-field white-background">
                                                     <option value="m" @if ($data->gender=='m') selected @endif>Masculino</option>
@@ -186,7 +235,7 @@
                                                     <option value="o" @if ($data->gender=='o') selected @endif>Outro</option>
                                                 </select>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-3">
+                                            <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-housing">Casa</label>
                                                 <select name="housing" id="data-housing" class="w-input text-field white-background">
                                                     <option value="owned" @if ($data->housing=='owned') selected @endif >Própria</option>
@@ -208,24 +257,24 @@
                                         <div class="row margin-top-10">
                                             <div class=" col-sm-12 col-lg-8">
                                                 <label for="data-foreigner">Estrangeiro?</label>
-                                                <select class='w-input text-field white-background' id='foreigner' name='foreigner' >
+                                                <select class='w-input text-field white-background' id='foreigner' name='foreigner' v-model='holdingData.foreigner'>
                                                     <option value='1' @if($data->foreigner) selected @endif>Sim</option>
                                                     <option value='0'  @if(!$data->foreigner) selected @endif>Não</option>
                                                 </select>
                                             </div>
-                                            <div class="col-sm-12 col-lg-4">
+                                            <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4">
                                                 <label for="data-arrival-date">Data de Chegada</label>
                                                 <input type='date' class='w-input text-field white-background' id='data-arrival-date' name='arrival_date' value='{{$data->arrival_date}}'/>
                                             </div>
-                                            <div class="col-sm-12 col-lg-4 margin-top-10">
+                                            <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4 margin-top-10">
                                                 <label for="data-foreign-register">Registro de Estrangeiro</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-foreign-register' name='foreign_register' value='{{$data->foreign_register}}'/>
                                             </div>
-                                            <div class="col-sm-12 col-lg-4 margin-top-10">
+                                            <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4 margin-top-10">
                                                 <label for="data-foreign-emitter">Orgão Emissor</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-foreign-emitter' name='foreign_emitter' value='{{$data->foreign_emitter}}'/>
                                             </div>
-                                            <div class="col-sm-12 col-lg-4 margin-top-10">
+                                            <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4 margin-top-10">
                                                 <label for="data-visa-expiration">Validade do Visto</label>
                                                 <input type='date' class='w-input text-field white-background' id='data-visa-expiration' name='visa_expiration' value='{{$data->visa_expiration}}'/>
                                             </div>                                    
@@ -233,12 +282,12 @@
                                         <div class="row margin-top-10">
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-deficiency">Apresenta deficiencia?</label>
-                                                <select class='w-input text-field white-background' id='deficiency' name='deficiency' >
+                                                <select class='w-input text-field white-background' id='deficiency' name='deficiency' v-model='holdingData.deficiency'>
                                                     <option value='1' @if($data->deficiency) selected @endif>Sim</option>
                                                     <option value='0'  @if(!$data->deficiency) selected @endif>Não</option>
                                                 </select>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-4">
+                                            <div v-show='holdingData.deficiency==1' class=" col-sm-12 col-lg-4">
                                                 <label for="data-deficiency-id">Tipo de deficiencia</label>
                                                 <select class='w-input text-field white-background' id='data-deficiency-id' name='deficiency_id'>
                                                     <option value=''>Nenhuma</option>
@@ -247,7 +296,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-sm-12 col-lg-4">
+                                            <div v-show='holdingData.deficiency==1' class="col-sm-12 col-lg-4">
                                                 <label for="data-cid">CID</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-cid' name='cid' value='{{$data->cid}}'/>
                                             </div>
@@ -431,27 +480,41 @@
                                     <h5>Conjuge e Filhos</h5>
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class=" col-sm-12 col-lg-6">
+                                            <div class=" col-sm-12 col-lg-2">
+                                                <label for="data-civil-state">Estado Civil</label>
+                                                <select name="civil_state" id="data-civil-state" class="w-input text-field white-background">
+                                                    <!--option value="married">Casado</option>
+                                                    <option value="single">Solteiro</option>
+                                                    <option value="stable">União Estável</option-->
+                                                        <option value='1' @if ($data->civil_state=='1') selected @endif>Solteiro</option>
+                                                        <option value='2' @if ($data->civil_state=='2') selected @endif>Casado</option>
+                                                        <option value='3' @if ($data->civil_state=='3') selected @endif>Divorciado</option>
+                                                        <option value='4' @if ($data->civil_state=='4') selected @endif>Viuvo</option>
+                                                        <option value='5' @if ($data->civil_state=='5') selected @endif>Concubinato</option>
+                                                        <option value='6' @if ($data->civil_state=='6') selected @endif>Separado</option>
+                                                        <option value='7' @if ($data->civil_state=='7') selected @endif>Uniao estavel</option>
+                                                        <option value='9' @if ($data->civil_state=='9') selected @endif>Outros</option>
+                                                </select>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-5">
                                                 <label for="data-spouse-name">Nome do Conjuge</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-spouse-name' name='spouse_name' value='{{$data->spouse_name}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-6">
+                                            <div class=" col-sm-12 col-lg-5">
                                                 <label for="data-spouse-job">Profissão do Conjuge</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-spouse-job' name='spouse_job' value='{{$data->spouse_job}}'/>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-6">
+                                            <div class=" col-sm-12 col-lg-2">
                                                 <label for="data-children-amount">Numero de Filhos</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-children-amount' name='children_amount' value='{{$data->children_amount}}'/>
+                                                <input type='number' min=0  max=10 class='w-input text-field white-background' id='data-children-amount' name='children_amount' v-model='holdingData.children_amount' value='{{$data->children_amount}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-6">
+                                            <div v-show='holdingData.children_amount>0' class=" col-sm-12 col-lg-2">
                                                 <label for="data-children-age">Idades dos Filhos</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-children-age' name='children_age' value='{{$data->children_age}}'  placeholder='10,11,12...'/>
                                             </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg">
+                                            <div v-show='holdingData.children_amount>0' class=" col-sm-12 col-lg-8">
                                                 <label for="data-children-location">Onde ficarão os fihos durante o trabalho?</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-children-location' name='children_location' value='{{$data->children_location}}'/>
                                             </div>
@@ -464,79 +527,34 @@
                                     <div class="card-body">
 
                                         <div class="row">
-                                            <div class=" col-sm-12 col-lg-8">
-                                                <label for="data-father-name">Nome do Pai</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-father-name' name='father_name' value='{{$data->father_name}}'/>
+                                            <div class="row margin-top-10">
+                                                <div class=" col-sm-12 col-lg-8">
+                                                    <label for="data-mother-name">Nome da Mãe</label>
+                                                    <input type='text' class='w-input text-field white-background' id='data-mother-name' name='mother_name' value='{{$data->mother_name}}'/>
+                                                </div>
+                                                <div class=" col-sm-12 col-lg-4">
+                                                    <label for="data-mother-dob">Data de nascimento da Mãe</label>
+                                                    <input type='date' class='w-input text-field white-background' id='data-mother-dob' name='mother_dob' value='{{$data->mother_dob}}'/>
+                                                </div>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-father-dob">Data de nascimento do Pai</label>
-                                                <input type='date' class='w-input text-field white-background' id='data-father-dob' name='father_dob' value='{{$data->father_dob}}'/>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-8">
-                                                <label for="data-mother-name">Nome da Mãe</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-mother-name' name='mother_name' value='{{$data->mother_name}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-mother-dob">Data de nascimento da Mãe</label>
-                                                <input type='date' class='w-input text-field white-background' id='data-mother-dob' name='mother_dob' value='{{$data->mother_dob}}'/>
+                                            
+                                            <div class="row margin-top-10">
+                                                <div class=" col-sm-12 col-lg-8">
+                                                    <label for="data-father-name">Nome do Pai</label>
+                                                    <input type='text' class='w-input text-field white-background' id='data-father-name' name='father_name' value='{{$data->father_name}}'/>
+                                                </div>
+                                                <div class=" col-sm-12 col-lg-4">
+                                                    <label for="data-father-dob">Data de nascimento do Pai</label>
+                                                    <input type='date' class='w-input text-field white-background' id='data-father-dob' name='father_dob' value='{{$data->father_dob}}'/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                     
-                            <div class='tab-pane fade' v-bind:class="{ active: isItMe('documents') , show: isItMe('documents') }" id="documents">
-                                <div class="card elegant shadow large-header" style='margin-top:-30px;'>
-                                    <h5>Dados Civis</h5>
-                                    <div class="card-body">
-
-                                        <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-cpf">CPF</label>
-                                                <input type='text' v-mask="'###.###.###-##'" v-model="holdingData.cpf" placeholder="111.111.111-11" class='w-input text-field white-background' id='data-cpf' name='cpf' value='{{$data->cpf}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-work-card">Carteira de Trabalho</label>
-                                                <input type='text'  v-mask="'#######'" v-model="holdingData.work_card" placeholder="1234567" class='w-input text-field white-background' id='data-work-card' name='work_card' value='{{$data->work_card}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-2">
-                                                <label for="data-work-card-series">Serie</label>
-                                                <input type='text' v-mask="'####'" v-model="holdingData.work_card_series" placeholder="1234" class='w-input text-field white-background' id='data-work-card-series' name='work_card_series' value='{{$data->work_card_series}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-2">
-                                                <label for="data-work-card-digit">Digito</label>
-                                                <input type='text'   v-mask="'##'" v-model="holdingData.work_card_digit" placeholder="12" class='w-input text-field white-background' id='data-work-card-digit' name='work_card_digit' value='{{$data->work_card_digit}}'/>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-pis">PIS</label>
-                                                <input type='text'   v-mask="'###.#####.##-#'" v-model="holdingData.pis" placeholder="123.12345.12-1" class='w-input text-field white-background' id='data-pis' name='pis' value='{{$data->pis}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-rg">RG</label>
-                                                <input type='text'  v-mask="'##.###.###-#'" v-model="holdingData.rg" placeholder="12.123.123-1" class='w-input text-field white-background' id='data-rg' name='rg' value='{{$data->rg}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-rg-emitter">Órgão Expedidor</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-rg-emitter' name='rg_emitter' value='{{$data->rg_emitter}}'/>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-6">
-                                                <label for="data-elector-card">Título de Eleitor</label>
-                                                <input type='text'  v-mask="'#### #### ####'" v-model="holdingData.elector_card" placeholder="1234 1234 1234" class='w-input text-field white-background' id='data-elector-card' name='elector_card' value='{{$data->elector_card}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-6">
-                                                <label for="data-veteran-card">Certificado de Reservista</label>
-                                                <input type='text'   v-mask="'##.###.#####-#'" v-model="holdingData.veteran_card" placeholder="12.123.12345-1" class='w-input text-field white-background' id='data-veteran-card' name='veteran_card' value='{{$data->veteran_card}}'/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <!--div class='tab-pane fade' v-bind:class="{ active: isItMe('documents') , show: isItMe('documents') }" id="documents">
+                            </div-->
 
                             <div class="tab-pane fade" v-bind:class="{ active: isItMe('extra') , show: isItMe('extra') }" id="extra">
                                 <div class="card elegant shadow large-header " style='margin-top:-30px;'>
@@ -696,7 +714,7 @@
                                 <div class="card elegant shadow large-header margin-top-20">
                                     <div class="card-body">
 
-                                        <div class="row margin-top-10">
+                                        <!--div class="row margin-top-10">
                                             <div class="col-lg-12">
                                                 <label for="data-positive-personal-characteristics">11. Cite características pessoais que você considera positivas: </label>
                                                 <input class='w-input text-field white-background' type='text'value="{{$data->positive_personal_characteristics}}" name='positive_personal_characteristics' id='data-positive-personal-characteristics'/>
@@ -707,16 +725,16 @@
                                                 <label for="data-personal-aspects-for-betterment">12. Cite aspectos pessoais que você acredita que poderiam ser melhorados: </label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->personal_aspects_for_betterment}}" name='personal_aspects_for_betterment' id='data-personal-aspects-for-betterment'/>
                                             </div>
-                                        </div>
+                                        </div-->
                                         <div class="row margin-top-10">
                                             <div class="col-lg-12">
-                                                <label for="data-lunelli-family">13. Possui parentes ou conhecidos que trabalham na Lunelli? Informe o nome:</label>
+                                                <label for="data-lunelli-family">11. Possui parentes ou conhecidos que trabalham na Lunelli? Informe o nome:</label>
                                                 <input class='w-input text-field white-background' type='text'  value="{{$data->lunelli_family}}" name='lunelli_family' id='data-lunelli-family'/>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class="col-lg-12">
-                                                <label for="data-pretended-salary">14. Pretensão salarial (mensal) em reais:</label>
+                                                <label for="data-pretended-salary">12. Pretensão salarial (mensal) em reais:</label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->pretended_salary}}" name='pretended_salary' id='data-pretended-salary'/>
                                             </div>
                                         </div>
@@ -726,42 +744,42 @@
                                     <div class="card-body">
                                         <div class="row margin-top-10">
                                             <div class="col-lg-4">
-                                                <label for="data-worked-without-ctp">15. Já trabalhou sem registro em carteira?</label>
+                                                <label for="data-worked-without-ctp">13. Já trabalhou sem registro em carteira?</label>
                                                 <select class='w-input text-field white-background'  name='worked_without_ctp' id='data-worked-without-ctp'>
                                                     <option value="0" @if($data->worked_without_ctp==0) selected @endif>Não</option>
                                                     <option value="1" @if($data->worked_without_ctp==1) selected @endif>Sim</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-4">
-                                                <label for="data-worked-without-ctp">15.a. Onde?</label>
+                                                <label for="data-worked-without-ctp">13.a. Onde?</label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->worked_without_ctp_job}}" name='worked_without_ctp_job' id='data-worked-without-ctp-job'/>
                                             </div>
                                             <div class="col-lg-4
                                             ">
-                                                <label for="data-worked-without-ctp">15.b. Quanto tempo?</label>
+                                                <label for="data-worked-without-ctp">13.b. Quanto tempo?</label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->worked_without_ctp_how_long}}" name='worked_without_ctp_how_long' id='data-worked-without-ctp-how-long'/>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class="col-lg-4">
-                                                <label for="data-previous-work-legal-action">16. Possui alguma questão trabalhista?</label>
+                                                <label for="data-previous-work-legal-action">14. Possui alguma questão trabalhista?</label>
                                                 <select class='w-input text-field white-background' type='text' name='previous_work_legal_action' id='data-previous-work-legal-action'>
                                                     <option value="0" @if($data->previous_work_legal_action==1) selected @endif>Não</option>
                                                     <option value="1" @if($data->previous_work_legal_action==1) selected @endif>Sim</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-4">
-                                                <label for="data-previous-work-legal-action-business">16.a. Com qual empresa?</label>
+                                                <label for="data-previous-work-legal-action-business">14.a. Com qual empresa?</label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->previous_work_legal_action_business}}" name='previous_work_legal_action_business' id='data-previous-work-legal-action-business'/>
                                             </div>
                                             <div class="col-lg-4">
-                                                <label for="data-previous-work-legal-action-reason">16.b. Qual o motivo?</label>
+                                                <label for="data-previous-work-legal-action-reason">14.b. Qual o motivo?</label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->previous_work_legal_action_reason}}" name='previous_work_legal_action_reason' id='data-previous-work-legal-action-reason'/>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class="col-lg-12">
-                                                <label for="data-professional-dream">17. Qual o seu sonho profissional?</label>
+                                                <label for="data-professional-dream">15. Qual o seu sonho profissional?</label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->professional_dream}}" name='professional_dream' id='data-professional-dream'/>
                                             </div>
                                             <!--div class="col-lg-12">
@@ -771,27 +789,35 @@
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class="col-lg-12">
-                                                <label for="data-who-are-you">18. Resumidamente escreva quem é você:</label>
+                                                <label for="data-who-are-you">16. Resumidamente escreva quem é você:</label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->who_are_you}}" name='who_are_you' id='data-who-are-you'/>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class="col-lg-12">
-                                                <label for="data-professional-motivation">19. O que o motiva profissionalmente?</label>
+                                                <label for="data-professional-motivation">17. O que o motiva profissionalmente?</label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->professional_motivation}}" name='professional_motivation' id='data-professional-motivation'/>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class="col-lg-12">
-                                                <label for="data-what-irritates-you">20. O que o irrita?</label>
+                                                <label for="data-what-irritates-you">18. O que o irrita?</label>
                                                 <input class='w-input text-field white-background' value="{{$data->what_irritates_you}}" type='text' name='what_irritates_you' id='data-what-irritates-you'/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class='tab-pane fade padding-top-10'  v-bind:class="{ active: isItMe('success'), show: isItMe('success') }" id="success">
+                                <div class="card margin-top-30">
+                                    <div class="card-body text-center">
+                                        <h1 style='color:rgb(27, 124, 15);'>Cadastro realizado com sucesso!</h1>
+                                        <h4 style='color:rgb(27, 124, 15);'>Veja nossas <a href='/jobs'>vagas</a> e candidate-se.</h1>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <button class='btn btn-info margin-left-40' v-on:click="saveProfile" v-bind:disabled="saving">SALVAR</button>
+                        <button class='btn btn-info margin-left-40' v-on:click="saveProfile" v-bind:disabled="saving" type='button'>SALVAR</button>
                     </div>
                 </div>
             </form>

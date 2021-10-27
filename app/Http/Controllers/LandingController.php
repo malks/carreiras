@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\AboutUs;
+use App\Address;
 use App\Candidate;
 use App\Deficiency;
 use App\Banner;
@@ -19,6 +20,7 @@ use App\Schooling;
 use App\Subscribed;
 use App\Subscriber;
 use App\Field;
+use App\Mail\Register;
 use App\Unit;
 use App\User;
 use App\State;
@@ -26,6 +28,7 @@ use App\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class LandingController extends Controller
 {
@@ -88,6 +91,29 @@ class LandingController extends Controller
         );
     }
 
+    public function buscaCep(Request $request) {
+        $req_cep=str_replace(["-","."],"",$request->cep);
+        $address = Address::where('zip','=',$req_cep)->first()->toJson();
+        if (empty($address)){
+            $response=Http::get("https://viacep.com.br/ws/{$req_cep}/json/");
+            $vals=json_decode($response,true);
+
+            $address=new Address;
+            $address->zip=str_replace(["-","."],"",$vals['cep']);
+            $address->city=$vals['localidade'];
+            $address->state=$vals['uf'];
+            $address->street=$vals['logradouro'];
+            $address->district=$vals['bairro'];
+            $address->complement=$vals['complemento'];
+            $address->number=$vals['siafi'];
+
+            $address->save();
+
+        }
+
+        return $address;
+    }
+
     public function landingData(){
 
         $logged_in=Auth::user();
@@ -143,6 +169,7 @@ class LandingController extends Controller
         $selected_languages=$data->langs->toArray();
         $tags = Tag::all();
         $schooling_grades=[
+            'professional' => 'Profissionalizante',
             'technology' => 'Tecnólogo',
             'technician' => 'Técnico',
             'graduation' => 'Graduação',
