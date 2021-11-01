@@ -343,7 +343,6 @@
                                             <option value="{{$k}}" @if($schooling->status==$k) selected @endif>{{$status}}</option>
                                         @endforeach
                                     </select>
-
                                 </div>
                             </div>
                             <div class="row margin-top-10">
@@ -368,13 +367,11 @@
                                 <div class=" col-sm-12 col-lg-3">
                                     <label for="schooling-start">Início</label>
                                     <input type='text' class='form-control text-center' id='schooling-start' name='schooling[].start' 
-                                    value='{{date_format(DateTime::createFromFormat('Y-m-d', 
-													$schooling->start),'d/m/Y')}}'/>
+                                    value='{{$carbon->parse($schooling->start)->format('d/m/Y')}}'/>
                                 </div>
                                 <div class=" col-sm-12 col-lg-3">
                                     <label for="schooling-end">Fim</label>
-                                    <input type='text' class='form-control text-center' id='schooling-end' name='schooling[].end' value='{{date_format(DateTime::createFromFormat('Y-m-d', 
-                                    $schooling->end),'d/m/Y')}}'/>
+                                    <input type='text' class='form-control text-center' id='schooling-end' name='schooling[].end' value='{{$carbon->parse($schooling->end)->format('d/m/Y')}}'/>
                                 </div>
                             </div>
 
@@ -406,13 +403,11 @@
                                 <div class=" col-sm-12 col-lg-3">
                                     <label for="experience-admission">Admissão</label>
                                     <input type='text' class='form-control text-center' id='experience-admission' name='experience[].admission' 
-                                    value='{{date_format(DateTime::createFromFormat('Y-m-d', 
-													$experience->admission),'d/m/Y')}}'/>
+                                    value='{{$carbon->parse($experience->admission)->format('d/m/Y')}}'/>
                                 </div>
                                 <div class=" col-sm-12 col-lg-3">
                                     <label for="experience-demission">Demissão</label>
-                                    <input type='text' class='form-control text-center' id='experience-demission' name='experience[].demission' value='{{date_format(DateTime::createFromFormat('Y-m-d', 
-                                    $experience->demission),'d/m/Y')}}'/>
+                                    <input type='text' class='form-control text-center' id='experience-demission' name='experience[].demission' value='{{$carbon->parse($experience->demission)->format('d/m/Y')}}'/>
                                 </div>
                             </div>
                         @endforeach

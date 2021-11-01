@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Configurações | Lunelli Carreiras')
+@section('title', 'Seleção e Recrutamento | Lunelli Carreiras')
 
 @section('content_header')
 @stop

@@ -650,6 +650,62 @@ class AdmController extends Controller
         );
     }
 
+    public function candidatePrint ($id){
+        $data=Candidate::where('id','=',$id)->with(['experience','interests','schooling'])->first();
+
+        $language_levels=[
+            'basic'=>'Básico',
+            'intermediary'=>'Intermediário',
+            'advanced'=>'Avançado',
+            'natural'=>'Fluente',
+        ];
+
+        $civil_states=[
+            'Solteiro',
+            'Casado',
+            'Divorciado',
+            'Viuvo',
+            'Concubinato',
+            'Separado',
+            'Uniao Estavel',
+            'Outros',
+        ];
+
+        $schooling_grades=[
+            'professional' => 'Profissionalizante',
+            'technology' => 'Tecnólogo',
+            'technician' => 'Técnico',
+            'graduation' => 'Graduação',
+            'postgrad' => 'Pós Graduação',
+            'masters' => 'Mestrado',
+            'doctor' => 'Doutorado',
+            'phd' => 'PHD',
+        ];
+
+        $schooling_formation=[
+            'fundamental'=>'Fundamental',
+            'highschool'=>'Médio',
+            'technical'=>'Técnico',
+            'superior'=>'Superior',
+        ];
+
+        $course_status=[
+            'complete'=>'completo',
+            'coursing'=>'cursando',
+            'incomplete'=>'Incompleto',
+        ];
+
+        return view('adm.candidates.print')->with([
+            'data'=>$data,
+            'civil_states'=>$civil_states,
+            'course_status'=>$course_status,
+            'schooling_grades'=>$schooling_grades,
+            'schooling_formation'=>$schooling_formation,
+            'language_levels'=>$language_levels,
+            'carbon'=>new Carbon,
+        ]);
+    }
+
     public function candidatesList (Request $request){
         $data=Candidate::
         when(!empty($request->search),function($query) use ($request) {
@@ -1055,6 +1111,7 @@ class AdmController extends Controller
                 'deficiencies'=>$deficiencies,
                 'schooling_grades'=>$schooling_grades,
                 'schooling_status'=>$schooling_status,
+                'carbon'=>new Carbon,
             ]
         );
     }
