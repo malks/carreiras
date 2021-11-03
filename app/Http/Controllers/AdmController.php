@@ -650,9 +650,27 @@ class AdmController extends Controller
         );
     }
 
-    public function candidatePrint ($id){
-        $data=Candidate::where('id','=',$id)->with(['experience','interests','schooling'])->first();
+    private function mask($val, $mask) {
+        $maskared = '';
+        $max=strlen($mask)-1;
+        $k=0;
 
+        for ($i = 0; $i<=$max; $i++) {
+            if($mask[$i] == '#') {
+                if(isset($val[$k]))
+                    $maskared .= $val[$k++];
+            }
+            else {
+                if(isset($mask[$i]))
+                    $maskared .= $mask[$i];
+            }
+        }
+        return $maskared;
+    }
+
+
+    public function candidatePrint ($id){
+        $data=Candidate::where('id','=',$id)->with(['experience','interests','schooling','defici'])->first();
         $language_levels=[
             'basic'=>'Básico',
             'intermediary'=>'Intermediário',
@@ -695,6 +713,11 @@ class AdmController extends Controller
             'incomplete'=>'Incompleto',
         ];
 
+        $yes_no=[
+            '0'=>'Não',
+            '1'=>'Sim'
+        ];
+
         return view('adm.candidates.print')->with([
             'data'=>$data,
             'civil_states'=>$civil_states,
@@ -702,7 +725,9 @@ class AdmController extends Controller
             'schooling_grades'=>$schooling_grades,
             'schooling_formation'=>$schooling_formation,
             'language_levels'=>$language_levels,
+            'yes_no'=>$yes_no,
             'carbon'=>new Carbon,
+            'mask'=>function ($a,$b)  { return  $this->mask($a,$b); },
         ]);
     }
 

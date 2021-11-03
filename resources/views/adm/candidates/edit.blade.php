@@ -40,7 +40,11 @@
                         <i>Última Atualização:</i><i style='margin-left:10px;'>{{ (!empty($data->updated_at)) ? date_format($data->updated_at,'d/m/Y') : ''}}</i>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col">
+                        <a href="/adm/candidates/print/{{$data->id}}" target='_blank'>Currículo para impressão</a>
+                    </div>
+                </div>
                 <ul class="nav nav-tabs margin-top-20">
                     <li class="nav-item">
                         <a  class='nav-link'  v-bind:class="{ active: isItMe('candidate-data') }" v-on:click="currentTab='candidate-data'" >Candidato</a>
