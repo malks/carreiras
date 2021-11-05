@@ -629,11 +629,6 @@ function validate(whichTab){
             if ($('#interests-holder .badge')[0]==undefined)
                 ret.push({'extra': 'Informe ao menos um interesse'});
             break;
-        case 'questionary':
-            if ($('#data-pretended-salary').val()==''){
-                ret.push({'questionary': 'Pretensão salarial é obrigatória'});
-            }
-            break;
     }
 
     return ret;
