@@ -21,14 +21,17 @@ use App\Subscribed;
 use App\Subscriber;
 use App\Field;
 use App\Mail\Register;
+use App\Mail\Help;
 use App\Unit;
 use App\User;
 use App\State;
 use App\Tag;
+use App\HelpContact;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class LandingController extends Controller
 {
@@ -155,6 +158,30 @@ class LandingController extends Controller
     public function policy() {
         $logged_in=Auth::user();
         return view('policy')->with([
+            'logged_in'=>$logged_in,
+        ]);
+    }
+
+    public function help(){
+        $logged_in=Auth::user();
+        return view('help')->with([
+            'logged_in'=>$logged_in,
+        ]);
+    }
+
+    public function sendHelp(Request $request){
+        $logged_in=Auth::user();
+        $data=$request->all();
+        if ($request->hasFile('contact_file')){
+            $extension=$request->contact_file->extension();
+            $attachment=date('U').".".$extension;
+            $tmp=$request->contact_file->path();
+            copy($tmp, $_SERVER['DOCUMENT_ROOT'].'/files/'.$attachment);
+            $data['attachment']=$attachment;
+        }
+        $to=array_map(function ($arr) { return $arr['email']; }, HelpContact::where('status','=',1)->get()->toArray());
+        Mail::to($to)->send(new Help($data));
+        return view('help_success')->with([
             'logged_in'=>$logged_in,
         ]);
     }

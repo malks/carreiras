@@ -81,6 +81,9 @@
                                                         <a href="/jobs">Vagas</a>
                                                     </li>
                                                     <li class="menu-item">
+                                                        <a href="/help">Ajuda</a>
+                                                    </li>
+                                                    <li class="menu-item">
                                                         &nbsp
                                                     </li>
                                                     <li class="menu-item">
@@ -123,6 +126,9 @@
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="/profile">Perfil</a>
+                                                    </li>
+                                                    <li class="menu-item">
+                                                        <a href="/help">Ajuda</a>
                                                     </li>
                                                     <li>
                                                         <span class='small margin-left-20'>

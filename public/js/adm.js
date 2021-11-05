@@ -32,6 +32,8 @@ $(document).ready(function () {
         usersList();
     if ($('[check-tags-list]').length>0)
         tagsList();
+    if ($('[check-help-contacts-list]').length>0)
+        helpContactsList();
     if ($('[check-candidates-edit]').length>0)
         editCandidate();
     if ($('[check-recruiting]').length>0)
@@ -258,6 +260,7 @@ function editJobsTemplates(){
 
 
 function recruiting(){
+
     let bootstrapData = {
         runData: {
             jobs:null,
@@ -293,6 +296,9 @@ function recruiting(){
                             status:[]
                         },
                         gt:{
+                            created_at:''
+                        },
+                        btw:{
                             created_at:''
                         },
                         lt:{
@@ -761,6 +767,13 @@ function unitsList(){
     $('#search').focus();
 }
 
+function helpContactsList(){
+    startData();
+    ajaxUrl=$('#app').attr('action');
+    startList();
+    $('#search').focus();
+}
+
 function tagsList(){
     startData();
     ajaxUrl=$('#app').attr('action');
@@ -849,6 +862,20 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             },
             edit:function(){
                 window.location.href=ajaxUrl+'/edit/'+this.selectedIds[0];
+            },
+            toggle:function(){
+                let that=this;
+                form.append('ids',that.selectedIds);
+                $.ajax({
+                    url:ajaxUrl+'/toggle',
+                    type:'POST',
+                    processData: false,
+                    contentType: false,			    
+                    data:form,
+                    success:function(data){
+                        window.location.reload();
+                    }
+                });
             },
             destroy:function(){
                 let that=this;

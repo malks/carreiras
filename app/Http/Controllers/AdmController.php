@@ -9,6 +9,7 @@ use App\Banner;
 use App\AboutUs;
 use App\OurNumbers;
 use App\OurTeam;
+use App\HelpContact;
 use App\Job;
 use App\JobTemplate;
 use App\Tag;
@@ -91,6 +92,42 @@ class AdmController extends Controller
         $banners=Banner::get();
         return view('adm.config')->with([
             'banners'=>$banners,
+        ]);
+    }
+
+    public function helpContactsCreate(Request $request){
+        $data=new HelpContact;
+        $arr=$request->toArray();
+        unset($arr['_token']);
+
+        foreach ($arr as $k=>$value){
+            $data->{$k}=$value;
+        }
+        $data->save();
+		return redirect('/adm/help-contacts/');
+    }
+
+    public function helpContactsDestroy(Request $request){
+        HelpContact::whereIn('id',explode(",",$request->ids))->delete();
+    }
+
+    public function helpContactsToggle(Request $request){
+        $contacts=HelpContact::whereIn('id',explode(",",$request->ids))->get();
+        foreach($contacts as $contact){
+            $contact->status=!$contact->status;
+            $contact->save();
+        }
+    }
+
+    public function helpContactsList(Request $request){
+        $data=HelpContact::paginate(15);
+        $active_inactive=[
+            'Inativo',
+            'Ativo'
+        ];
+        return view('adm.help_contacts')->with([
+            'data'=>$data,
+            'active_inactive'=>$active_inactive
         ]);
     }
 
@@ -319,6 +356,14 @@ class AdmController extends Controller
                     foreach($filter_data as $key=>$value){
                         if($value!=''){
                             $query->where($key,'<=',$value);
+                            $directLikeDone=1;
+                        }
+                    }
+                }
+                else if ($type_filter=='btw'){
+                    foreach($filter_data as $key=>$value){
+                        if($value!=''){
+                            $query->whereBetween($key,$value);
                             $directLikeDone=1;
                         }
                     }

@@ -252,6 +252,13 @@ return [
             'can' => ['users'],
             'icon' => 'fas fa-user-tag',
         ],
+        [
+            'text' => 'Destinatários da Ajuda',
+            'url'  => 'adm/help-contacts',
+            'can' => ['config'],
+            'icon' => 'fas fa-address-book',
+        ],
+
 
         ['header' => 'GERENCIAR'],
         [

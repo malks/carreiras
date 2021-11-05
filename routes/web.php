@@ -24,6 +24,8 @@ Route::post('/newsletter-subscribe', 'LandingController@newsletterSubscribe');
 Route::get('/landing-data', 'LandingController@landingData');
 Route::get('/view-mail/{id}', 'AdmController@viewMail')->name('view-mail');
 Route::post('/busca-cep', 'LandingController@buscaCep')->name('busca-cep');
+Route::get('/help', 'LandingController@help')->name('help');
+Route::post('/send-help', 'LandingController@sendHelp')->name('send-help');
 
 $router->group(['middleware' => ['auth']], function() {
     Route::get('/profile', 'LandingController@profile');
@@ -46,6 +48,11 @@ $router->group(['middleware' => ['auth','is.admin','can:access admin']], functio
         Route::post('/adm/delete-banner', 'AdmController@deleteBanner')->name('delete-banner');
         Route::post('/adm/config-data', 'AdmController@configData')->name('config-data');
         Route::post('/adm/save-other-conf', 'AdmController@saveOtherConf')->name('save-other-conf');
+
+        Route::get('/adm/help-contacts', 'AdmController@helpContactsList')->name('help-contacts');
+        Route::post('/adm/help-contacts/create', 'AdmController@helpContactsCreate')->name('help-contacts-create');
+        Route::post('/adm/help-contacts/toggle', 'AdmController@helpContactsToggle')->name('help-contacts-toggle');
+        Route::post('/adm/help-contacts/destroy', 'AdmController@helpContactsDestroy')->name('help-contacts-destroy');
     });
     
     Route::post('/adm/add-tag', 'AdmController@addTag')->name('add-tag');
