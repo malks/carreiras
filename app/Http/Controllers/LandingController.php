@@ -96,7 +96,9 @@ class LandingController extends Controller
 
     public function buscaCep(Request $request) {
         $req_cep=str_replace(["-","."],"",$request->cep);
-        $address = Address::where('zip','=',$req_cep)->first()->toJson();
+        $address = Address::where('zip','=',$req_cep)->first();
+        if (!empty($address))
+            $address=$address->toJson();
         if (empty($address)){
             $response=Http::get("https://viacep.com.br/ws/{$req_cep}/json/");
             $vals=json_decode($response,true);
