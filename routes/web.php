@@ -135,6 +135,7 @@ $router->group(['middleware' => ['auth','is.admin','can:access admin']], functio
         Route::get('/adm/users/edit/{id}', 'AdmController@usersEdit')->name('users-edit');
         Route::post('/adm/users/destroy', 'AdmController@usersDestroy')->name('users-destroy');
         Route::get('/adm/users/save', 'AdmController@usersSave')->name('users-save');
+        Route::post('/adm/users/reset-pass', 'AdmController@resetPass')->name('reset-pass');
     });
 
     Route::group(['middleware' => ['can:users']], function() {

@@ -612,7 +612,7 @@ function validate(whichTab){
                 $('#schooling-start0').val()==null ||
                 $('#schooling-end0').val()==null
             ){
-                ret.push({'schooling-data': 'Ao menos uma formação com dados completos é necessária'});
+                ret.push({'schooling-data': 'Ao menos uma formação necessária. Preencha todos os dados de suas formações.'});
             }
             break;
         case 'experience-data':
@@ -679,6 +679,18 @@ function canTab(current,trial){
     console.log(ret);
     return ret;
 }
+
+function dec2hex (dec) {
+    return dec.toString(16).padStart(2, "0")
+}
+  
+// generateId :: Integer -> String
+function generateId (len) {
+    var arr = new Uint8Array((len || 40) / 2)
+    window.crypto.getRandomValues(arr)
+    return Array.from(arr, dec2hex).join('')
+}
+
 
 function profile(){
     startProfile('profile-edit','candidate-data');
@@ -772,6 +784,7 @@ function startProfile(screenNameHelper='',firstTab=''){
                         contentType: false,            
                         data: form,
                         success:function (data){
+                            console.log(data);
                             jdata= JSON.parse(data);
                             for (let i in jdata){
                                 console.log(i);
@@ -834,6 +847,24 @@ function startProfile(screenNameHelper='',firstTab=''){
                         type:'POST',
                         data:data,
                         success:function (data){
+                            let handler = null;
+                            let temp_schoolings={...that.schoolings};
+                            let temp_experiences={...that.experiences};
+                            if (data){
+                                handler=JSON.parse(data);
+                                for (let i in temp_schoolings){
+                                    if( that.schoolings[i].hash!=undefined && that.schoolings[i].hash!="" && that.schoolings[i].hash!=null && (that.schoolings[i].id==undefined || that.schoolings[i].id==null)){
+                                        that.schoolings.splice(i,1);
+                                        that.schoolings.unshift(handler.schoolings.find(obj => { return obj.hash==temp_schoolings[i].hash}));
+                                    }
+                                }
+                                for (let i in temp_experiences){
+                                    if( that.experiences[i].hash!=undefined && that.experiences[i].hash!="" && that.experiences[i].hash!=null && (that.experiences[i].id==undefined || that.experiences[i].id==null)){
+                                        that.experiences.splice(i,1);
+                                        that.experiences.unshift(handler.experiences.find(obj => { return obj.hash==temp_experiences[i].hash}));
+                                    }
+                                }
+                            }
                             that.saving=false;
                             that.currentTab=jumpTab(that.currentTab);
                         }
@@ -884,7 +915,7 @@ function getCustomData(screenNameHelper,firstTab){
         customData.interestInput=false;
         customData.currentInterest='';
         if ($('#data-interests').val()!="")
-            customData.selectedTags=JSON.parse($('#data-interests').val());
+            customData.selectedTags=JSON.parse(decodeURIComponent($('#data-interests').val()).replace(/\+/g," "));
         else
             customData.selectedTags=[];
         customData.filteredTags=[];
@@ -940,6 +971,7 @@ function getSubscriptionsData(){
 function loadDefault(which){
     if (which=="schoolings"){
         let helper = {
+            hash:generateId(7),
             formation:'',
             status:'',
             course:'',
@@ -952,6 +984,7 @@ function loadDefault(which){
     }
     else if (which=="experience"){
         let helper = {
+            hash:generateId(7),
             business:'',
             job:'',
             activities:'',

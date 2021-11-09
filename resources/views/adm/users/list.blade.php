@@ -26,6 +26,9 @@
 	        		<div class="col-1">
 	        			<button class="btn btn-danger" id='destroy' v-on:click='destroy()' type='button' v-bind:disabled='canDestroy'>Excluir</button>
 	        		</div>
+	        		<div class="col-2">
+	        			<button class="btn btn-success" id='reset-pass' v-on:click='resetPass()' type='button' v-bind:disabled="selectedIds.length==0">Resetar Senha</button>
+	        		</div>
 	        	</div>
 				<div class="row margin-top-10">
 					<div class="col-lg-4">

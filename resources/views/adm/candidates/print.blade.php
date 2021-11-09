@@ -13,6 +13,14 @@
                     <div class='card'>
             
                         <div class="card-header">
+                            <div class="row">
+                                <div class="col">
+                                    <img style='max-width:200px;float:left;' src="{{asset('img/grupo-lunelli-colored.png')}}" alt="Lunelli">
+                                    <span class="logo-complement">
+                                        Carreiras
+                                    </span>
+                                </div>
+                            </div>
                             <div class="row margin-top-10">
                                 <div class="col">
                                     <h3 style='text-transform:capitalize'>{{$data->name}}</h3>

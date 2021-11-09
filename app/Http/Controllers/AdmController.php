@@ -111,6 +111,15 @@ class AdmController extends Controller
         HelpContact::whereIn('id',explode(",",$request->ids))->delete();
     }
 
+    public function resetPass(Request $request){
+        $users=User::whereIn('id',explode(",",$request->ids))->get();
+        $newpass=Hash::make('12345678');
+        foreach($users as $user){
+            $user->password=$newpass;
+            $user->save();
+        }
+    }
+
     public function helpContactsToggle(Request $request){
         $contacts=HelpContact::whereIn('id',explode(",",$request->ids))->get();
         foreach($contacts as $contact){

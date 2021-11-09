@@ -97,8 +97,6 @@ class LandingController extends Controller
     public function buscaCep(Request $request) {
         $req_cep=str_replace(["-","."],"",$request->cep);
         $address = Address::where('zip','=',$req_cep)->first();
-        if (!empty($address))
-            $address=$address->toJson();
         if (empty($address)){
             $response=Http::get("https://viacep.com.br/ws/{$req_cep}/json/");
             $vals=json_decode($response,true);
@@ -110,11 +108,11 @@ class LandingController extends Controller
             $address->street=$vals['logradouro'];
             $address->district=$vals['bairro'];
             $address->complement=$vals['complemento'];
-            $address->number=$vals['siafi'];
 
             $address->save();
-
         }
+        if (!empty($address))
+            $address=$address->toJson();
 
         return $address;
     }
@@ -341,12 +339,13 @@ $arr['what_irritates_you']="20. O que o irrita?";
             DB::table('candidate_languages')->insert(['candidate_id'=>$candidate->id,'language_id'=>$lang['id'],'level'=>$lang['pivot']['level']]);
         }
 
+        $new_schoolings=[];
         foreach ($schoolings as $schooling_data){
             if (!empty($schooling_data['id']))
                 $schooling = Schooling::where('id','=',$schooling_data['id'])->first();
             else
                 $schooling = new Schooling;
-            
+
             unset($schooling_data['id']);
             unset($schooling_data['created_at']);
             unset($schooling_data['updated_at']);
@@ -355,8 +354,13 @@ $arr['what_irritates_you']="20. O que o irrita?";
                 $schooling->{$k}=$d;
             }
             $schooling->save();
+
+            $schooling->start=$schooling_data['start'];
+            $schooling->end=$schooling_data['end'];
+            array_push($new_schoolings,$schooling->toArray());
         }
 
+        $new_experiences=[];
         foreach ($experiences as $experience_data){
             if (!empty($experience_data['id']))
                 $experience = Experience::where('id','=',$experience_data['id'])->first();
@@ -371,9 +375,12 @@ $arr['what_irritates_you']="20. O que o irrita?";
                 $experience->{$k}=$d;
             }
             $experience->save();
+            $experience->admission=$experience_data['admission'];
+            $experience->demission=$experience_data['demission'];
+            array_push($new_experiences,$experience->toArray());
         }
 
-        return "";
+        return json_encode(['experiences'=>$new_experiences,'schoolings'=>$new_schoolings],true);
     }
 
     public function jobsList(){

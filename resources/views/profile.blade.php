@@ -8,15 +8,15 @@
         <div class="col-12">
             <form method='GET' id='app' class='margin-top-20' action='/adm/candidates/save'>
                 @csrf
-                <input type="hidden" class="hide" id='schooling-data' value='{{ json_encode($data->schooling) }}'>
-                <input type="hidden" class="hide" id='experience-data' value='{{ json_encode($data->experience) }}'>
-                <input type="hidden" class="hide" id='tags-data' value='{{ json_encode($tags) }}'>
-                <input type="hidden" class="hide" id='schooling-status' value='{{ json_encode($schooling_status) }}'>
-                <input type="hidden" class="hide" id='schooling-grades' value='{{ json_encode($schooling_grades) }}'>
-                <input type="hidden" class="hide" id='schooling-formation' value='{{ json_encode($schooling_formation) }}'>
-                <input type="hidden" class="hide" id='selected-languages' value='{{ json_encode($selected_languages) }}'>
-                <input type="hidden" class="hide" id='languages' value='{{ json_encode($languages) }}'>
-                <input type="hidden" name='schoolings' :value='stringedSchoolings'>
+                <input type="hidden" class="hide" id='schooling-data'           value='{{ json_encode($data->schooling) }}'>
+                <input type="hidden" class="hide" id='experience-data'          value='{{ json_encode($data->experience) }}'>
+                <input type="hidden" class="hide" id='tags-data'                value='{{ json_encode($tags) }}'>
+                <input type="hidden" class="hide" id='schooling-status'         value='{{ json_encode($schooling_status) }}'>
+                <input type="hidden" class="hide" id='schooling-grades'         value='{{ json_encode($schooling_grades) }}'>
+                <input type="hidden" class="hide" id='schooling-formation'      value='{{ json_encode($schooling_formation) }}'>
+                <input type="hidden" class="hide" id='selected-languages'       value='{{ json_encode($selected_languages) }}'>
+                <input type="hidden" class="hide" id='languages'                value='{{ json_encode($languages) }}'>
+                <input type="hidden" name='schoolings' id='stringed-schoolings' :value='stringedSchoolings'>
                 <input type="hidden" name='experiences' :value='stringedExperiences'>
                 <input type="hidden" name='excluded_experiences' v-model='stringedExcludedExperiences'>
                 <input type="hidden" name='excluded_schoolings' :value='stringedExcludedSchoolings'>
@@ -114,7 +114,7 @@
                                         <div class="row">
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-address-zip">CEP</label>
-                                                <input type='text' v-mask="'##.###-###'" v-model="holdingData.zip" placeholder="89.250-000" class='w-input text-field white-background' v-on:change='getCep()' name='zip' id='data-address-zip' value='{{$data->zip}}'/>
+                                                <input type='text' v-mask="'##.###-###'" v-model="holdingData.zip" placeholder="89.250-000" class='w-input text-field white-background' v-on:blur='getCep()' name='zip' id='data-address-zip' value='{{$data->zip}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-address-state">Estado</label>
@@ -134,11 +134,15 @@
                                                 <label for="data-address-district">Bairro</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_district" id='data-address-district' name='address_district' value='{{$data->address_district}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-5">
+                                            <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-address-street">Rua</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_street" name='address_street' id='data-address-street' value='{{$data->address_street}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-2">
+                                                <label for="data-address-complement">Complemento</label>
+                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_complement" name='address_complement' id='data-address-complement' value='{{$data->address_complement}}'/>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-1">
                                                 <label for="data-address-number">Numero</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_number" name='address_number' id='data-address-number' value='{{$data->address_number}}'/>
                                             </div>
@@ -564,7 +568,7 @@
                                         <div class="row margin-top-10">
                                             <div class=" col-sm-12">
                                                 <label for="data-interests">Interesses</label>
-                                                <input id='data-interests' name='interests' type='hidden' value={{json_encode($data->interests->toArray())}}>
+                                                <input id='data-interests' name='interests' type='hidden' value={{urlencode(json_encode($data->interests->toArray()))}}>
                                                 <ul class='interests-holder' id='interests-holder' v-on:mousedown.stop.prevent="targetInterestsInputShow" v-on:mouseup.stop.prevent="targetInterestsInputFocus" >
                                                     <template v-for='(tag,idx) in selectedTags'>
                                                         <li><span  class='badge'>@{{tag.name}} <i class="fa fa-times-circle" v-on:click="removeTag(idx)"></i></span></li>

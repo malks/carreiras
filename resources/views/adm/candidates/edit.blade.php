@@ -27,9 +27,9 @@
 	        		<div class=" col-sm-12 col-lg-1">
 	        			<a class="btn btn-secondary" href='/adm/candidates'>Voltar</a>
 	        		</div>
-	        		<div class=" col-sm-12 col-lg-1">
+	        		<!--div class=" col-sm-12 col-lg-1">
 	        			<button class="btn btn-primary" id='save' type='submit' >Salvar</button>
-	        		</div>
+	        		</div-->
 	        	</div>
                 <div class="row margin-top-20">
                     <div class="col-sm-12 col-lg-12">

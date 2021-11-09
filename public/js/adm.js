@@ -783,8 +783,14 @@ function tagsList(){
 
 function usersList(){
     startData();
+    let tempData=JSON.parse(decodeURIComponent($('#full-data').val()).replace(/\+/g," "));
+    let locked=[];
+    for (let i in tempData){
+        if (tempData[i].role_id==2)
+            locked.push(tempData[i].id);
+    }
     ajaxUrl=$('#app').attr('action');
-    startList();
+    startList(locked,locked);
     $('#search').focus();
 }
 
@@ -876,6 +882,22 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                         window.location.reload();
                     }
                 });
+            },
+            resetPass:function(){
+                let that=this;
+                form.append('ids',that.selectedIds);
+                if(confirm('Alterar a senha dos usuários selecionados para 12345678?')){
+                    $.ajax({
+                        url:ajaxUrl+'/reset-pass',
+                        type:'POST',
+                        processData: false,
+                        contentType: false,			    
+                        data:form,
+                        success:function(data){
+                            window.location.reload();
+                        }
+                    });
+                }
             },
             destroy:function(){
                 let that=this;

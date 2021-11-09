@@ -176,6 +176,16 @@ input#interests-input.interests-input, input#interests-input.interests-input:foc
   font-size: 12pt;
 }
 
+.logo-complement{
+  font-size: 28pt;
+  margin-left: -7px;
+  margin-top: 3px;
+  display: block;
+  float: left;
+  font-family: Lato, sans-serif;
+  letter-spacing: -1px;
+}
+
 @media (max-width:600px){
   .config-block-image{
       max-width:400px
