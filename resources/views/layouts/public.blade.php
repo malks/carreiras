@@ -54,8 +54,8 @@
                     <nav class="navbar">
                         <div class="container-fluid">
                             <div class="container" style='max-width: 1200px;'>
-                                <div class="row">
-                                    <div class="col-4 hedone-menu-header">
+                                <div >
+                                    <div class="hedone-menu-header">
                                         <div class="nav-button">
                                             <i class="fa fa-bars"></i>
                                         </div>
@@ -69,7 +69,7 @@
                                             </a>
                                         </div>      
                                     </div>
-                                    <div id="Hedone" class="col-8 hedone-menu-container">
+                                    <div id="Hedone" class="hedone-menu-container">
                                         <div class="navbar-right">
                                             @if(empty($logged_in))
                                                 <ul class="hedone-menu" id='welcoLogin'>
@@ -91,20 +91,29 @@
 
                                                     <li class="menu-item">
                                                         <form id='login-form' action='/login' method='post' >
+                                                            <label class='d-block d-sm-none' for="">Login</label>
                                                             <div class="form-group">
                                                                 @csrf
                                                                 <input v-show='login_user_ok==0' type='text' v-on:keyup.enter="checkLogin" class='form-control' id='login-user' v-model='login_user' name='email' placeholder='usuario'/>
                                                                 <input v-show='login_user_ok==1' v-on:keyup.enter="goToLogin" type='password' class='form-control' id='login-pass' v-model='login_pass' name='password' placeholder='senha'/>
+                                                                @if($errors->has('email'))
+                                                                    <span style='color:#9b0303!important;position:absolute;width:220px;'>Credenciais não conferem.</span>
+                                                                @endif
                                                             </div>
                                                         </form>
                                                     </li>
-                                                    <li class="menu-item" >
-                                                        <button v-if='login_user_ok & login_user.length>0' v-on:click="backToUsername()" type='button' class='btn btn-grey' id='back'><i class="fa fa-undo" style='font-size:11pt'></i></button>
-                                                        <button  v-if='login_user_ok==0'  v-on:click="checkLogin" type='button' class='btn btn-default' id='ok'>OK</button>
-                                                        <button  v-if='checkPass()' type='button' v-on:click="goToLogin" class='btn btn-default' id="login">login</button>
+                                                    <li class="menu-item pad-left-10-xs" >
+                                                        <div class="pull-left-xs">
+                                                            <button v-if='login_user_ok & login_user.length>0' v-on:click="backToUsername()" type='button' class='btn btn-grey' id='back'><i class="fa fa-undo" style='font-size:11pt'></i></button>
+                                                            <button  v-if='login_user_ok==0'  v-on:click="checkLogin" type='button' class='btn btn-default' id='ok'>OK</button>
+                                                            <button  v-if='checkPass()' type='button' v-on:click="goToLogin" class='btn btn-default' id="login">login</button>
+                                                        </div>
+                                                        <a href='/register' class="btn btn-green d-block d-sm-none margin-left-20 pull-left"  id='register'>Registre-se</a>
                                                     </li>
-                                                    <li class="menu-item margin-left-20" >
-                                                        <a href='/register' class="btn btn-green"  id='register'>Registre-se</a>
+                                                    <li class="menu-item d-block d-sm-none margin-top-60">&nbsp</li>
+                                                    <li class="menu-item d-block d-sm-none">&nbsp</li>
+                                                    <li class="menu-item d-none d-sm-block pull-right" >
+                                                        <a href='/register' class="btn btn-green  margin-left-10 margin-top-7-lg"  id='register'>Registre-se</a>
                                                     </li>
                                                 </ul>
                                             @else 

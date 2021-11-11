@@ -83,15 +83,16 @@
                                                     <li class="menu-item">
                                                         <a href="/help">Ajuda</a>
                                                     </li>
-                                                    <li class="menu-item">
+                                                    <li class="menu-item hidden-xs">
                                                         &nbsp
                                                     </li>
-                                                    <li class="menu-item">
+                                                    <li class="menu-item hidden-xs">
                                                         &nbsp
                                                     </li>
 
                                                     <li class="menu-item">
                                                         <form id='login-form' action='/login' method='post' >
+                                                            <label class='visible-xs' for="">Login</label>
                                                             <div class="form-group">
                                                                 @csrf
                                                                 <input v-show='login_user_ok==0' type='text' v-on:keyup.enter="checkLogin" class='form-control' id='login-user' v-model='login_user' name='email' placeholder='usuario'/>
@@ -102,12 +103,17 @@
                                                             </div>
                                                         </form>
                                                     </li>
-                                                    <li class="menu-item" >
-                                                        <button v-if='login_user_ok & login_user.length>0' v-on:click="backToUsername()" type='button' class='btn btn-grey' id='back'><i class="fa fa-undo" style='font-size:11pt'></i></button>
-                                                        <button  v-if='login_user_ok==0'  v-on:click="checkLogin" type='button' class='btn btn-default' id='ok'>OK</button>
-                                                        <button  v-if='checkPass()' type='button' v-on:click="goToLogin" class='btn btn-default' id="login">login</button>
+                                                    <li class="menu-item pad-left-10-xs" >
+                                                        <div class="pull-left-xs">
+                                                            <button v-if='login_user_ok & login_user.length>0' v-on:click="backToUsername()" type='button' class='btn btn-grey' id='back'><i class="fa fa-undo" style='font-size:11pt'></i></button>
+                                                            <button  v-if='login_user_ok==0'  v-on:click="checkLogin" type='button' class='btn btn-default' id='ok'>OK</button>
+                                                            <button  v-if='checkPass()' type='button' v-on:click="goToLogin" class='btn btn-default' id="login">login</button>
+                                                        </div>
+                                                        <a href='/register' class="btn btn-green visible-xs margin-left-20 pull-left"  id='register'>Registre-se</a>
                                                     </li>
-                                                    <li class="menu-item margin-left-20" >
+                                                    <li class="menu-item visible-xs margin-top-40">&nbsp</li>
+                                                    <li class="menu-item visible-xs">&nbsp</li>
+                                                    <li class="menu-item hidden-xs" >
                                                         <a href='/register' class="btn btn-green"  id='register'>Registre-se</a>
                                                     </li>
                                                 </ul>
