@@ -171,10 +171,10 @@
                                             <div class="text-mid  {{$banner->title_small_outline}}" style='line-height:50px;color:{{$banner->title_small_color}};'>{{$banner->title_small}}</div>
                                             <div class="slider-line"></div>
                                         </div>
-                                        <div class="downSection animated slideOutDown">
+                                        <!--div class="downSection animated slideOutDown">
                                             <div class="text-bottom">{{$banner->cta}}</div>
                                             <a class="home-move-button" href="#about-home"></a>
-                                        </div>
+                                        </div-->
                                     </div>
                                 </div> 
                             </div>
@@ -185,7 +185,7 @@
 
 
             <!-- ABOUT SECTION -->
-            <section id="about-home" class="padding-top-120px white-background">
+            <section id="about-home" class="padding-top-120px white-background" style='padding-bottom:20px;'>
                 <div class="container">
                     <div class="row">
                         <div class="animatedParent animateOnce">
@@ -270,7 +270,7 @@
 
             <!-- VIDEO BACKGROUND SECTION -->
             @if (!empty($video))
-                <div class="padding-top-bottom-120px video-section" style="background-image:url({{'/img/'.$video->face}})">
+                <!--div class="padding-top-bottom-120px video-section" style="background-image:url({{'/img/'.$video->face}})">
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-12">
@@ -279,7 +279,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div-->
                 <!-- OUR SERVICES -->
                 <section class="padding-top-bottom-120px white-background animation-overflow" id='video-home'>
                     <div class="container">
