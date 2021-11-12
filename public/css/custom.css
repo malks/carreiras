@@ -391,10 +391,13 @@ ul.errors:hover > li:first-child {
 }
 
 #welcoLogin {
-    background-color: rgba(255,255,255)!important;
+    background-color: transparent;
 }
 
 @media (max-width:600px){
+    #welcoLogin {
+        background-color: rgba(255,255,255)!important;
+    }    
     #welcoLogin .menu-item #login-form{
         padding-left:10px;
         max-width: 50%;
