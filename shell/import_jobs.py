@@ -149,13 +149,13 @@ def job_to_requisition(data_job):
     for data in data_job:
         helper={}
         print(data)
-        helper['name']=data['TITCAR']
-        helper['cod_senior']=data['CODCAR']
-        helper['cod_rqu_senior']=data['CODRQU']
-        helper['cod_est_senior']=data['ESTCAR']
-        helper['cod_hie_senior']=data['CODHIE']
-        helper['start']=data['DATINI'].strftime('%Y-%m-%d')
-        helper['end']=data['DATFIM'].strftime('%Y-%m-%d')
+        helper['name']=data['name']
+        helper['cod_senior']=data['cod_senior']
+        helper['cod_rqu_senior']=data['cod_rqu_senior']
+        helper['cod_est_senior']=data['cod_est_senior']
+        helper['cod_hie_senior']=data['cod_hie_senior']
+        helper['start']=data['start'].strftime('%Y-%m-%d')
+        helper['end']=data['end'].strftime('%Y-%m-%d')
         helper['unit_id']=get_carreiras_unit_from_senior_code(data['CODFIL'],data['NUMEMP'])
         ret.append(helper)
     
