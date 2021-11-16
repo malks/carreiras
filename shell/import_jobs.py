@@ -146,14 +146,14 @@ def senior_to_carreiras_job(data_senior):
 #Monta requisição com base na vaga, e seta a vaga como pai
 def job_to_requisition(data):
     ret={}
-    ret['name']=data['TITCAR']
-    ret['cod_senior']=data['CODCAR']
-    ret['cod_rqu_senior']=data['CODRQU']
-    ret['cod_est_senior']=data['ESTCAR']
-    ret['cod_hie_senior']=data['CODHIE']
-    ret['start']=data['DATINI'].strftime('%Y-%m-%d')
-    ret['end']=data['DATFIM'].strftime('%Y-%m-%d')
-    ret['unit_id']=get_carreiras_unit_from_senior_code(data['CODFIL'],data['NUMEMP'])
+    ret['name']=data['name']
+    ret['cod_senior']=data['cod_senior']
+    ret['cod_rqu_senior']=data['cod_rqu_senior']
+    ret['cod_est_senior']=data['cod_est_senior']
+    ret['cod_hie_senior']=data['cod_hie_senior']
+    ret['start']=data['start'].strftime('%Y-%m-%d')
+    ret['end']=data['end'].strftime('%Y-%m-%d')
+    ret['unit_id']=data["unit"]
     
     return ret
 
