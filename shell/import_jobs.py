@@ -151,8 +151,8 @@ def job_to_requisition(data):
     ret['cod_rqu_senior']=data['cod_rqu_senior']
     ret['cod_est_senior']=data['cod_est_senior']
     ret['cod_hie_senior']=data['cod_hie_senior']
-    ret['start']=data['start'].strftime('%Y-%m-%d')
-    ret['end']=data['end'].strftime('%Y-%m-%d')
+    ret['start']=data['start']
+    ret['end']=data['end']
     ret['unit_id']=data["unit"]
     
     return ret
