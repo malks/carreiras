@@ -17,6 +17,7 @@ use App\Unit;
 use App\Field;
 use App\User;
 use App\Permission;
+use App\Requisition;
 use App\Role;
 use App\State;
 use App\StateMail;
@@ -308,23 +309,41 @@ class AdmController extends Controller
 
         //Se contratado, altera outros inscritos na vaga para não-selecionado
         if (strtolower(trim($request->status))=='contratado'){
-            $other_subscribed=Subscribed::
-            where('job_id','=',$request->job_id)
-            ->where('candidate_id','!=',$request->candidate_id)
-            ->get();
-
-            Job::where("id",'=',$request->job_id)
+            $thejob= Job::where("id",'=',$request->job_id)->first();
+            Requisition::where("cod_rqu_senior",'=',$thejob->cod_rqu_senior)
             ->update(['status'=>0]);
 
-            foreach ($other_subscribed as $sub){
-                DB::connection('mysql')->table('subscribed_has_states')->insert(
-                    [
-                        'subscribed_id'=>$sub->id,
-                        'state_id'=>2,
-                    ]
-                );
-        
+            $requisitions = Requisition::where('cod_senior','=',$thejob->cod_senior)->where('status','=','1')->get()->toArray();
+            if (!empty($requisitions) && count($requisitions)>0){
+                $thejob->cod_rqu_senior=$requisitions[0]['cod_rqu_senior'];
+                //$thejob->start=$requisitions[0]['start'];
+                //$thejob->end=$requisitions[0]['end'];
+                $thejob->unit_id=$requisitions[0]['unit_id'];
+                $thejob->created_at=$requisitions[0]['created_at'];
+                $thejob->save();
             }
+            else {
+                Job::where("id",'=',$request->job_id)
+                ->update(['status'=>0]);
+
+                $other_subscribed=Subscribed::
+                where('job_id','=',$request->job_id)
+                ->where('candidate_id','!=',$request->candidate_id)
+                ->whereDoesntHave('states', function ($query) {
+                    $query->where('state_id','=',2);
+                })
+                ->get();
+
+                foreach ($other_subscribed as $sub){
+                    DB::connection('mysql')->table('subscribed_has_states')->insert(
+                        [
+                            'subscribed_id'=>$sub->id,
+                            'state_id'=>2,
+                        ]
+                    );
+                }    
+            }
+
         }
 
         return '';
@@ -470,6 +489,7 @@ class AdmController extends Controller
         })
         ->with(['tags','subscribers','subscribers.interests','subscribers.experience','field','unit'])
         ->withCount('subscriptions as subscription_amount')
+        ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])
         ->get()->toArray();
 
         $data['states'] = State::all()->toArray();
@@ -1011,9 +1031,13 @@ class AdmController extends Controller
         $fields=Field::all();
         $units=Unit::all();
         $tags=Tag::all();
+        $requisition_status=[
+            'Fechada',
+            'Aberta'
+        ];
 
         if (!empty($request->template)){
-            $template=JobTemplate::where('id','=',$request->template)->with(['tags'])->first()->toArray();
+            $template=JobTemplate::where('id','=',$request->template)->with(['tags','requisitions', 'requisitions.unit'])->first()->toArray();
             foreach ($template as $k => $template_data){
                 if ($k!='id')
                     $data[$k]=$template_data;
@@ -1026,6 +1050,7 @@ class AdmController extends Controller
                 'fields'=>$fields,
                 'units'=>$units,
                 'tags'=>$tags,
+                'requisition_status'=>$requisition_status,
             ]
         );
     }
@@ -1169,10 +1194,14 @@ class AdmController extends Controller
 
     public function jobsEdit (Request $request) {
         $id=$request->id;
-        $data=Job::where('id','=',$id)->first();
+        $data=Job::where('id','=',$id)->with(['tags','requisitions', 'requisitions.unit'])->first();
         $units=Unit::all();
         $fields=Field::all();
         $tags=Tag::all();
+        $requisition_status=[
+            'Fechada',
+            'Aberta'
+        ];
 
         if (!empty($request->template)){
             $template=JobTemplate::where('id','=',$request->template)->first()->toArray();
@@ -1188,6 +1217,7 @@ class AdmController extends Controller
                 'units'=>$units,
                 'fields'=>$fields,
                 'tags'=>$tags,
+                'requisition_status'=>$requisition_status,
             ]
         );
     }

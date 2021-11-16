@@ -885,9 +885,10 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     that.availableJobsFilterData.dateEnd!=null
                     ){
                     ret=false;   
-                        console.log(currentJob);
+                        console.log(that.availableJobsFilterData.status);
+                        console.log(currentJob.status);
                     if (that.availableJobsFilterData.status.length>0){
-                        if (that.availableJobsFilterData.status.indexOf(currentJob.status)!==-1)
+                        if (that.availableJobsFilterData.status[0]==currentJob.status || that.availableJobsFilterData.status[1]==currentJob.status)
                             ret=true;
                     }
                     if (that.availableJobsFilterData.name!=""){

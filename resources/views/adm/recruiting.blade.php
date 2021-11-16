@@ -162,6 +162,12 @@
                         </div>
                         <div class="row">
                             <div class="col">
+                                <h5 style='float:left;'>Requisições Abertas:</h5>
+                                <span style='float:left;margin-left:10px;font-size:10pt;line-height:28px;'>@{{ runData.selectedJob.requisition_amount }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <h5 style='float:left;'>Unidade:</h5>
                                 <span style='float:left;margin-left:10px;font-size:10pt;line-height:28px;'>@{{ getUnitById(runData.selectedJob.unit_id).name }}</span>
                             </div>

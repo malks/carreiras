@@ -28,4 +28,9 @@ class Job extends Model
     public function subscriptions(){
         return $this->hasMany('App\Subscribed');
     }
+
+    public function requisitions(){
+        return $this->hasMany('App\Requisition','cod_senior','cod_senior');
+    }
+
 }

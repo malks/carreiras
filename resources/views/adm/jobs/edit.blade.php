@@ -157,8 +157,36 @@
                         </ul>
                     </div>
                 </div>
-
-			</div>
+                <div class="row margin-top-10" id='jobs-requisitions'>
+                    <div class=" col-sm-12 col-lg-4">
+                        <label for="">Requisições</label>
+                        <table class='table'>
+                            <thead>
+                                <tr>
+                                    <th>COD RQU</th>
+                                    <th>Unidade</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($data->requisitions as $requisition)
+                                    <tr>
+                                        <td>
+                                            {{$requisition->cod_rqu_senior}}
+                                        </td>
+                                        <td>
+                                            {{$requisition->unit->name}}
+                                        </td>
+                                        <td>
+                                            {{$requisition_status[$requisition->status]}}
+                                        </td>
+                                    </tr>
+                                @endforeach        
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 		</div>
 	</form>
 @stop
