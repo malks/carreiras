@@ -143,6 +143,24 @@ def senior_to_carreiras_job(data_senior):
     
     return ret
 
+#Monta requisição com base na vaga, e seta a vaga como pai
+def job_to_requisition(data_job):
+    ret=[]
+    for data in data_job:
+        helper={}
+        print(data)
+        helper['name']=data['TITCAR']
+        helper['cod_senior']=data['CODCAR']
+        helper['cod_rqu_senior']=data['CODRQU']
+        helper['cod_est_senior']=data['ESTCAR']
+        helper['cod_hie_senior']=data['CODHIE']
+        helper['start']=data['DATINI'].strftime('%Y-%m-%d')
+        helper['end']=data['DATFIM'].strftime('%Y-%m-%d')
+        helper['unit_id']=get_carreiras_unit_from_senior_code(data['CODFIL'],data['NUMEMP'])
+        ret.append(helper)
+    
+    return ret
+
 #Define dados de unidades para o carreiras a partir das filiais no senior
 def senior_to_carreiras_units(data_senior):
     ret=[]
@@ -196,13 +214,24 @@ def import_units(units,conn):
 
 
 def import_jobs(jobs,conn):
+    requisitions=[]
     for job in jobs:
+        requisitions.append(job_to_requisition(job))
         keys = ",".join(map(string_and_strip,list(job.keys())))
         values = "','".join(map(string_and_strip,list(job.values())))
         updates = ",".join(map(mount_updates,list(job.keys()),list(job.values())))
         sql="INSERT IGNORE INTO lunellicarreiras.jobs ("+keys+") VALUES ('"+values+"') ON DUPLICATE KEY UPDATE "+updates
         run_sql(sql,conn)
 
+    import_requisitions(requisitions,conn)
+
+def import_requisitions(jobs,conn):
+    for job in jobs:
+        keys = ",".join(map(string_and_strip,list(job.keys())))
+        values = "','".join(map(string_and_strip,list(job.values())))
+        updates = ",".join(map(mount_updates,list(job.keys()),list(job.values())))
+        sql="INSERT IGNORE INTO lunellicarreiras.requisitions ("+keys+") VALUES ('"+values+"') ON DUPLICATE KEY UPDATE "+updates
+        run_sql(sql,conn)
 
 def import_candidates(candidates,conn):
     for candidate in candidates:
