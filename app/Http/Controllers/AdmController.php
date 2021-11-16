@@ -78,6 +78,14 @@ class AdmController extends Controller
         
     }
 
+    public function getAvailableJobs(){
+        $jobs=Job::
+        with(['unit','field'])
+        ->get()
+        ->toJson();
+        return $jobs;
+    }
+
     public function addTag(Request $request){
         if (!empty($request->name)){
             $tag = new Tag;
@@ -254,6 +262,27 @@ class AdmController extends Controller
             'schooling_grades'=>$schooling_grades,
             'schooling_status'=>$schooling_status,
         ]);
+    }
+
+
+    public function subscribeCandidatesToJob (Request $request){
+        $arr=$request->all();
+        $candidates=explode(",",$arr['candidates']);
+        $job=$arr['job'];
+        $state = State::where('id','=',1)->first();
+        foreach($candidates as $candidate){
+            $subscribed = new Subscribed;
+            $subscribed->candidate_id=$candidate;
+            $subscribed->job_id=$job;
+            $subscribed->save();
+
+            DB::connection('mysql')->table('subscribed_has_states')->insert(
+                [
+                    'subscribed_id'=>$subscribed->id,
+                    'state_id'=>$state->id,
+                ]
+            );
+        }
     }
 
     public function addSubscriptionState(Request $request){
@@ -595,6 +624,7 @@ class AdmController extends Controller
         ->when(!empty($request->filter_unit),function ($query) use ($request) {
             $query->where('unit_id','=',$request->filter_unit);
         })
+        ->orderBy('id','desc')
         ->with(['unit'])
         ->paginate(15);
 
@@ -814,6 +844,7 @@ class AdmController extends Controller
         ->with(['Schooling','Experience'])
         ->withCount('subscriptions as subscription_amount')
         ->leftJoin('subscribed','subscribed.candidate_id','=','candidates.id')
+        ->orderBy('updated_at','desc')
         ->orderBy('subscribed.created_at','desc')
         ->paginate(15);
 

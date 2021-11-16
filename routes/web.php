@@ -122,9 +122,11 @@ $router->group(['middleware' => ['auth','is.admin','can:access admin']], functio
 
     Route::group(['middleware' => ['can:candidates']], function() {
         Route::get('/adm/candidates', 'AdmController@candidatesList')->name('candidates-list');
+        Route::get('/adm/candidates/available-jobs', 'AdmController@getAvailableJobs')->name('candidates-available-jobs');
         Route::get('/adm/candidates/create', 'AdmController@candidatesCreate')->name('candidates-create');
         Route::get('/adm/candidates/edit/{id}', 'AdmController@candidatesEdit')->name('candidates-edit');
         Route::post('/adm/candidates/destroy', 'AdmController@candidatesDestroy')->name('candidates-destroy');
+        Route::post('/adm/candidates/subscribe-candidates-to-job', 'AdmController@subscribeCandidatesToJob')->name('subscribe-candidates-to-job');
         Route::get('/adm/candidates/save', 'AdmController@candidatesSave')->name('candidates-save');
         Route::get('/adm/candidates/print/{id}', 'AdmController@candidatePrint')->name('candidates-print');
     });

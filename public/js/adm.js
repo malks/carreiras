@@ -347,12 +347,12 @@ function recruiting(){
             jobSize:function(){
                 if (this.runData.selectedJob.id!=null)
                     return "hide";
-                return "col-lg-8";
+                return "col-lg-12";
             },
             candidateSize: function(){
                 if (this.runData.selectedJob.id!=null)
                     return "col-lg-12";
-                return "col-lg-4";
+                return "hide";
             },
             notingObservation:function () {
                 let obs = "";
@@ -819,7 +819,13 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             blockEditIds:blockEditIds,
             blockDeleteIds:blockDeleteIds,
             logged_id:logged_id,
+            availableJobs:[],
+            jobChoosing:false,
+            selectedJob:null,
         },
+        mounted:function (){
+            this.loadAvailableJobs();
+        }, 
         computed:{
             canEdit:function(){
                 let that = this;
@@ -847,8 +853,60 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     return false;
                 return true;
             },
+            candidatesJobsSelected:function (){
+                if (this.selectedJob!=null)
+                    return false;
+                return true;
+            }
         },
         methods:{
+            selectJob:function (id) {
+                if(this.selectedJob!=id)
+                    this.selectedJob=id;
+                else
+                    this.selectedJob=null;
+            },
+            loadAvailableJobs:function(){
+                let that = this;
+                $.ajax({
+                    url:ajaxUrl+'/available-jobs',
+                    type:'GET',
+                    processData: false,
+                    contentType: false,			    
+                    data:form,
+                    success:function(data){
+                        that.availableJobs=JSON.parse(data);
+                        console.log(that.availableJobs);
+                    }
+                });
+            },
+            subscribeCandidatesToJob:function (){
+                let that=this;
+
+                form.append('candidates',that.selectedIds);
+                form.append('job',that.selectedJob);
+                that.openJobs();
+                $.ajax({
+                    url:ajaxUrl+'/subscribe-candidates-to-job',
+                    type:'POST',
+                    processData: false,
+                    contentType: false,			    
+                    data:form,
+                    success:function(data){
+                        console.log(data);
+                        alert("Inscritos com sucesso");
+                        window.location.reload();
+                    }
+                })
+            },
+            openJobs:function (){
+                this.jobChoosing=!this.jobChoosing;
+                this.selectedJob=null;
+                if (this.jobChoosing)
+                    $('#subscribe-job-modal').show();
+                else
+                    $('#subscribe-job-modal').hide();
+            },
             addItem:function(id){
                 let idx=this.selectedIds.findIndex(el=>el == id);
                 if(idx>=0)

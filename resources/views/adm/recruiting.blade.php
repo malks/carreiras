@@ -64,11 +64,11 @@
                                 <input type="date" class="form-control" name='filter-date-to' v-model='pushData.filters.jobs.direct.lt.created_at' v-on:change='updateData'>
                             </div>
 
-                            <div class="col-xs-12 col-lg-12">
+                            <div class="col-xs-12 col-lg-6">
                                 <h6 class='margin-top-10'>Filtrar por Nome</h6>
                                 <input type="text" placeholder="Buscar vaga por nome" class='form-control' id='job-search' v-model='otherData.jobNameSearch'>
                             </div>
-                            <div class="col-12">
+                            <div class="col-xs-12 col-lg-6">
                                 <h6 class='margin-top-10'>Filtrar por Tags</h6>
                                 <input type="text" placeholder="Buscar vaga por tags ex: vendas comercial" class='form-control' id='job-tag-search' v-model='otherData.tagFilters'>
                             </div>
@@ -102,12 +102,18 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row margin-top-20">
+                        <div class="row margin-top-30">
+                            <div class="col">
+                                <label for="">Selecione uma vaga para ver os candidatos</label>
+                            </div>
+                        </div>
+                        <div class="row margin-top-10">
                             <div class="col-xs-12 col-lg-12 table-responsive">
                                 <table class='table dataTable'>
                                     <thead>
                                         <tr>
                                             <th>Vaga</th>
+                                            <th>Cod. RQU</th>
                                             <th>Unidade</th>
                                             <th>Área</th>
                                             <th class='text-center'>Status</th>
@@ -125,6 +131,7 @@
                                         <template v-for="job in runData.jobs">
                                             <tr v-show='inFilter(job) && inJobNameFilter(job)' v-on:click="inspectJob(job)" class='hoverable' :class="{ 'active':runData.selectedJob.id==job.id }">
                                                 <td><a :href="'/adm/jobs/edit/'+job.id" target='_blank'> @{{ job.name }}</a></td>
+                                                <td>@{{job.cod_rqu_senior}}</td>
                                                 <td>@{{ getUnitById(job.unit_id).name }}</td>
                                                 <td>@{{ getFieldById(job.field_id).name }}</td>
                                                 <td class='text-center'>@{{ runData.jobStatusNames[job.status] }}</td>

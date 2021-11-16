@@ -227,7 +227,7 @@ if __name__ == "__main__":
         last_sync[0]['last_sync']=datetime.strptime('2021-05-01','%Y-%m-%d')
    
     #Unidades, pego somente as que tem requisição recente.
-    units_senior=oc_select("SELECT DISTINCT R030FIL.* FROM R030FIL INNER JOIN R126RQU ON R126RQU.CODFIL=R030FIL.CODFIL AND R126RQU.NUMEMP=R030FIL.NUMEMP WHERE R030FIL.NUMEMP IN (1,2,3,4,5,20) AND R126RQU.DATRQU>='"+last_sync[0]['last_sync'].strftime('%Y-%m-%d')+"' AND SITRQU IN ('0','1')",main_oc_conn)
+    units_senior=oc_select("SELECT DISTINCT R030FIL.* FROM R030FIL INNER JOIN R126RQU ON R126RQU.CODFIL=R030FIL.CODFIL AND R126RQU.NUMEMP=R030FIL.NUMEMP WHERE R030FIL.NUMEMP IN (1,2,3,4,5,12,20) AND R126RQU.DATRQU>='"+last_sync[0]['last_sync'].strftime('%Y-%m-%d')+"' AND SITRQU IN ('0','1')",main_oc_conn)
     units_carreiras=senior_to_carreiras_units(units_senior)
     import_units(units_carreiras,main_sql_conn)
     
