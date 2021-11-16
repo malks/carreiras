@@ -153,7 +153,7 @@ def job_to_requisition(data):
     ret['cod_hie_senior']=data['cod_hie_senior']
     ret['start']=data['start']
     ret['end']=data['end']
-    ret['unit_id']=data["unit"]
+    ret['unit_id']=data["unit_id"]
     
     return ret
 
