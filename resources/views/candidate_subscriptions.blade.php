@@ -99,6 +99,10 @@
                         </div>
                     </div>
                     <div class="row">
+                    
+                        <div class="col-lg-12" v-if="jobs.length==0">
+                            Nenhuma candidatura encontrada
+                        </div>
                         <template v-for='job in subscriptions'>
                             <div class="col-lg-4 margin-top-20"  v-show='inFilter(getSubscriptionsJob(job))'>
 

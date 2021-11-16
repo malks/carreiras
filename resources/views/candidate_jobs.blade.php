@@ -119,6 +119,10 @@
                             </div>
                         </div>
                     
+                        <div class="col-lg-12" v-if="jobs.length==0">
+                            Nenhuma vaga disponível no momento
+                        </div>
+
                         <template v-for='job in jobs'>
                             <div class="col-lg-4 margin-top-20" v-show='inFilter(job)'>
 
