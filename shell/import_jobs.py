@@ -144,7 +144,7 @@ def senior_to_carreiras_job(data_senior):
     return ret
 
 #Monta requisição com base na vaga, e seta a vaga como pai
-def job_to_requisition(data_job):
+def job_to_requisition(data):
     ret={}
     ret['name']=data['TITCAR']
     ret['cod_senior']=data['CODCAR']
