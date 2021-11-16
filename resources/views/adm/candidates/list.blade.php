@@ -11,7 +11,7 @@
 	<div id="app" action='/adm/candidates'>
 		<div id='subscribe-job-modal' class="modal" style='display:block;' tabindex="-1" v-show="jobChoosing" v-if="availableJobs.length>0">
 			<form action="/adm/candidates/subscribe-job" method='POST'>
-				<div class="modal-dialog">
+				<div class="modal-dialog" style='width:820px;max-width:820px;'>
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title">Inscrever candidatos na vaga:</h5>
@@ -20,7 +20,36 @@
 						<div class="modal-body">
 							<div class="card" >
 								<div class="card-header">
-
+									<div class="row">
+										<div class="col-lg-3">
+											<input style='float:left;margin-top:5px;' v-model='availableJobsFilterData.status' type="checkbox" value='0' id='filter-jobs-status-0'>
+											<label style='float:left;margin-left:5px;' for="filter-jobs-status-0">Inativas</label><br><br>
+											<input style='float:left;margin-top:5px;' v-model='availableJobsFilterData.status' type="checkbox" value='1' id='filter-jobs-status-1'>
+											<label style='float:left;margin-left:5px;' for="filter-jobs-status-1">Ativas</label>
+										</div>
+										<div class="col-lg-3">
+											<label for="">Nome</label>
+											<input class='form-control' v-model='availableJobsFilterData.name' type="text">
+										</div>
+										<div class="col-lg-3">
+											<label for="">Unidade</label>
+											<select class='form-control'  v-model='availableJobsFilterData.unit'>
+												<option value="0">Todas</option>
+												<template v-for='unit in allUnits'>
+													<option :value="unit.id">@{{unit.name}}</option>
+												</template>
+											</select>
+										</div>
+										<div class="col-lg-3">
+											<label for="">Área</label>
+											<select class='form-control'  v-model='availableJobsFilterData.field'>
+												<option value="0">Todas</option>
+												<template v-for='field in allFields'>
+													<option :value="field.id">@{{field.name}}</option>
+												</template>
+											</select>
+										</div>
+									</div>
 								</div>
 								<div class="card-body" style='max-height:400px;overflow-y:scroll; overflow-x:show;'>
 									<div class="row">
@@ -36,7 +65,7 @@
 												</thead>
 												<tbody>
 													<template v-for="job in availableJobs">
-														<tr class='hoverable'  v-on:click="selectJob(job.id)">
+														<tr class='hoverable'  v-on:click="selectJob(job.id)" v-show='filterAvailableJobs(job)'>
 															<td><input type='checkbox':checked='selectedJob==job.id' class='selected-ids' :value="job.id" name='selected_jobs[]'> </td>
 															<td>@{{job.name}}</td>
 															<td>@{{(job.unit!=undefined) ? job.unit.name : ''}}</td>

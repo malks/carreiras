@@ -820,11 +820,25 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             blockDeleteIds:blockDeleteIds,
             logged_id:logged_id,
             availableJobs:[],
+            availableJobsFilterData:{
+                status:[],
+                name:"",
+                unit:0,
+                field:0,
+                dateStart:null,
+                dateEnd:null,
+            },
+            allFields:[],
+            allUnits:[],
             jobChoosing:false,
             selectedJob:null,
         },
         mounted:function (){
-            this.loadAvailableJobs();
+            if ($('[check-candidates-list]').length>0){
+                this.loadAvailableJobs();
+                this.loadFields();
+                this.loadUnits();
+            }
         }, 
         computed:{
             canEdit:function(){
@@ -860,6 +874,49 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             }
         },
         methods:{
+            filterAvailableJobs: function (currentJob){
+                let ret = true;
+                let that = this;
+                if(that.availableJobsFilterData.status.length>0 || 
+                    that.availableJobsFilterData.name!="" || 
+                    that.availableJobsFilterData.unit!=0 || 
+                    that.availableJobsFilterData.field!=0 ||
+                    that.availableJobsFilterData.dateStart!=null || 
+                    that.availableJobsFilterData.dateEnd!=null
+                    ){
+                    ret=false;   
+                        console.log(currentJob);
+                    if (that.availableJobsFilterData.status.length>0){
+                        if (that.availableJobsFilterData.status.indexOf(currentJob.status)!==-1)
+                            ret=true;
+                    }
+                    if (that.availableJobsFilterData.name!=""){
+                        if (currentJob.name.toLowerCase().includes(that.availableJobsFilterData.name.toLowerCase()))
+                            ret=true;
+                    }
+                    if (that.availableJobsFilterData.unit!=0){
+                        if (currentJob.unit!=undefined && currentJob.unit.id==that.availableJobsFilterData.unit)
+                            ret=true;
+                    }
+                    if (that.availableJobsFilterData.field!=0){
+                        if (currentJob.field!=undefined && currentJob.field.id==that.availableJobsFilterData.field)
+                            ret=true;
+                    }
+                    if (that.availableJobsFilterData.dateStart!=null){
+                        let tempDateStart=new Date(that.availableJobsFilterData.dateStart);
+                        let jobDate=new Date(currentJob.created_at);
+                        if (tempDateStart<=jobDate)
+                            ret = true;
+                    }
+                    if (that.availableJobsFilterData.dateEnd!=null){
+                        let tempDateEnd=new Date(that.availableJobsFilterData.dateEnd);
+                        let jobDate=new Date(currentJob.created_at);
+                        if (jobDate<=tempDateEnd)
+                            ret = true;
+                    }
+                }
+                return ret;
+            },
             selectJob:function (id) {
                 if(this.selectedJob!=id)
                     this.selectedJob=id;
@@ -872,11 +929,33 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     url:ajaxUrl+'/available-jobs',
                     type:'GET',
                     processData: false,
-                    contentType: false,			    
+                    contentType: false,
                     data:form,
                     success:function(data){
                         that.availableJobs=JSON.parse(data);
                         console.log(that.availableJobs);
+                    }
+                });
+            },
+            loadFields:function(){
+                let that = this;
+                $.ajax({
+                    url:'/all-fields',
+                    type:'GET',
+                    success:function(data){
+                        console.log(data);
+                        that.allFields=JSON.parse(data);
+                        console.log(that.allfields);
+                    }
+                });
+            },
+            loadUnits:function(){
+                let that = this;
+                $.ajax({
+                    url:'/all-units',
+                    type:'GET',
+                    success:function(data){
+                        that.allUnits=JSON.parse(data);
                     }
                 });
             },

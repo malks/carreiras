@@ -532,6 +532,16 @@ class AdmController extends Controller
 		return '';
     }
 
+    public function getUnits (){
+        $data=Unit::all()->toJson();
+        return $data;
+    }
+
+    public function getFields (){
+        $data=Field::all()->toJson();
+        return $data;
+    }
+
     public function fieldsList (Request $request){
         $data=Field::
         when(!empty($request->search),function($query) use ($request) {

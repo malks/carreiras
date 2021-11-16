@@ -40,6 +40,8 @@ $router->group(['middleware' => ['auth']], function() {
 
 $router->group(['middleware' => ['auth','is.admin','can:access admin']], function() {
     Route::get('/home', 'HomeController@index')->name('home-adm');
+    Route::get('/all-units', 'AdmController@getUnits')->name('all-units');
+    Route::get('/all-fields', 'AdmController@getFields')->name('all-fields');
 
     Route::group(['middleware' => ['can:config']], function() {
         Route::get('/adm/config', 'AdmController@config')->name('config');
