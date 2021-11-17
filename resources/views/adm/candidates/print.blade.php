@@ -28,7 +28,7 @@
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <p>@php echo (idate('Y')-explode("-",$data->dob)[0]); @endphp anos - {{$civil_states[$data->civil_state-1]}}</p>
+                                    <p>@php echo (!empty($data->dob)) ? (idate('Y')-explode("-",$data->dob)[0]) : ''; @endphp anos - {{(!empty($data->civil_state) && is_numeric($data->civil_state)) ? $civil_states[$data->civil_state-1] : ''}}</p>
                                 </div>
                             </div>
                             <div class="row" style='margin-top:-10px;'>
@@ -253,7 +253,7 @@
 
                             <div class="row margin-top-30">
                                 <div class="col">
-                                    <span>Trabalhou anteriormente na Lunelli? </span> <span style='margin-left:5px;'>{{$yes_no[$data->worked_earlier_at_lunelli]}}</span> <br>
+                                    <span>Trabalhou anteriormente na Lunelli? </span> <span style='margin-left:5px;'>{{$yes_no[$data->worked_earlier_at_lunelli | 0]}}</span> <br>
                                     @if($data->worked_earlier_at_lunelli)
                                         <small >Início: {{$carbon->parse($data->lunelli_earlier_work_period_start)->format('d/m/Y')}} </small> &nbsp - &nbsp
                                         <small >Fim: {{$carbon->parse($data->lunelli_earlier_work_period_start)->format('d/m/Y')}} </small>
@@ -294,7 +294,7 @@
                             </div>
                             <div class="row margin-top-20">
                                 <div class="col">
-                                    <span>Já passou por alguma cirurgia? </span> <span style='margin-left:5px;'>{{$yes_no[$data->surgery]}}</span> 
+                                    <span>Já passou por alguma cirurgia? </span> <span style='margin-left:5px;'>{{$yes_no[$data->surgery | 0]}}</span> 
                                     @if($data->surgery)
                                         <br>
                                         <small>Motivo: </small> <small style='margin-left:5px;'>{{$data->surgery_reason}}</small>
@@ -303,7 +303,7 @@
                             </div>
                             <div class="row margin-top-20">
                                 <div class="col">
-                                    <span>Já ficou internado(a) por algum motivo? </span> <span style='margin-left:5px;'>{{$yes_no[$data->hospitalized]}}</span> 
+                                    <span>Já ficou internado(a) por algum motivo? </span> <span style='margin-left:5px;'>{{$yes_no[$data->hospitalized | 0]}}</span> 
                                     @if($data->hospitalized)
                                         <br>
                                         <small>Motivo: </small> <small style='margin-left:5px;'>{{$data->hospitalized_reason}}</small>
@@ -312,7 +312,7 @@
                             </div>
                             <div class="row margin-top-20">
                                 <div class="col">
-                                    <span>Já sofreu acidente de trabalho? </span> <span style='margin-left:5px;'>{{$yes_no[$data->work_accident]}}</span> 
+                                    <span>Já sofreu acidente de trabalho? </span> <span style='margin-left:5px;'>{{$yes_no[$data->work_accident | 0]}}</span> 
                                     @if($data->work_accident)
                                         <br>
                                         <small>Quando e empresa: </small> <small style='margin-left:5px;'>{{$data->work_accident_where}}</small>
@@ -351,7 +351,7 @@
                                 <div class="col">
                                     <span>Ja trabalhou sem registro em carteira? </span> 
                                     <br>
-                                    <small>{{$yes_no[$data->worked_without_ctp]}}</small>
+                                    <small>{{$yes_no[$data->worked_without_ctp | 0]}}</small>
                                     @if($data->worked_without_ctp)
                                         <small>
                                             &nbsp - &nbsp
@@ -366,7 +366,7 @@
                                 <div class="col">
                                     <span>Questão trabalhista? </span> 
                                     <br>
-                                    <small>{{$yes_no[$data->previous_work_legal_action]}}</small>
+                                    <small>{{$yes_no[$data->previous_work_legal_action | 0]}}</small>
                                     @if($data->previous_work_legal_action)
                                         <small>
                                             &nbsp - &nbsp
