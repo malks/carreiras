@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 App::setLocale('ptbr');
 Route::get('/', 'LandingController@index')->name('home');
-Route::get('/login', 'LandingController@index')->name('login');
+//Route::get('/login', 'LandingController@index')->name('login');
+Route::get('/login', 'LandingController@access')->name('login');
 Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/jobs', 'LandingController@jobsList');
 Route::get('/policy', 'LandingController@policy');
@@ -26,6 +27,7 @@ Route::get('/view-mail/{id}', 'AdmController@viewMail')->name('view-mail');
 Route::post('/busca-cep', 'LandingController@buscaCep')->name('busca-cep');
 Route::get('/help', 'LandingController@help')->name('help');
 Route::post('/send-help', 'LandingController@sendHelp')->name('send-help');
+Route::get('/forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password-forgot');
 
 $router->group(['middleware' => ['auth']], function() {
     Route::get('/profile', 'LandingController@profile');

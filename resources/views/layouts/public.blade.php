@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-        <title>LunelliCarreiras</title>
+        <title>Lunelli</title>
 
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/img/lunelli-small-red.png') }}">
 
@@ -21,7 +21,7 @@
         <![endif]-->
 
         <link href="{{ asset('css/animations.css') }}" rel="stylesheet" type="text/css"/>
-        <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
         <link href="{{ asset('css/owl.carousel.custom.css') }}" rel="stylesheet" type="text/css"/>
         <link href="{{ asset('css/hedone.css') }}" rel="stylesheet" type="text/css"/>
         <link href="{{ asset('css/colors.css') }}" rel="stylesheet" type="text/css"/>
@@ -63,9 +63,9 @@
                                         <div class="site-branding">
                                             <a href="/" >
                                                 <img src="{{ asset('/img/grupo-lunelli-colored.png') }}" alt="brand logo"/>
-                                                <span class='logo-complement'>
+                                                <!--span class='logo-complement'>
                                                     Carreiras
-                                                </span>
+                                                </span-->
                                             </a>
                                         </div>      
                                     </div>
@@ -73,6 +73,9 @@
                                         <div class="navbar-right">
                                             @if(empty($logged_in))
                                                 <ul class="hedone-menu" id='welcoLogin'>
+                                                    <li class="menu-item">
+                                                        <a href="/">Início</a>
+                                                    </li>
                                                     <li class="menu-item">
                                                         <a href="/policy">Termos</a>
                                                     </li>
@@ -83,6 +86,10 @@
                                                         <a href="/help">Ajuda</a>
                                                     </li>
                                                     <li class="menu-item">
+                                                        <a href="/login">Login</a>
+                                                    </li>
+
+                                                    <!--li class="menu-item">
                                                         &nbsp
                                                     </li>
                                                     <li class="menu-item">
@@ -114,10 +121,14 @@
                                                     <li class="menu-item d-block d-sm-none">&nbsp</li>
                                                     <li class="menu-item d-none d-sm-block pull-right" >
                                                         <a href='/register' class="btn btn-green  margin-left-10 margin-top-7-lg"  id='register'>Registre-se</a>
-                                                    </li>
+                                                    </li-->
                                                 </ul>
                                             @else 
                                                 <ul class="hedone-menu" id='welcoLogin'>
+                                                    <li class="menu-item">
+                                                        <a href="/">Início</a>
+                                                    </li>
+
                                                     <li class="menu-item">
                                                         <a href="/policy">Termos</a>
                                                     </li>
@@ -166,16 +177,16 @@
 
                     <div class="footer-social-block">
                         <a href="https://www.instagram.com/grupolunelli/" target='_blank' class="w-inline-block social-wrap">
-                            <i class="fa fa-instagram"></i>
+                            <i style='font-size:16pt;line-height:37px;' class="fab fa-instagram"></i>
                         </a>
                         <a href="https://www.linkedin.com/company/grupo-lunelli" target='_blank' class="w-inline-block social-wrap">
-                            <i class="fa fa-linkedin"></i>
+                            <i style='font-size:16pt;line-height:37px;' class="fab fa-linkedin"></i>
                         </a>
                         <a href="https://www.facebook.com/grupolunelli" target='_blank' class="w-inline-block social-wrap">
-                            <i class="fa fa-facebook"></i>
+                            <i style='font-size:16pt;line-height:37px;' class="fab fa-facebook"></i>
                         </a>
                         <a href="https://www.youtube.com/channel/UCPfbbICzMyJAgkC3iDtFlHA/featured"  target='_blank' class="w-inline-block social-wrap">
-                            <i class="fa fa-youtube"></i>
+                            <i style='font-size:16pt;line-height:37px;' class="fab fa-youtube"></i>
                         </a>
                     </div>
                     <div class="footer-text">

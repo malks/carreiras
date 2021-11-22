@@ -25,7 +25,7 @@
                     <div class='card-header'>
                         <div class="animatedParent animateOnce">
                             <h3 class="head-h3">SEU PERFIL</h3>
-                            <p class="head-subtitle">queremos conhecer você</p>
+                            <p class="head-subtitle">fale sobre você</p>
                         </div>
                     </div>
                     
@@ -37,12 +37,12 @@
                                 <a  class='nav-link'  v-bind:class="{ active: isItMe('candidate-data') }" v-on:click="tabTo('candidate-data')" >Pessoal</a>
                             </li>
                             <li class="nav-item">
-                                <a  class='nav-link'  v-bind:class="{ active: isItMe('schooling-data') }" v-on:click="tabTo('schooling-data')" >Escolaridade</a>
+                                <a  class='nav-link'  v-bind:class="{ active: isItMe('schooling-data') }" v-on:click="tabTo('schooling-data')" >Formação</a>
                             </li>
                             <li class="nav-item">
                                 <a  class='nav-link'  v-bind:class="{ active: isItMe('experience-data') }" v-on:click="tabTo('experience-data')" >Experiência</a>
                             </li>
-                            <li class="nav-item">
+                            <!--li class="nav-item">
                                 <a  class='nav-link'  v-bind:class="{ active: isItMe('language-data') }" v-on:click="tabTo('language-data')" >Idiomas</a>
                             </li>
                             <li class="nav-item">
@@ -54,9 +54,10 @@
                             <li class="nav-item">
                                 <a class='nav-link' v-bind:class="{  active: isItMe('questionary') }" v-on:click="tabTo('questionary')" >Questionário</a>
                             </li>
-                            <li class="nav-item"></li>
+                            <li class="nav-item"></li-->
                         </ul>
                         <hr>
+                        <small style='margin-left:40px;'>*dados obrigatórios</small>
                         <div v-if='errors.length>0' class="row">
                             <div class="col-lg-6 col-12">
                                 <ul class='errors' v-on:click='errors=[]'>
@@ -76,6 +77,7 @@
 
                         <div class="tab-content">
         
+
                             <div class='tab-pane fade padding-top-10'  v-bind:class="{ active: isItMe('candidate-data'), show: isItMe('candidate-data') }" id="candidate-data">
         
                                 <div class="card elegant large-header shadow">
@@ -84,11 +86,11 @@
                                         <div class="row margin-top-10">
                                             <input type='hidden' name='id' value='{{$data->id}}'>
                                             <div class=" col-sm-12 col-lg-6">
-                                                <label for="data-name">Nome</label>
+                                                <label for="data-name">*Nome</label>
                                                 <input type='text' required class='w-input text-field white-background' name='name' id='data-name' value='{{$data->name}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-6">
-                                                <label for="data-email">E-mail</label>
+                                                <label for="data-email">*E-mail</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-email' name='email' value='{{$data->email}}'/>
                                             </div>
                                         </div>
@@ -113,29 +115,29 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-address-zip">CEP</label>
+                                                <label for="data-address-zip">*CEP</label>
                                                 <input type='text' v-mask="'##.###-###'" v-model="holdingData.zip" placeholder="89.250-000" class='w-input text-field white-background' v-on:blur='getCep()' name='zip' id='data-address-zip' value='{{$data->zip}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-address-state">Estado</label>
+                                                <label for="data-address-state">*Estado</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_state" id='data-address-state' name='address_state' value='{{$data->address_state}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-address-country">País</label>
+                                                <label for="data-address-country">*País</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_country" id='data-address-country' name='address_country' value='{{$data->address_country}}'/>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class=" col-sm-12 col-lg-3">
-                                                <label for="data-address-city">Cidade</label>
+                                                <label for="data-address-city">*Cidade</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_city" id='data-address-city' name='address_city' value='{{$data->address_city}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-2">
-                                                <label for="data-address-district">Bairro</label>
+                                                <label for="data-address-district">*Bairro</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_district" id='data-address-district' name='address_district' value='{{$data->address_district}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-address-street">Rua</label>
+                                                <label for="data-address-street">*Rua</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_street" name='address_street' id='data-address-street' value='{{$data->address_street}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-2">
@@ -156,10 +158,10 @@
 
                                         <div class="row margin-top-10">
                                             <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-cpf">CPF</label>
+                                                <label for="data-cpf">*CPF</label>
                                                 <input type='text' v-mask="'###.###.###-##'" v-model="holdingData.cpf" placeholder="111.111.111-11" class='w-input text-field white-background' id='data-cpf' name='cpf' value='{{$data->cpf}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-4">
+                                            <!--div class=" col-sm-12 col-lg-4">
                                                 <label for="data-work-card">Carteira de Trabalho</label>
                                                 <input type='text'  v-mask="'#######'" v-model="holdingData.work_card" placeholder="1234567" class='w-input text-field white-background' id='data-work-card' name='work_card' value='{{$data->work_card}}'/>
                                             </div>
@@ -170,13 +172,7 @@
                                             <div class=" col-sm-12 col-lg-2">
                                                 <label for="data-work-card-digit">Digito</label>
                                                 <input type='text'   v-mask="'##'" v-model="holdingData.work_card_digit" placeholder="12" class='w-input text-field white-background' id='data-work-card-digit' name='work_card_digit' value='{{$data->work_card_digit}}'/>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-pis">PIS</label>
-                                                <input type='text'   v-mask="'###.#####.##-#'" v-model="holdingData.pis" placeholder="123.12345.12-1" class='w-input text-field white-background' id='data-pis' name='pis' value='{{$data->pis}}'/>
-                                            </div>
+                                            </div-->
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-rg">RG</label>
                                                 <input type='text'  v-mask="'##.###.###-#'" v-model="holdingData.rg" placeholder="12.123.123-1" class='w-input text-field white-background' id='data-rg' name='rg' value='{{$data->rg}}'/>
@@ -185,17 +181,26 @@
                                                 <label for="data-rg-emitter">Órgão Expedidor</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-rg-emitter' name='rg_emitter' value='{{$data->rg_emitter}}'/>
                                             </div>
+
                                         </div>
                                         <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-drivers-license">CNH</label>
-                                                <input type='text'  v-mask="'#### #### ####'" v-model="holdingData.drivers_license" placeholder="12345678901" class='w-input text-field white-background' id='data-drivers-license' name='drivers_license' value='{{$data->drivers_license}}'/>
+                                            <div class=" col-sm-12 col-lg-3">
+                                                <label for="data-pis">PIS</label>
+                                                <input type='text'   v-mask="'###.#####.##-#'" v-model="holdingData.pis" placeholder="123.12345.12-1" class='w-input text-field white-background' id='data-pis' name='pis' value='{{$data->pis}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-4">
+                                            <div class=" col-sm-12 col-lg-3">
+                                                <label for="data-drivers-license">CNH</label>
+                                                <select name="drivers_license" id="data-drivers-license" class='w-input text-field white-background' v-model="holdingData.drivers_license">
+                                                    <option value="0">Não</option>
+                                                    <option value="1">Sim</option>
+                                                </select>
+                                                <!--input type='text'  v-mask="'#### #### ####'" v-model="holdingData.drivers_license" placeholder="12345678901" class='w-input text-field white-background' id='data-drivers-license' name='drivers_license' value='{{$data->drivers_license}}'/-->
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-3">
                                                 <label for="data-elector-card">Título de Eleitor</label>
                                                 <input type='text'  v-mask="'#### #### ####'" v-model="holdingData.elector_card" placeholder="1234 1234 1234" class='w-input text-field white-background' id='data-elector-card' name='elector_card' value='{{$data->elector_card}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-4">
+                                            <div class=" col-sm-12 col-lg-3">
                                                 <label for="data-veteran-card">Certificado de Reservista</label>
                                                 <input type='text'   v-mask="'##.###.#####-#'" v-model="holdingData.veteran_card" placeholder="12.123.12345-1" class='w-input text-field white-background' id='data-veteran-card' name='veteran_card' value='{{$data->veteran_card}}'/>
                                             </div>
@@ -209,16 +214,82 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-natural-city">Cidade</label>
+                                                <label for="data-natural-city">*Cidade</label>
                                                 <input type='text' class='w-input text-field white-background' name='natural_city' id='data-natural-city' value='{{$data->natural_city}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-natural-state">Estado</label>
+                                                <label for="data-natural-state">*Estado</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-natural-state' name='natural_state' value='{{$data->natural_state}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-natural-country">País</label>
+                                                <label for="data-natural-country">*País</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-natural-country' name='natural_country' value='{{$data->natural_country}}'/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card elegant shadow large-header margin-top-30" >
+                                    <h5>Família</h5>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class=" col-sm-12 col-lg-2">
+                                                <label for="data-civil-state">Estado Civil</label>
+                                                <select name="civil_state" id="data-civil-state" class="w-input text-field white-background">
+                                                    <!--option value="married">Casado</option>
+                                                    <option value="single">Solteiro</option>
+                                                    <option value="stable">União Estável</option-->
+                                                        <option value='1' @if ($data->civil_state=='1') selected @endif>Solteiro</option>
+                                                        <option value='2' @if ($data->civil_state=='2') selected @endif>Casado</option>
+                                                        <option value='3' @if ($data->civil_state=='3') selected @endif>Divorciado</option>
+                                                        <option value='4' @if ($data->civil_state=='4') selected @endif>Viuvo</option>
+                                                        <option value='5' @if ($data->civil_state=='5') selected @endif>Concubinato</option>
+                                                        <option value='6' @if ($data->civil_state=='6') selected @endif>Separado</option>
+                                                        <option value='7' @if ($data->civil_state=='7') selected @endif>Uniao estavel</option>
+                                                        <option value='9' @if ($data->civil_state=='9') selected @endif>Outros</option>
+                                                </select>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-4">
+                                                <label for="data-spouse-name">Nome do Conjuge</label>
+                                                <input type='text' class='w-input text-field white-background' id='data-spouse-name' name='spouse_name' value='{{$data->spouse_name}}'/>
+                                            </div>
+                                            <!--div class=" col-sm-12 col-lg-5">
+                                                <label for="data-spouse-job">Profissão do Conjuge</label>
+                                                <input type='text' class='w-input text-field white-background' id='data-spouse-job' name='spouse_job' value='{{$data->spouse_job}}'/>
+                                            </div-->
+                                            <div class=" col-sm-12 col-lg-3">
+                                                <label for="data-children-amount">Numero de Filhos</label>
+                                                <input type='number' min=0  max=30 class='w-input text-field white-background' id='data-children-amount' name='children_amount' v-model='holdingData.children_amount' value='{{$data->children_amount}}'/>
+                                            </div>
+                                            <div v-show='holdingData.children_amount>0' class=" col-sm-12 col-lg-3">
+                                                <label for="data-children-age">Idades dos Filhos</label>
+                                                <input type='text' class='w-input text-field white-background' id='data-children-age' name='children_age' value='{{$data->children_age}}'  placeholder='10,11,12...'/>
+                                            </div>
+                                            <!--div v-show='holdingData.children_amount>0' class=" col-sm-12 col-lg-8">
+                                                <label for="data-children-location">Onde ficarão os fihos durante o trabalho?</label>
+                                                <input type='text' class='w-input text-field white-background' id='data-children-location' name='children_location' value='{{$data->children_location}}'/>
+                                            </div-->
+                                        </div>
+                                        <div class="row">
+                                            <div class="row margin-top-10">
+                                                <div class=" col-sm-12 col-lg-8">
+                                                    <label for="data-mother-name">*Nome da Mãe</label>
+                                                    <input type='text' class='w-input text-field white-background' id='data-mother-name' name='mother_name' value='{{$data->mother_name}}'/>
+                                                </div>
+                                                <div class=" col-sm-12 col-lg-4">
+                                                    <label for="data-mother-dob">*Data de nascimento da Mãe</label>
+                                                    <input type='date' class='w-input text-field white-background' id='data-mother-dob' name='mother_dob' value='{{$data->mother_dob}}'/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row margin-top-10">
+                                                <div class=" col-sm-12 col-lg-8">
+                                                    <label for="data-father-name">Nome do Pai</label>
+                                                    <input type='text' class='w-input text-field white-background' id='data-father-name' name='father_name' value='{{$data->father_name}}'/>
+                                                </div>
+                                                <div class=" col-sm-12 col-lg-4">
+                                                    <label for="data-father-dob">Data de nascimento do Pai</label>
+                                                    <input type='date' class='w-input text-field white-background' id='data-father-dob' name='father_dob' value='{{$data->father_dob}}'/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -228,10 +299,10 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-dob">Data de Nascimento</label>
+                                                <label for="data-dob">*Data de Nascimento</label>
                                                 <input type='date' class='w-input text-field white-background' id='data-dob' name='dob' value='{{$data->dob}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-4">
+                                            <!--div class=" col-sm-12 col-lg-4">
                                                 <label for="data-gender">Genero</label>
                                                 <select name="gender" id="data-gender" class="w-input text-field white-background">
                                                     <option value="m" @if ($data->gender=='m') selected @endif>Masculino</option>
@@ -256,7 +327,7 @@
                                             <div class=" col-sm-12 col-lg-6">
                                                 <label for="data-weight">Peso</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-weight' name='weight' value='{{$data->weight}}'/>
-                                            </div>
+                                            </div-->
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class=" col-sm-12 col-lg-8">
@@ -267,19 +338,19 @@
                                                 </select>
                                             </div>
                                             <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4">
-                                                <label for="data-arrival-date">Data de Chegada</label>
+                                                <label for="data-arrival-date">*Data de Chegada</label>
                                                 <input type='date' class='w-input text-field white-background' id='data-arrival-date' name='arrival_date' value='{{$data->arrival_date}}'/>
                                             </div>
                                             <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4 margin-top-10">
-                                                <label for="data-foreign-register">Registro de Estrangeiro</label>
+                                                <label for="data-foreign-register">*Registro de Estrangeiro</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-foreign-register' name='foreign_register' value='{{$data->foreign_register}}'/>
                                             </div>
                                             <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4 margin-top-10">
-                                                <label for="data-foreign-emitter">Orgão Emissor</label>
+                                                <label for="data-foreign-emitter">*Orgão Emissor</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-foreign-emitter' name='foreign_emitter' value='{{$data->foreign_emitter}}'/>
                                             </div>
                                             <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4 margin-top-10">
-                                                <label for="data-visa-expiration">Validade do Visto</label>
+                                                <label for="data-visa-expiration">*Validade do Visto</label>
                                                 <input type='date' class='w-input text-field white-background' id='data-visa-expiration' name='visa_expiration' value='{{$data->visa_expiration}}'/>
                                             </div>                                    
                                         </div>
@@ -292,7 +363,7 @@
                                                 </select>
                                             </div>
                                             <div v-show='holdingData.deficiency==1' class=" col-sm-12 col-lg-4">
-                                                <label for="data-deficiency-id">Tipo de deficiencia</label>
+                                                <label for="data-deficiency-id">*Tipo de deficiencia</label>
                                                 <select class='w-input text-field white-background' id='data-deficiency-id' name='deficiency_id'>
                                                     <option value=''>Nenhuma</option>
                                                     @foreach($deficiencies as $deficiency)
@@ -301,92 +372,276 @@
                                                 </select>
                                             </div>
                                             <div v-show='holdingData.deficiency==1' class="col-sm-12 col-lg-4">
-                                                <label for="data-cid">CID</label>
+                                                <label for="data-cid">*CID</label>
                                                 <input type='text' class='w-input text-field white-background' id='data-cid' name='cid' value='{{$data->cid}}'/>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <label for="data-worked-earlier-at-lunelli">Trabalhou anteriormente na Lunelli?</label>
+                                                <select class='w-input text-field white-background'  name='worked_earlier_at_lunelli' id='data-worked-earlier-at-lunelli'>
+                                                    <option value="0" @if($data->worked_earlier_at_lunelli==0) selected @endif>Não</option>
+                                                    <option value="1" @if($data->worked_earlier_at_lunelli==1) selected @endif>Sim</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <label for="data-worked-earlier-at-lunelli-period-start">Início</label>
+                                                <input class='w-input text-field white-background' type='date' value="{{$data->lunelli_earlier_work_period_start}}" name='lunelli_earlier_work_period_start' id='data-lunelli-earlier-work-period-start'/>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <label for="data-worked-earlier-at-lunelli-period-end">Fim</label>
+                                                <input class='w-input text-field white-background' type='date' value="{{$data->lunelli_earlier_work_period_end}}" name='lunelli_earlier_work_period_end' id='data-worked-earlier-at-lunelli-period-end'/>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-lg-12">
+                                                <label for="data-lunelli-family">Possui parentes ou conhecidos que trabalham na Lunelli? Informe o nome:</label>
+                                                <input class='w-input text-field white-background' type='text'  value="{{$data->lunelli_family}}" name='lunelli_family' id='data-lunelli-family'/>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-lg-6">
+                                                <label for="data-time-living-in-sc">Há quanto tempo vive no endereço atual?</label>
+                                                <input class='w-input text-field white-background' type='text' value="{{$data->time_living_in_sc}}" name='time_living_in_sc' id='data-time-living-in-sc'/>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label for="data-cities-lived-before">Em que cidades viveu anteriormente?</label>
+                                                <input class='w-input text-field white-background' type='text' value="{{$data->cities_lived_before}}" name='cities_lived_before' id='data-cities-lived-before'/>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-lg-6">
+                                                <label for="data-living-with">Mora com Quem?</label>
+                                                <input class='w-input text-field white-background' type='text' value="{{$data->living_with}}" name='living_with' id='data-living-with'/>
+                                            </div>
+                                            <!--div class="col-lg-6">
+                                                <label for="data-living-with-professions">5. Qual a profissão das pessoas que moram com você?</label>
+                                                <input class='w-input text-field white-background' type='text' value="{{$data->living_with_professions}}" name='living_with_professions' id='data-living-with-professions'/>
+                                            </div-->
+                                        </div>
+                                                
+                                        <div class="row margin-top-10">
+                                            <div class="col-lg-12">
+                                                <label for="data-work-commute">Como pretende se deslocar até a empresa?</label>
+                                                <input class='w-input text-field white-background' type='text' value="{{$data->work_commute}}" name='work_commute' id='data-work-commute'/>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-lg-12">
+                                                <label for="data-pretended-salary">*Pretensão salarial (mensal) em reais</label>
+                                                <input class='w-input text-field white-background' type='text' value="{{$data->pretended_salary}}" name='pretended_salary' id='data-pretended-salary'/>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-top-10">
+                                            <div class="col-lg-12">
+                                                <label for="data-prefered-work-period">Turno de Preferência</label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input style='float:left;margin-top:5px;' type='checkbox' v-model="holdingData.prefered_work_period" value="1" name='prefered_work_period[]' id='data-prefered-work-period1'/>
+                                                <label style='float:left;font-weight:normal;font-size:10pt;' for='data-prefered-work-period1'>1º Turno</label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input style='float:left;margin-top:5px;'  type='checkbox' v-model="holdingData.prefered_work_period" value="2" name='prefered_work_period[]' id='data-prefered-work-period2'/>
+                                                <label style='float:left;font-weight:normal;font-size:10pt;' for="data-prefered-work-period2">2º Turno</label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input style='float:left;margin-top:5px;'  type='checkbox' v-model="holdingData.prefered_work_period" value="3" name='prefered_work_period[]' id='data-prefered-work-period3'/>
+                                                <label style='float:left;font-weight:normal;font-size:10pt;' for="data-prefered-work-period3">3º Turno</label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input style='float:left;margin-top:5px;'  type='checkbox' v-model="holdingData.prefered_work_period" value="4" name='prefered_work_period[]' id='data-prefered-work-period4'/>
+                                                <label style='float:left;font-weight:normal;font-size:10pt;' for="data-prefered-work-period4">Horário Comercial</label>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
+
                             </div>
 
-                            <div class='tab-pane fade' v-bind:class="{ active: isItMe('schooling-data') , show: isItMe('schooling-data') }" id="schooling">
-                                <div class="row" style='margin-top:-30px;'>
-                                    <div class="col-2">
-                                        <button class="btn btn-default" v-on:click='addSchooling'   type='button'>Adicionar</button>
+                            <div class='tab-pane fade padding-top-10' v-bind:class="{ active: isItMe('schooling-data') , show: isItMe('schooling-data') }" id="schooling">
+
+
+                                <div class="card elegant shadow large-header " >
+                                    <h5>Áreas de Interesse</h5>
+                                    <div class="card-body">
+
+                                        <div class="row margin-top-10">
+                                            <div class="col-sm-12">
+                                                <template v-for='(tag,tagIdx) in filteredTags'>
+                                                    <template v-if="tagIdx<8">
+                                                        <b v-if="tagIdx==0">
+                                                            @{{tag.name}} &nbsp
+                                                        </b>
+                                                        <span v-else>
+                                                            @{{tag.name}} &nbsp
+                                                        </span>
+                                                    </template>
+                                                </template>
+                                                &nbsp
+                                            </div>
+
+                                            <div class=" col-sm-12 margin-top-10">
+                                                <input id='data-interests' name='interests' type='hidden' value={{urlencode(json_encode($data->interests->toArray()))}}>
+                                                <ul class='interests-holder' id='interests-holder' v-on:mousedown.stop.prevent="targetInterestsInputShow" v-on:mouseup.stop.prevent="targetInterestsInputFocus" >
+                                                    <template v-for='(tag,idx) in selectedTags'>
+                                                        <li><span  class='badge'>@{{tag.name}} <i class="fa fa-times-circle" v-on:click="removeTag(idx)"></i></span></li>
+                                                    </template>
+                                                    <li  v-show='interestInput' >
+                                                        <input 
+                                                            type="text" 
+                                                            v-model="currentInterest" 
+                                                            :style="currentInterestSize" 
+                                                            class='interests-input' 
+                                                            id='interests-input' 
+                                                            v-on:blur='targetInterestsInputHide' 
+                                                            v-on:keyup.prevent.stop="filterTags" 
+                                                            v-on:keydown.stop.exact.backspace="if (currentInterest.length==0) removeTag(selectedTags.length-1)" 
+                                                            v-on:keydown.prevent.stop.tab="selectTag()" 
+                                                            v-on:keydown.prevent.stop.enter="selectTag()"
+                                                        >
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <template v-for='(schooling,index) in schoolings'>
-                                    <div class="row">
-                                        <div class="col">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                        </div>
-                                    </div>
-                                    <div class="card elegant shadow large-header margin-top-30">
-                                        <h5>#@{{index+1}}</h5>
-                                        <div class="card-body">
-                                            <button class="btn btn-danger" v-on:click='excludeSchooling(index)' type='button'>
-                                                Excluir
-                                            </button>
-    
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg-6">
-                                                    <label :for="'schooling-formation-'+index">Formação</label>
-                                                    <select :id="'schooling-formation'+index" class="w-input text-field white-background" v-model="schooling.formation">
-                                                        <template v-for="(sformation,sfidx) in schooling_formation">
-                                                            <option :value="sfidx" :selected='validateKey(sfidx,schooling.formation)'>
-                                                                @{{sformation}}
-                                                            </option>
-                                                        </template>
-                                                    </select>
-                                                </div>
-                                                <div class=" col-sm-12 col-lg-6">
-                                                    <label :for="'schooling-status'+index">Status</label>
-                                                    <select :id="'schooling-status'+index" class="w-input text-field white-background" v-model="schooling.status">
-                                                        <template v-for="(sstatus,ssidx) in schooling_status">
-                                                            <option :value="ssidx" :selected='validateKey(ssidx,schooling.status)'>
-                                                                @{{sstatus}}
-                                                            </option>
-                                                        </template>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg-6">
-                                                    <label :for="'schooling-course'+index">Curso</label>
-                                                    <input type='text' class='w-input text-field white-background' :id="'schooling-course-'+index" v-model="schooling.course" />
-                                                </div>
-                                                <div class=" col-sm-12 col-lg-6">
-                                                    <label for="schooling-grade">Grau</label>
-                                                    <select :id="'schooling-grade'+index" class="w-input text-field white-background" v-model="schooling.grade">
-                                                        <template v-for="(sgrade,sgidx) in schooling_grades">
-                                                            <option :value="sgidx" :selected='validateKey(sgidx,schooling.grade)'>
-                                                                @{{sgrade}}
-                                                            </option>
-                                                        </template>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg-6">
-                                                    <label :for="'schooling-institution'+index">Instituição</label>
-                                                    <input type='text' class='w-input text-field white-background' :id="'schooling-institution'+index" v-model='schooling.institution' />
-                                                </div>
-                                                <div class=" col-sm-12 col-lg-3">
-                                                    <label :for="'schooling-start'+index">Início</label>
-                                                    <input type='date' class='w-input text-field white-background text-center' :id="'schooling-start'+index"  v-model="schooling.start"
-                                                    />
-                                                </div>
-                                                <div class=" col-sm-12 col-lg-3">
-                                                    <label :for="'schooling-end'+index">Fim</label>
-                                                    <input type='date' class='w-input text-field white-background text-center' :id="'schooling-end'+index" v-model='schooling.end' />
-                                                </div>
+                                <div class="card elegant shadow large-header margin-top-30">
+                                    <h5>Habilidades/Conhecimentos</h5>
+                                    <div class="card-body">
+                                        <div class="row margin-top-30">
+                                            <div class=" col-sm-12">
+                                                <textarea name="skills" id="data-skills"  style='width: 100%;height:150px;border:1px solid #bbb;'>{{$data->skills}}</textarea>
                                             </div>
                                         </div>
                                     </div>
-                                </template>
+                                </div>
+
+
+                                <div class="card elegant shadow large-header margin-top-30">
+                                    <h5>Idiomas</h5>
+                                    <div class="card-body">
+                                        <div class="row" >
+                                            <div class="col">
+                                                <button class="btn btn-default" v-on:click="addLang" type='button'>Adicionar</button>
+                                            </div>
+                                        </div>
+                                        <input type='hidden' name='selected_languages' :value='stringedLanguages'/>
+                                        <template v-for="(sellang,idx) in selected_languages">
+                                            <div class="card  margin-top-10">
+                                                <div class="card-body">
+        
+                                                    <div class="row margin-top-10">
+                                                        <div class="col-lg-3">
+                                                            <label>Lingua</label>
+                                                            <select class="form-control" v-model='sellang.id'>
+                                                                <option value="">Selecione</option>
+                                                                <template v-for='lang in languages'>
+                                                                    <option :value="lang.id">@{{lang.name}}</option>
+                                                                </template>
+                                                            </select>
+                                                        </div>
+                    
+                                                        <div class="col-lg-3">
+                                                            <label>Nivel</label>
+                                                            <select v-model='sellang.pivot.level' class='form-control'>
+                                                                <option value="basic">Básico</option>
+                                                                <option value="intermediary">Intermediário</option>
+                                                                <option value="advanced">Avançado</option>
+                                                                <option value="natural">Fluente</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-3 margin-top-20">
+                                                            <button class="btn btn-danger" v-on:click="selected_languages.splice(idx,1)" type='button'>Remover</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                                <div class="card elegant shadow large-header margin-top-30">
+                                    <h5>Cursos</h5>
+                                    <div class="card-body">
+
+                                        <div class="row">
+                                            <div class="col-2">
+                                                <button class="btn btn-default" v-on:click='addSchooling'   type='button'>Adicionar</button>
+                                            </div>
+                                        </div>
+                                        <template v-for='(schooling,index) in schoolings'>
+                                            <div class="row">
+                                                <div class="col">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                </div>
+                                            </div>
+                                            <div class="card margin-top-30">
+                                                <div class="card-body">
+                                                    <button class="btn btn-danger" v-on:click='excludeSchooling(index)' type='button'>
+                                                        Excluir
+                                                    </button>
+            
+                                                    <div class="row margin-top-10">
+                                                        <div class=" col-sm-12 col-lg-6">
+                                                            <label :for="'schooling-formation-'+index">*Formação</label>
+                                                            <select :id="'schooling-formation'+index" class="w-input text-field white-background" v-model="schooling.formation">
+                                                                <template v-for="(sformation,sfidx) in schooling_formation">
+                                                                    <option :value="sfidx" :selected='validateKey(sfidx,schooling.formation)'>
+                                                                        @{{sformation}}
+                                                                    </option>
+                                                                </template>
+                                                            </select>
+                                                        </div>
+                                                        <div class=" col-sm-12 col-lg-6">
+                                                            <label :for="'schooling-status'+index">*Status</label>
+                                                            <select :id="'schooling-status'+index" class="w-input text-field white-background" v-model="schooling.status">
+                                                                <template v-for="(sstatus,ssidx) in schooling_status">
+                                                                    <option :value="ssidx" :selected='validateKey(ssidx,schooling.status)'>
+                                                                        @{{sstatus}}
+                                                                    </option>
+                                                                </template>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row margin-top-10">
+                                                        <div class=" col-sm-12 col-lg-6">
+                                                            <label :for="'schooling-course'+index">*Curso</label>
+                                                            <input type='text' class='w-input text-field white-background' :id="'schooling-course-'+index" v-model="schooling.course" />
+                                                        </div>
+                                                        <div class=" col-sm-12 col-lg-6">
+                                                            <label for="schooling-grade">*Grau</label>
+                                                            <select :id="'schooling-grade'+index" class="w-input text-field white-background" v-model="schooling.grade">
+                                                                <template v-for="(sgrade,sgidx) in schooling_grades">
+                                                                    <option :value="sgidx" :selected='validateKey(sgidx,schooling.grade)'>
+                                                                        @{{sgrade}}
+                                                                    </option>
+                                                                </template>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row margin-top-10">
+                                                        <div class=" col-sm-12 col-lg-6">
+                                                            <label :for="'schooling-institution'+index">*Instituição</label>
+                                                            <input type='text' class='w-input text-field white-background' :id="'schooling-institution'+index" v-model='schooling.institution' />
+                                                        </div>
+                                                        <div class=" col-sm-12 col-lg-3">
+                                                            <label :for="'schooling-start'+index">*Início</label>
+                                                            <input type='date' class='w-input text-field white-background text-center' :id="'schooling-start'+index"  v-model="schooling.start"
+                                                            />
+                                                        </div>
+                                                        <div class=" col-sm-12 col-lg-3">
+                                                            <label :for="'schooling-end'+index">Fim</label>
+                                                            <input type='date' class='w-input text-field white-background text-center' :id="'schooling-end'+index" v-model='schooling.end' />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
                             </div>
         
                             <div class='tab-pane fade' v-bind:class="{ active: isItMe('experience-data') , show: isItMe('experience-data') }" id="experience">
@@ -440,168 +695,15 @@
                                 </template>
                             </div>
 
-                            <div class='tab-pane fade'   v-bind:class="{ active: isItMe('language-data') , show: isItMe('language-data') }" id="language-data">
-                                <div class="row" style='margin-top:-30px;'>
-                                    <div class="col">
-                                        <button class="btn btn-default" v-on:click="addLang" type='button'>Adicionar</button>
-                                    </div>
-                                </div>
-                                <input type='hidden' name='selected_languages' :value='stringedLanguages'/>
-                                <template v-for="(sellang,idx) in selected_languages">
-                                    <div class="card elegant shadow large-header margin-top-30">
-                                        <div class="card-body">
-
-                                            <div class="row margin-top-10">
-                                                <div class="col-lg-3">
-                                                    <label>Lingua</label>
-                                                    <select class="form-control" v-model='sellang.id'>
-                                                        <option value="">Selecione</option>
-                                                        <template v-for='lang in languages'>
-                                                            <option :value="lang.id">@{{lang.name}}</option>
-                                                        </template>
-                                                    </select>
-                                                </div>
-            
-                                                <div class="col-lg-3">
-                                                    <label>Nivel</label>
-                                                    <select v-model='sellang.pivot.level' class='form-control'>
-                                                        <option value="basic">Básico</option>
-                                                        <option value="intermediary">Intermediário</option>
-                                                        <option value="advanced">Avançado</option>
-                                                        <option value="natural">Fluente</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-3 margin-top-20">
-                                                    <button class="btn btn-danger" v-on:click="selected_languages.splice(idx,1)" type='button'>Remover</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>
+                            <!--div class='tab-pane fade'   v-bind:class="{ active: isItMe('language-data') , show: isItMe('language-data') }" id="language-data">
                             </div>
                             <div class='tab-pane fade'   v-bind:class="{ active: isItMe('family-data') , show: isItMe('family-data') }" id="family-data">
-                                <div class="card elegant shadow large-header" style='margin-top:-30px;'>
-                                    <h5>Conjuge e Filhos</h5>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class=" col-sm-12 col-lg-2">
-                                                <label for="data-civil-state">Estado Civil</label>
-                                                <select name="civil_state" id="data-civil-state" class="w-input text-field white-background">
-                                                    <!--option value="married">Casado</option>
-                                                    <option value="single">Solteiro</option>
-                                                    <option value="stable">União Estável</option-->
-                                                        <option value='1' @if ($data->civil_state=='1') selected @endif>Solteiro</option>
-                                                        <option value='2' @if ($data->civil_state=='2') selected @endif>Casado</option>
-                                                        <option value='3' @if ($data->civil_state=='3') selected @endif>Divorciado</option>
-                                                        <option value='4' @if ($data->civil_state=='4') selected @endif>Viuvo</option>
-                                                        <option value='5' @if ($data->civil_state=='5') selected @endif>Concubinato</option>
-                                                        <option value='6' @if ($data->civil_state=='6') selected @endif>Separado</option>
-                                                        <option value='7' @if ($data->civil_state=='7') selected @endif>Uniao estavel</option>
-                                                        <option value='9' @if ($data->civil_state=='9') selected @endif>Outros</option>
-                                                </select>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-5">
-                                                <label for="data-spouse-name">Nome do Conjuge</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-spouse-name' name='spouse_name' value='{{$data->spouse_name}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-5">
-                                                <label for="data-spouse-job">Profissão do Conjuge</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-spouse-job' name='spouse_job' value='{{$data->spouse_job}}'/>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-2">
-                                                <label for="data-children-amount">Numero de Filhos</label>
-                                                <input type='number' min=0  max=10 class='w-input text-field white-background' id='data-children-amount' name='children_amount' v-model='holdingData.children_amount' value='{{$data->children_amount}}'/>
-                                            </div>
-                                            <div v-show='holdingData.children_amount>0' class=" col-sm-12 col-lg-2">
-                                                <label for="data-children-age">Idades dos Filhos</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-children-age' name='children_age' value='{{$data->children_age}}'  placeholder='10,11,12...'/>
-                                            </div>
-                                            <div v-show='holdingData.children_amount>0' class=" col-sm-12 col-lg-8">
-                                                <label for="data-children-location">Onde ficarão os fihos durante o trabalho?</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-children-location' name='children_location' value='{{$data->children_location}}'/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="card elegant shadow large-header margin-top-30">
-                                    <h5>Pais</h5>
-                                    <div class="card-body">
-
-                                        <div class="row">
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg-8">
-                                                    <label for="data-mother-name">Nome da Mãe</label>
-                                                    <input type='text' class='w-input text-field white-background' id='data-mother-name' name='mother_name' value='{{$data->mother_name}}'/>
-                                                </div>
-                                                <div class=" col-sm-12 col-lg-4">
-                                                    <label for="data-mother-dob">Data de nascimento da Mãe</label>
-                                                    <input type='date' class='w-input text-field white-background' id='data-mother-dob' name='mother_dob' value='{{$data->mother_dob}}'/>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg-8">
-                                                    <label for="data-father-name">Nome do Pai</label>
-                                                    <input type='text' class='w-input text-field white-background' id='data-father-name' name='father_name' value='{{$data->father_name}}'/>
-                                                </div>
-                                                <div class=" col-sm-12 col-lg-4">
-                                                    <label for="data-father-dob">Data de nascimento do Pai</label>
-                                                    <input type='date' class='w-input text-field white-background' id='data-father-dob' name='father_dob' value='{{$data->father_dob}}'/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            </div-->
                     
                             <!--div class='tab-pane fade' v-bind:class="{ active: isItMe('documents') , show: isItMe('documents') }" id="documents">
                             </div-->
 
-                            <div class="tab-pane fade" v-bind:class="{ active: isItMe('extra') , show: isItMe('extra') }" id="extra">
-                                <div class="card elegant shadow large-header " style='margin-top:-30px;'>
-                                    <h5>Informações Adicionais</h5>
-                                    <div class="card-body">
-
-                                        <div class="row margin-top-10">
-                                            <div class=" col-sm-12">
-                                                <label for="data-interests">Interesses</label>
-                                                <input id='data-interests' name='interests' type='hidden' value={{urlencode(json_encode($data->interests->toArray()))}}>
-                                                <ul class='interests-holder' id='interests-holder' v-on:mousedown.stop.prevent="targetInterestsInputShow" v-on:mouseup.stop.prevent="targetInterestsInputFocus" >
-                                                    <template v-for='(tag,idx) in selectedTags'>
-                                                        <li><span  class='badge'>@{{tag.name}} <i class="fa fa-times-circle" v-on:click="removeTag(idx)"></i></span></li>
-                                                    </template>
-                                                    <li  v-show='interestInput' >
-                                                        <input 
-                                                            type="text" 
-                                                            v-model="currentInterest" 
-                                                            :style="currentInterestSize" 
-                                                            class='interests-input' 
-                                                            id='interests-input' 
-                                                            v-on:blur='targetInterestsInputHide' 
-                                                            v-on:keyup.prevent.stop="filterTags" 
-                                                            v-on:keydown.stop.exact.backspace="if (currentInterest.length==0) removeTag(selectedTags.length-1)" 
-                                                            v-on:keydown.prevent.stop.tab="selectTag()" 
-                                                            v-on:keydown.prevent.stop.enter="selectTag()"
-                                                        >
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <template v-for='tag in filteredTags'>
-                                                    @{{tag.name}} &nbsp
-                                                </template>
-                                            </div>
-                                        </div>
-
-                                        <div class="row margin-top-30">
-                                            <div class=" col-sm-12">
-                                                <label for="data-skills">Habilidades</label>
-                                                <textarea name="skills" id="data-skills"  style='width: 100%;height:150px;border:1px solid #bbb;'>{{$data->skills}}</textarea>
-                                            </div>
-                                        </div>
+                            <!--div class="tab-pane fade" v-bind:class="{ active: isItMe('extra') , show: isItMe('extra') }" id="extra">
                                         
                                         <div class="row margin-top-30">
                                             <div class=" col-sm-12">
@@ -613,55 +715,7 @@
                                 </div>
                             </div>
                             <div class='tab-pane fade padding-top-10'  v-bind:class="{ active: isItMe('questionary'), show: isItMe('questionary') }" id="questionary">
-                                <div class="card elegant shadow large-header margin-top-10">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <label for="data-worked-earlier-at-lunelli">1. Trabalhou anteriormente na Lunelli?</label>
-                                                <select class='w-input text-field white-background'  name='worked_earlier_at_lunelli' id='data-worked-earlier-at-lunelli'>
-                                                    <option value="0" @if($data->worked_earlier_at_lunelli==0) selected @endif>Não</option>
-                                                    <option value="1" @if($data->worked_earlier_at_lunelli==1) selected @endif>Sim</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <label for="data-worked-earlier-at-lunelli-period-start">1.a. Início</label>
-                                                <input class='w-input text-field white-background' type='date' value="{{$data->lunelli_earlier_work_period_start}}" name='lunelli_earlier_work_period_start' id='data-lunelli-earlier-work-period-start'/>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <label for="data-worked-earlier-at-lunelli-period-end">1.b. Fim</label>
-                                                <input class='w-input text-field white-background' type='date' value="{{$data->lunelli_earlier_work_period_end}}" name='lunelli_earlier_work_period_end' id='data-worked-earlier-at-lunelli-period-end'/>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class="col-lg-6">
-                                                <label for="data-time-living-in-sc">2. Há quanto tempo vive em Santa Catarina?</label>
-                                                <input class='w-input text-field white-background' type='text' value="{{$data->time_living_in_sc}}" name='time_living_in_sc' id='data-time-living-in-sc'/>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <label for="data-cities-lived-before">3. Em que cidades viveu anteriormente?</label>
-                                                <input class='w-input text-field white-background' type='text' value="{{$data->cities_lived_before}}" name='cities_lived_before' id='data-cities-lived-before'/>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class="col-lg-6">
-                                                <label for="data-living-with">4. Mora com Quem?</label>
-                                                <input class='w-input text-field white-background' type='text' value="{{$data->living_with}}" name='living_with' id='data-living-with'/>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <label for="data-living-with-professions">5. Qual a profissão das pessoas que moram com você?</label>
-                                                <input class='w-input text-field white-background' type='text' value="{{$data->living_with_professions}}" name='living_with_professions' id='data-living-with-professions'/>
-                                            </div>
-                                        </div>
-                                                
-                                        <div class="row margin-top-10">
-                                            <div class="col-lg-12">
-                                                <label for="data-work-commute">6. Como pretende se deslocar até a empresa?</label>
-                                                <input class='w-input text-field white-background' type='text' value="{{$data->work_commute}}" name='work_commute' id='data-work-commute'/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card elegant shadow large-header margin-top-20">
+                                <!--div class="card elegant shadow large-header margin-top-20">
                                     <div class="card-body">
 
                                         <div class="row margin-top-10">
@@ -729,22 +783,10 @@
                                                 <label for="data-personal-aspects-for-betterment">12. Cite aspectos pessoais que você acredita que poderiam ser melhorados: </label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->personal_aspects_for_betterment}}" name='personal_aspects_for_betterment' id='data-personal-aspects-for-betterment'/>
                                             </div>
-                                        </div-->
-                                        <div class="row margin-top-10">
-                                            <div class="col-lg-12">
-                                                <label for="data-lunelli-family">11. Possui parentes ou conhecidos que trabalham na Lunelli? Informe o nome:</label>
-                                                <input class='w-input text-field white-background' type='text'  value="{{$data->lunelli_family}}" name='lunelli_family' id='data-lunelli-family'/>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class="col-lg-12">
-                                                <label for="data-pretended-salary">12. Pretensão salarial (mensal) em reais:</label>
-                                                <input class='w-input text-field white-background' type='text' value="{{$data->pretended_salary}}" name='pretended_salary' id='data-pretended-salary'/>
-                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card elegant shadow large-header margin-top-20">
+                                </div-->
+                                <!--div class="card elegant shadow large-header margin-top-20">
                                     <div class="card-body">
                                         <div class="row margin-top-10">
                                             <div class="col-lg-4">
@@ -786,10 +828,10 @@
                                                 <label for="data-professional-dream">15. Qual o seu sonho profissional?</label>
                                                 <input class='w-input text-field white-background' type='text' value="{{$data->professional_dream}}" name='professional_dream' id='data-professional-dream'/>
                                             </div>
-                                            <!--div class="col-lg-12">
+                                            <div class="col-lg-12">
                                                 <label for="data-personal-dream">Qual o seu sonho pessoal?</label>
                                                 <input class='w-input text-field white-background' type='text' name='personal_dream' id='data-personal-dream'/>
-                                            </div-->
+                                            </div>
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class="col-lg-12">
@@ -811,7 +853,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div--->
                             <div class='tab-pane fade padding-top-10'  v-bind:class="{ active: isItMe('success'), show: isItMe('success') }" id="success">
                                 <div class="card margin-top-30">
                                     <div class="card-body text-center">

@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-        <title>LunelliCarreiras</title>
+        <title>Lunelli</title>
 
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/img/lunelli-small-red.png') }}">
 
@@ -63,9 +63,9 @@
                                         <div class="site-branding">
                                             <a href="/" >
                                                 <img src="{{ asset('/img/grupo-lunelli-colored.png') }}" alt="brand logo"/>
-                                                <span class='logo-complement'>
+                                                <!--span class='logo-complement'>
                                                     Carreiras
-                                                </span>
+                                                </span-->
                                             </a>
                                         </div>      
                                     </div>
@@ -75,6 +75,10 @@
                                             @if(empty($logged_in))
                                                 <ul class="hedone-menu" id='welcoLogin'>
                                                     <li class="menu-item">
+                                                        <a href="/">Início</a>
+                                                    </li>
+
+                                                    <li class="menu-item">
                                                         <a href="/policy">Termos</a>
                                                     </li>
                                                     <li class="menu-item">
@@ -83,14 +87,11 @@
                                                     <li class="menu-item">
                                                         <a href="/help">Ajuda</a>
                                                     </li>
-                                                    <li class="menu-item hidden-xs">
-                                                        &nbsp
-                                                    </li>
-                                                    <li class="menu-item hidden-xs">
-                                                        &nbsp
+                                                    <li class="menu-item">
+                                                        <a href="/login">Login</a>
                                                     </li>
 
-                                                    <li class="menu-item">
+                                                    <!--li class="menu-item">
                                                         <form id='login-form' action='/login' method='post' >
                                                             <label class='visible-xs' for="">Login</label>
                                                             <div class="form-group">
@@ -115,10 +116,14 @@
                                                     <li class="menu-item visible-xs">&nbsp</li>
                                                     <li class="menu-item hidden-xs" >
                                                         <a href='/register' class="btn btn-green"  id='register'>Registre-se</a>
-                                                    </li>
+                                                    </li-->
                                                 </ul>
                                             @else 
                                                 <ul class="hedone-menu" id='welcoLogin'>
+                                                    <li class="menu-item">
+                                                        <a href="/">Início</a>
+                                                    </li>
+
                                                     @if($role=='admin')
                                                         <li class="menu-item">
                                                             <a href="/home">Admin</a>

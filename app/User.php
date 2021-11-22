@@ -3,14 +3,23 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\ResetPassword as ResetPasswordNotification;
+
 
 class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
+
+    public function sendPasswordResetNotification($token)
+    {
+        // Your your own implementation.
+        $this->notify(new ResetPasswordNotification($token,$this->email));
+    }
 
     /**
      * The attributes that are mass assignable.

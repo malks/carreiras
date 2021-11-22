@@ -16,9 +16,9 @@
                             <div class="row">
                                 <div class="col">
                                     <img style='max-width:200px;float:left;' src="{{asset('img/grupo-lunelli-colored.png')}}" alt="Lunelli">
-                                    <span class="logo-complement">
+                                    <!--span class="logo-complement">
                                         Carreiras
-                                    </span>
+                                    </span-->
                                 </div>
                             </div>
                             <div class="row margin-top-10">
@@ -64,7 +64,7 @@
                                 <div class="col">
                                     <p>Natural de {{$data->natural_city}} - {{$data->natural_state}}, {{$data->natural_country}}</p>
                                     <p>Reside em {{$data->address_city}} - {{$data->address_state}}, {{$data->address_country}}</p>
-                                    <p>{{$data->email}} - {{(!empty($data->ddd_mobile)) ? $data->ddd_mobile : $data->ddd_phone}} {{(!empty($data->mobile)) ? substr($data->mobile,0,4)."-".substr($data->mobile,4,4) : substr($data->phone,0,4)."-".substr($data->phone,4,4)}}</p>    
+                                    <p>{{$data->email}} - {{(!empty($data->ddd_mobile)) ? $data->ddd_mobile : $data->ddd_phone}} {{(!empty($data->mobile)) ? substr($data->mobile,0,1)."-".substr($data->mobile,1,4)."-".substr($data->mobile,5,4) : substr($data->phone,0,4)."-".substr($data->phone,4,4)}}</p>    
                                 </div>
                             </div>
 
@@ -82,14 +82,14 @@
                             </div>
                             <div class="row margin-top-10" >
                                 <div class="col">
-                                    CNH: {{$data->drivers_license}}
+                                    CNH: {{$yes_no[$data->drivers_license | 0]}}
                                 </div>
                             </div>
-                            <div class="row margin-top-10" >
+                            <!--div class="row margin-top-10" >
                                 <div class="col">
                                     Carteira de Trabalho: {{$data->worker_card}} - {{$data->worker_card_series}} - {{$data->worker_card_digit}}
                                 </div>
-                            </div>
+                            </div-->
                             <div class="row margin-top-10" >
                                 <div class="col">
                                     PIS: {{$data->pis}}
@@ -262,7 +262,7 @@
                             </div>
                             <div class="row margin-top-20">
                                 <div class="col">
-                                    <span>Há quanto tempo vive em Santa Catarina? </span> <span style='margin-left:5px;'>{{$data->time_living_in_sc}}</span>
+                                    <span>Há quanto tempo vive no endereço atual? </span> <span style='margin-left:5px;'>{{$data->time_living_in_sc}}</span>
                                 </div>
                             </div>
                             <div class="row margin-top-20">
@@ -272,20 +272,20 @@
                             </div>
                             <div class="row margin-top-20">
                                 <div class="col">
-                                    <span>Mora com quem? </span> <span style='margin-left:5px;'>{{$data->livint_with}}</span>
+                                    <span>Mora com quem? </span> <span style='margin-left:5px;'>{{$data->living_with}}</span>
                                 </div>
                             </div>
-                            <div class="row margin-top-20">
+                            <!--div class="row margin-top-20">
                                 <div class="col">
                                     <span>Qual a profissão das pessoas que moram com você? </span> <span style='margin-left:5px;'>{{$data->living_with_professions}}</span>
                                 </div>
-                            </div>
+                            </div-->
                             <div class="row margin-top-20">
                                 <div class="col">
                                     <span>Como pretende se deslocar até a empresa? </span> <span style='margin-left:5px;'>{{$data->work_commute}}</span>
                                 </div>
                             </div>
-                            <div class="row margin-top-20">
+                            <!--div class="row margin-top-20">
                                 <div class="col">
                                     <span>Quando foi pela última vez ao médico? </span> <span style='margin-left:5px;'>{{$carbon->parse($data->last_time_doctor)->format('d/m/Y')}}</span> 
                                     <br> 
@@ -332,10 +332,10 @@
                                     <br>
                                     <small>{{$data->personal_aspects_for_betterment}}</small>
                                 </div>
-                            </div>
+                            </div-->
                             <div class="row margin-top-20">
                                 <div class="col">
-                                    <span>Familiares na Lunelli: </span> 
+                                    <span>Familiares ou conhecidos na Lunelli: </span> 
                                     <br>
                                     <small>{{$data->lunelli_family}}</small>
                                 </div>
@@ -348,6 +348,20 @@
                                 </div>
                             </div>
                             <div class="row margin-top-20">
+                                <div class="col">
+                                    <span>Turnos de Preferência: </span> 
+                                    <br>
+                                    @if (!empty($data->prefered_work_period))
+                                        @foreach(explode(",",$data->prefered_work_period) as $k=>$work_period)
+                                            <small>{{ $work_periods[$work_period] }}</small>
+                                            @if ($k!=count(explode(",",$data->prefered_work_period))-1)
+                                            &nbsp<small> / </small>&nbsp
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                            <!--div class="row margin-top-20">
                                 <div class="col">
                                     <span>Ja trabalhou sem registro em carteira? </span> 
                                     <br>
@@ -407,7 +421,7 @@
                                     <br>
                                     <small>{{$data->what_irritates_you}}</small>
                                 </div>
-                            </div>
+                            </div-->
 
                         </div>
             

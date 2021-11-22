@@ -94,6 +94,10 @@ class LandingController extends Controller
         );
     }
 
+    public function access(){
+        return view('access');
+    }
+
     public function buscaCep(Request $request) {
         $req_cep=str_replace(["-","."],"",$request->cep);
         $address = Address::where('zip','=',$req_cep)->first();
@@ -222,6 +226,7 @@ class LandingController extends Controller
             $schooling = new Schooling;
             $data->schooling=$schooling;
         }
+        $data['prefered_work_period']=explode(",",$data['prefered_work_period']);
         
         return view('profile')->with([
             'tags'=>$tags,
@@ -306,14 +311,26 @@ $arr['what_irritates_you']="20. O que o irrita?";
         $dados['cpf'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['cpf']),0,11);
         $dados['pis'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['pis']),0,11);
         $dados['rg'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['rg']),0,16);
-        $dados['weight'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['weight']),0,6);
-        $dados['height'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['height']),0,5);
-        $dados['work_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card']),0,9);
-        $dados['work_card_series'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card_series']),0,5);
-        $dados['work_card_digit'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card_digit']),0,2);
-        $dados['elector_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['elector_card']),0,13);
-        $dados['veteran_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['veteran_card']),0,13);
+        if (!empty($dados['weight']))
+            $dados['weight'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['weight']),0,6);
+        if (!empty($dados['height']))
+            $dados['height'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['height']),0,5);
+        if (!empty($dados['work_card']))
+            $dados['work_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card']),0,9);
+        if (!empty($dados['work_card_series']))
+            $dados['work_card_series'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card_series']),0,5);
+        if (!empty($dados['work_card_digit']))
+            $dados['work_card_digit'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card_digit']),0,2);
+        if (!empty($dados['elector_card']))
+            $dados['elector_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['elector_card']),0,13);
+        if (!empty($dados['veteran_card']))
+            $dados['veteran_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['veteran_card']),0,13);
         $dados['cid'] = str_replace(['.','-',',','_','!',';'],'',$dados['cid']);
+        if (!empty($dados['prefered_work_period']))
+            $dados['prefered_work_period']=implode(",",$dados['prefered_work_period']); 
+        else
+            $dados['prefered_work_period']=""; 
+        
 
         foreach($dados as $k => $d){
             $candidate->{$k}=$d;

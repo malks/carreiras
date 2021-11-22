@@ -80,6 +80,13 @@
 
                         </form>
                     </div>
+                    <div class="col-8 offset-2">
+                        <hr>
+                    </div>
+                    <div class="col-8 offset-2">
+                        <label for="">Já tem uma conta?</label>
+                        <a href="/login" class='btn btn-block btn-success'>Faça o login</a>
+                    </div>
                 </div>
 
 

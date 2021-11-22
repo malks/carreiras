@@ -16,6 +16,9 @@
     padding-bottom:5px;
     margin-top: -10px;
 }
+.site-branding > a > img{
+    width:265px!important;
+}
 .nav-back.fixed .logo-complement{
     margin-top: 17px;
     font-size:25pt;
@@ -413,7 +416,7 @@ ul.errors:hover > li:first-child {
         margin-top: 23px;
     }
     .site-branding > a > img{
-        width:165px!important;
+        width:235px!important;
     }
 }
 

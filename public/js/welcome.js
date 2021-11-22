@@ -582,10 +582,10 @@ function validate(whichTab){
             if ($('#data-dob').val().length<10){
                 ret.push({'candidate-data': 'Data de nascimento é obrigatório'});
             }
-            if ($('#data-address-street').val().length<6 || $('#data-address-city').val().length<4 || $('#data-address-district').val().length<4 || $('#data-address-number').val().length==0 || $('#data-address-state').val().length<2 || $('#data-address-country').val().length<3 || $('#data-address-zip').val().length<10){
+            if ($('#data-address-street').val().length<4 || $('#data-address-city').val().length<4 || $('#data-address-district').val().length<4 || $('#data-address-state').val().length<2 || $('#data-address-country').val().length<3 || $('#data-address-zip').val().length<10){
                 ret.push({'candidate-data': 'Endereço residencial é obrigatório'});
             }
-            if ($('#data-cpf').val().length!=14 ||  $('#data-rg').val().length<6 ){
+            if ($('#data-cpf').val().length!=14){
                 ret.push({'candidate-data': 'Documentos são obrigatórios'});
             }
             if ( $('#data-natural-city').val().length<4 || $('#data-natural-state').val().length<2 || $('#data-natural-country').val().length<3 ){
@@ -601,6 +601,13 @@ function validate(whichTab){
                     ret.push({'candidate-data': 'Se você tem alguma deficiência, os dados relacionados são obrigatórios'});
                 }
             }
+            if ( $('#data-mother-name').val().length<3 || 
+                 $('#data-mother-dob').val().length<2 ){
+                ret.push({'candidate-data': 'Dados da mãe obrigatórios'});
+            }
+            if ($('#data-pretended-salary').val().length<2 ){
+                ret.push({'candidate-data': 'Pretensão salarial origatória'});
+            }
             break;
         case 'schooling-data':
             if ($('#schooling-formation0')[0]==undefined || 
@@ -612,22 +619,18 @@ function validate(whichTab){
                 $('#schooling-start0').val()==null ||
                 $('#schooling-end0').val()==null
             ){
-                ret.push({'schooling-data': 'Ao menos uma formação necessária. Preencha todos os dados de suas formações.'});
+                ret.push({'schooling-data': 'Ao menos uma formação necessária. As formações precisam ter todos os dados preenchidos.'});
             }
+            if ($('#interests-holder .badge')[0]==undefined)
+                ret.push({'extra': 'Informe ao menos uma área de interesse'});
             break;
         case 'experience-data':
             break;
         case 'language-data':
             break;
         case 'family-data':
-            if ( $('#data-mother-name').val().length<3 || 
-                 $('#data-mother-dob').val().length<2 ){
-                ret.push({'family-data': 'Dados da mãe obrigatórios'});
-            }
             break;
         case 'extra':
-            if ($('#interests-holder .badge')[0]==undefined)
-                ret.push({'extra': 'Informe ao menos um interesse'});
             break;
     }
 
@@ -644,9 +647,9 @@ function jumpTab(current){
             ret='experience-data';
             break;
         case 'experience-data':
-            ret='language-data';
+            ret='success';
             break;
-        case 'language-data':
+        /*case 'language-data':
             ret='family-data';
             break;
         case 'family-data':
@@ -657,7 +660,7 @@ function jumpTab(current){
             break;
         case 'questionary':
             ret='success';
-            break;
+            break;*/
         }
     window.scroll(0,0);
 
@@ -925,6 +928,8 @@ function getCustomData(screenNameHelper,firstTab){
         customData.selected_languages=JSON.parse(document.getElementById('selected-languages').value);
         customData.languages=JSON.parse(document.getElementById('languages').value);
         customData.holdingData=JSON.parse(decodeURIComponent(profile_data).replace(/\+/g," "));
+        if (customData.holdingData.prefered_work_period==undefined || customData.holdingData.prefered_work_period.length==0)
+            customData.holdingData.prefered_work_period=[];
     }
     console.log(customData);
     return customData;

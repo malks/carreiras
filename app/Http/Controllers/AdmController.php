@@ -832,6 +832,13 @@ class AdmController extends Controller
             '1'=>'Sim'
         ];
 
+        $work_periods=[
+            '1'=>'1º Turno',
+            '2'=>'2º Turno',
+            '3'=>'3º Turno',
+            '4'=>'Horário comercial',
+        ];
+
         return view('adm.candidates.print')->with([
             'data'=>$data,
             'civil_states'=>$civil_states,
@@ -839,6 +846,7 @@ class AdmController extends Controller
             'schooling_grades'=>$schooling_grades,
             'schooling_formation'=>$schooling_formation,
             'language_levels'=>$language_levels,
+            'work_periods'=>$work_periods,
             'yes_no'=>$yes_no,
             'carbon'=>new Carbon,
             'mask'=>function ($a,$b)  { return  $this->mask($a,$b); },
