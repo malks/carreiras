@@ -425,3 +425,9 @@ ul.errors:hover > li:first-child {
         margin-top: 7px!important;
     }
 }
+
+@media (min-width: 768px) {
+    .animatedParent.animateOnce > p.head-subtitle {
+        font-size: 80px!important;
+    }
+}
