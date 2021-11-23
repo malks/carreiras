@@ -128,7 +128,7 @@
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-3">
+                                            <div class=" col-sm-12 col-lg-2">
                                                 <label for="data-address-city">*Cidade</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_city" id='data-address-city' name='address_city' value='{{$data->address_city}}'/>
                                             </div>
@@ -144,7 +144,7 @@
                                                 <label for="data-address-complement">Complemento</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_complement" name='address_complement' id='data-address-complement' value='{{$data->address_complement}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-1">
+                                            <div class=" col-sm-12 col-lg-2">
                                                 <label for="data-address-number">Numero</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_number" name='address_number' id='data-address-number' value='{{$data->address_number}}'/>
                                             </div>
