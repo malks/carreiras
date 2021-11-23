@@ -573,7 +573,7 @@ function validate(whichTab){
             if ($('#data-name').val().length<3){
                 ret.push({'candidate-data': 'Nome completo é necessário'});
             }
-            if ($('#data-email').val().match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)==null){
+            if ($('#data-email').val().match(/^[a-z0-9._]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)==null){
                 ret.push({'candidate-data': 'E-mail precisa ser válido'});
             }
             if (($('#data-ddd-phone').val().length<2 || $('#data-phone').val().length<9) && ($('#data-ddd-mobile').val().length<2 || $('#data-mobile').val().length<10 ) ){
