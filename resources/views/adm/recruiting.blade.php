@@ -242,7 +242,7 @@
                                         </tr>
         
                                         <template v-for="(subscription,subx) in runData.subscriptions">
-                                            <tr v-show="candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription)" class='select-sized'>
+                                            <tr v-if="candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription)" class='select-sized'>
                                                 <td>@{{ getCandidate(subscription).name }}</td>
                                                 <td>@{{ getCandidate(subscription).address_city }}</td>
                                                 <td>@{{ getCandidate(subscription).address_state }}</td>

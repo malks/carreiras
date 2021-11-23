@@ -1335,6 +1335,11 @@ class AdmController extends Controller
     }
 
     public function candidatesDestroy (Request $request) {
+        $subs=Subscribed::whereIn('candidate_id',explode(",",$request->ids))->get();
+        foreach ($subs as $sub){
+            DB::table('subscribed_has_states')->where('subscribed_id','=',$sub->id)->delete();
+        }
+        Subscribed::whereIn('candidate_id',explode(",",$request->ids))->delete();
         Candidate::whereIn('id',explode(",",$request->ids))->delete();
         return;
     }

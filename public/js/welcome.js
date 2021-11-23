@@ -606,7 +606,7 @@ function validate(whichTab){
                 ret.push({'candidate-data': 'Dados da mãe obrigatórios'});
             }
             if ($('#data-pretended-salary').val().length<2 ){
-                ret.push({'candidate-data': 'Pretensão salarial origatória'});
+                ret.push({'candidate-data': 'Pretensão salarial obrigatória'});
             }
             break;
         case 'schooling-data':

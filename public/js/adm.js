@@ -600,23 +600,25 @@ function recruiting(){
             candidateTagFilter:function (candidate) {
                 let contain=true;
                 let activeFilters="";
-                let dudeTags=candidate['interests'];
-                if(this.otherData.candidateTagSearch.length>0){
-                    contain=false;
-                    activeFilters = this.otherData.candidateTagSearch.split(" ");
-                    for (let i in activeFilters){
-                        if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
-                            contain = false;
-                            break;
-                        }
-                        for (let j in dudeTags){
-                            if (dudeTags[j].name.toLowerCase().includes(activeFilters[i].toLowerCase())){
-                                contain=true;
+                if (candidate!=undefined){
+                    let dudeTags=candidate['interests'];
+                    if(this.otherData.candidateTagSearch.length>0){
+                        contain=false;
+                        activeFilters = this.otherData.candidateTagSearch.split(" ");
+                        for (let i in activeFilters){
+                            if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                                contain = false;
                                 break;
                             }
+                            for (let j in dudeTags){
+                                if (dudeTags[j].name.toLowerCase().includes(activeFilters[i].toLowerCase())){
+                                    contain=true;
+                                    break;
+                                }
+                            }
+                            if (contain)
+                                break;
                         }
-                        if (contain)
-                            break;
                     }
                 }
                 return contain;
@@ -624,23 +626,25 @@ function recruiting(){
             candidateExpFilter:function (candidate){
                 let contain=true;
                 let activeFilters="";
-                let dudeExps=candidate['experience'];
-                if(this.otherData.candidateExpSearch.length>0){
-                    contain=false;
-                    activeFilters = this.otherData.candidateExpSearch.split(" ");
-                    for (let i in activeFilters){
-                        if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
-                            contain = false;
-                            break;
-                        }
-                        for (let j in dudeExps){
-                            if (dudeExps[j].activities.toLowerCase().includes(activeFilters[i].toLowerCase())){
-                                contain=true;
+                if (candidate!=undefined){
+                    let dudeExps=candidate['experience'];
+                    if(this.otherData.candidateExpSearch.length>0){
+                        contain=false;
+                        activeFilters = this.otherData.candidateExpSearch.split(" ");
+                        for (let i in activeFilters){
+                            if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                                contain = false;
                                 break;
                             }
+                            for (let j in dudeExps){
+                                if (dudeExps[j].activities.toLowerCase().includes(activeFilters[i].toLowerCase())){
+                                    contain=true;
+                                    break;
+                                }
+                            }
+                            if (contain)
+                                break;
                         }
-                        if (contain)
-                            break;
                     }
                 }
                 return contain;
@@ -648,24 +652,25 @@ function recruiting(){
             candidateLocFilter:function (candidate){
                 let contain=true;
                 let activeFilters="";
-                let dude=candidate;
-                console.log(dude);
-                if(this.otherData.candidateLocSearch.length>0){
-                    contain=false;
-                    activeFilters = this.otherData.candidateLocSearch.split(" ");
-                    for (let i in activeFilters){
-                        if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
-                            contain = false;
-                            break;
-                        }
-                        if (dude.address_city!=null && dude.address_state!=null){
-                            if (dude.address_city.toLowerCase().includes(activeFilters[i].toLowerCase()) || dude.address_state.toLowerCase().includes(activeFilters[i].toLowerCase())){
-                                contain=true;
+                if (candidate!=undefined){
+                    let dude=candidate;
+                    if(this.otherData.candidateLocSearch.length>0){
+                        contain=false;
+                        activeFilters = this.otherData.candidateLocSearch.split(" ");
+                        for (let i in activeFilters){
+                            if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                                contain = false;
                                 break;
                             }
+                            if (dude.address_city!=null && dude.address_state!=null){
+                                if (dude.address_city.toLowerCase().includes(activeFilters[i].toLowerCase()) || dude.address_state.toLowerCase().includes(activeFilters[i].toLowerCase())){
+                                    contain=true;
+                                    break;
+                                }
+                            }
+                            if (contain)
+                                break;
                         }
-                        if (contain)
-                            break;
                     }
                 }
                 return contain;
