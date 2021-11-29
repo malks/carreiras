@@ -1104,6 +1104,7 @@ function getCustomData(screenNameHelper,firstTab){
         customData.experiences=JSON.parse(document.getElementById('experience-data').value);
         customData.schooling_grades=JSON.parse(document.getElementById('schooling-grades').value);
         customData.schooling_status=JSON.parse(document.getElementById('schooling-status').value);
+        customData.holdingData={};
     }
     return customData;
 }
