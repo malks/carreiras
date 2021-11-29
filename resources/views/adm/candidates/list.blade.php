@@ -96,9 +96,9 @@
 				</div>
 				<div class="card-body">
 					<div class='row'>
-						<div class="col-1">
+						<!--div class="col-1">
 							<a class="btn btn-primary" id='new' href='/adm/candidates/create'>Novo</a>
-						</div>
+						</div-->
 						<div class="col-1">
 							<button class="btn btn-secondary" id='edit' v-on:click='edit()' type='button' v-bind:disabled='canEdit'>Editar</button>
 						</div>
