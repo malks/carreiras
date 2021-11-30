@@ -145,7 +145,7 @@
 										<th>Última Atualização</th>
 										<th>Candidaturas</th>
 										<th>Última Candidatura</th>
-										<th>Exportação Senior</th>
+										<th>Exportado Senior</th>
 									</tr>
 								</thead>
 								<tbody>
