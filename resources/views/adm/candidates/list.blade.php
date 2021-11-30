@@ -108,6 +108,9 @@
 						<div class="col-2">
 							<button class="btn btn-success" v-on:click='openJobs' type='button' v-bind:disabled='canDestroy'>Inscrever em vaga</button>
 						</div>
+						<div class="col-2">
+							<button class="btn btn-primary" v-on:click='exportCandidates' type='button' v-bind:disabled='canDestroy'>Exportar para Senior</button>
+						</div>
 
 					</div>
 					<div class="row margin-top-10">
@@ -142,6 +145,7 @@
 										<th>Última Atualização</th>
 										<th>Candidaturas</th>
 										<th>Última Candidatura</th>
+										<th>Exportação Senior</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -159,6 +163,7 @@
 											<td>{{(!empty($d->updated_at)) ? date_format($d->updated_at,'d/m/Y') : ''}}</td>
 											<td>{{$d->subscription_amount}}</td>
 											<td>{{(!empty($d->subscriptions[0]->created_at)) ? date_format($d->subscriptions[0]->created_at,'d/m/Y') : ''}}</td>
+											<td>{{(!empty($d->senior_num_can)) ? 'Exportado: '.$d->senior_num_can : ( ($d->exportado!==null) ? $export_states[$d->exportado] : 'Não' ) }}</td>
 										</tr>
 									@endforeach
 								</tbody>

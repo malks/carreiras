@@ -16,6 +16,7 @@ use App\Tag;
 use App\Unit;
 use App\Field;
 use App\User;
+use App\Exportable;
 use App\Permission;
 use App\Requisition;
 use App\Role;
@@ -265,6 +266,15 @@ class AdmController extends Controller
         ]);
     }
 
+    public function exportCandidates (Request $request){
+        $arr=$request->all();
+        $candidates=explode(",",$arr['candidates']);
+        foreach($candidates as $candidate){
+            $exportable= new Exportable;
+            $exportable->candidate_id=$candidate;
+            $exportable->save();
+        }
+    }
 
     public function subscribeCandidatesToJob (Request $request){
         $arr=$request->all();
@@ -855,7 +865,8 @@ class AdmController extends Controller
 
     public function candidatesList (Request $request){
         $data=Candidate::
-        when(!empty($request->search),function($query) use ($request) {
+        select('candidates.*','exportables.status as exportado')
+        ->when(!empty($request->search),function($query) use ($request) {
             $query->where('candidates.name','like',"%$request->search%");
             $query->orWhere('cpf','like',"%$request->search%");
             $query->orWhere('phone','like',"%$request->search%");
@@ -882,7 +893,8 @@ class AdmController extends Controller
         ->with(['Schooling','Experience'])
         ->withCount('subscriptions as subscription_amount')
         ->leftJoin('subscribed','subscribed.candidate_id','=','candidates.id')
-        ->orderBy('updated_at','desc')
+        ->leftJoin('exportables','exportables.candidate_id','=','candidates.id')
+        ->orderBy('candidates.updated_at','desc')
         ->orderBy('subscribed.created_at','desc')
         ->paginate(15);
 
@@ -904,6 +916,11 @@ class AdmController extends Controller
             'incomplete'=>'Incompleto',
         ];
 
+        $export_states=[
+            'Pendente',
+            'Exportado'
+        ];
+
         $data_list=[];
         foreach ($data as $cand){
             array_push($data_list,['id'=>$cand->id]);
@@ -914,6 +931,7 @@ class AdmController extends Controller
                 'data'=>$data,
                 'data_list'=>$data_list,
                 'search'=>$request->search,
+                'export_states'=>$export_states,
                 'schooling_grades'=>$schooling_grades,
                 'schooling_status'=>$schooling_status,
                 'filter_updated_at_end'=>$request->filter_updated_at_end,

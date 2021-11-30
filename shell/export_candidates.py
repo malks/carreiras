@@ -157,6 +157,12 @@ def add_carreiras_subscribed_state(candidates,conn):
             run_sql("INSERT INTO subscribed_has_states (subscribed_id,state_id,created_at,updated_at) VALUES('"+subscription+"',5,now(),now())",conn)
     return
 
+#Altera status do exportador para candidatos exportados
+def update_exportable(candidates,conn):
+    for candidate in candidates:
+        run_sql("UPDATE exportables SET status=1 WHERE candidate_id="+candidate["id"]+",updated_at=now()",conn)
+    return
+
 #Na senior não tem autoincrement na PK, então eu obtenho o valor maximo dela aqui e somo 1 antes de inserir
 def get_senior_candidate_next_key(conn):
     last_id=oc_select("SELECT MAX(NUMCAN) FROM R122CEX",conn)
@@ -194,12 +200,22 @@ if __name__ == "__main__":
     if last_sync[0]['last_sync']==None:
         last_sync[0]['last_sync']=datetime.strptime('2021-05-01','%Y-%m-%d')
    
+
+    #Candidatos que foram adicionados à lista de exportação
+    candidates_carreiras_avulsos=sql_select("SELECT candidates.*  FROM candidates JOIN exportables ON candidates.id=exportables.candidate_id WHERE exportables.status=0 AND candidates.senior_num_can IS NULL",main_sql_conn)
+    candidates_senior_avulsos=carreiras_to_senior_candidate(candidates_carreiras_avulsos)
+    export_candidates_to_senior(candidates_senior_avulsos,main_oc_conn)
+    update_exportable(candidates_senior_avulsos)
+
+
     #Candidatos do carreiras que estão inscritos em vagas ativas e última sincronização com senior foi anterior a ultima atualização/inscrição do candidato em
     candidates_carreiras=sql_select("SELECT DISTINCT candidates.*,group_concat(subscribed_has_states.subscribed_id) as subscriptions  FROM candidates JOIN subscribed ON subscribed.candidate_id=candidates.id JOIN subscribed_has_states ON subscribed_has_states.subscribed_id=subscribed.id LEFT JOIN subscribed_has_states AS denied_states ON denied_states.subscribed_id=subscribed.id AND denied_states.state_id IN (5,2) LEFT JOIN states ON states.id=subscribed_has_states.state_id  WHERE  candidates.senior_num_can IS NULL AND states.sync_to_senior=1 AND denied_states.id IS NULL AND (candidates.last_senior_synced<=candidates.updated_at OR candidates.last_senior_synced<=subscribed.updated_at OR candidates.last_senior_synced<=subscribed_has_states.updated_at OR candidates.last_senior_synced IS NULL) GROUP BY candidates.id",main_sql_conn)
 
     candidates_senior=carreiras_to_senior_candidate(candidates_carreiras)
     export_candidates_to_senior(candidates_senior,main_oc_conn)
     add_carreiras_subscribed_state(candidates_carreiras,main_sql_conn)
+
+
     #test=oc_select("SELECT NOMCAN,COUNT(NUMCAN) as CONNTA from R122CEX  GROUP BY NOMCAN ORDER BY CONNTA DESC  FETCH NEXT 3 ROWS ONLY ",main_oc_conn)
     #test=oc_select("select * from R122CEX WHERE NOMCAN LIKE '%KARL%'",main_oc_conn)
     #candidates_senior=oc_select("select * from R122CEX ORDER BY NUMCAN DESC FETCH NEXT 1 ROWS ONLY",main_oc_conn)

@@ -131,6 +131,7 @@ $router->group(['middleware' => ['auth','is.admin','can:access admin']], functio
         Route::get('/adm/candidates/edit/{id}', 'AdmController@candidatesEdit')->name('candidates-edit');
         Route::post('/adm/candidates/destroy', 'AdmController@candidatesDestroy')->name('candidates-destroy');
         Route::post('/adm/candidates/subscribe-candidates-to-job', 'AdmController@subscribeCandidatesToJob')->name('subscribe-candidates-to-job');
+        Route::post('/adm/candidates/export-candidates', 'AdmController@exportCandidates')->name('export-candidates');
         Route::get('/adm/candidates/save', 'AdmController@candidatesSave')->name('candidates-save');
         Route::get('/adm/candidates/print/{id}', 'AdmController@candidatePrint')->name('candidates-print');
     });

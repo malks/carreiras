@@ -984,6 +984,24 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     }
                 })
             },
+            exportCandidates:function (){
+                let that=this;
+                if(confirm('Tem certeza que deseja exportar os candidatos selecionados?')){
+                    form.append('candidates',that.selectedIds);
+                    $.ajax({
+                        url:ajaxUrl+'/export-candidates',
+                        type:'POST',
+                        processData: false,
+                        contentType: false,			    
+                        data:form,
+                        success:function(data){
+                            console.log(data);
+                            alert("Candidatos adicionados à fila de exportação, pode levar até 1 minuto para que ocorra a exportação.");
+                            window.location.reload();
+                        }
+                    })
+                }
+            },
             openJobs:function (){
                 this.jobChoosing=!this.jobChoosing;
                 this.selectedJob=null;
