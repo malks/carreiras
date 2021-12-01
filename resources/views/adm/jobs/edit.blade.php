@@ -175,7 +175,9 @@
                                             {{$requisition->cod_rqu_senior}}
                                         </td>
                                         <td>
-                                            {{$requisition->unit->name}}
+                                            @if (!empty($requisition->unit))
+                                                {{$requisition->unit->name}}
+                                            @endif
                                         </td>
                                         <td>
                                             {{$requisition_status[$requisition->status]}}
