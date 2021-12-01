@@ -96,7 +96,7 @@
 											<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
 										<td>{{$d->id}}</td>
 										<td>{{$d->name}}</td>
-										<td>{{$d->unit->name}}</td>
+										<td>{{ (!empty($d->unit)) ? $d->unit->name : ''}}</td>
 										<td>{{(!empty($d->created_at)) ? date_format($d->created_at,"d/m/Y") : ""}}</td>
 										<td>{{$d->cod_senior}}</td>
 										<td>{{$d->cod_rqu_senior}}</td>
