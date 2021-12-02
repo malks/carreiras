@@ -226,7 +226,7 @@ def import_requisitions(jobs,conn):
         keys = ",".join(map(string_and_strip,list(job.keys())))
         values = "','".join(map(string_and_strip,list(job.values())))
         updates = ",".join(map(mount_updates,list(job.keys()),list(job.values())))
-        sql="INSERT IGNORE INTO lunellicarreiras.requisitions ("+keys+") VALUES ('"+values+"') ON DUPLICATE KEY UPDATE "+updates
+        sql="INSERT IGNORE INTO lunellicarreiras.requisitions ("+keys+") VALUES ('"+values+"') "
         run_sql(sql,conn)
 
 def import_candidates(candidates,conn):
