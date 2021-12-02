@@ -119,6 +119,8 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper['NOMCJG']=data['spouse_name']
         helper['CARCON']=data['spouse_job']
 
+        helper['DATINC']=datetime.date.today().strftime('%Y-%m-%d')
+
         if (data['deficiency']==1):
             helper['CODDEF']=get_deficiency_senior_id_from_carreiras_code(data['deficiency_id'])
 
@@ -204,16 +206,16 @@ if __name__ == "__main__":
     #Candidatos que foram adicionados à lista de exportação
     candidates_carreiras_avulsos=sql_select("SELECT candidates.*  FROM candidates JOIN exportables ON candidates.id=exportables.candidate_id WHERE exportables.status=0 AND candidates.senior_num_can IS NULL",main_sql_conn)
     candidates_senior_avulsos=carreiras_to_senior_candidate(candidates_carreiras_avulsos)
-    export_candidates_to_senior(candidates_senior_avulsos,main_oc_conn)
-    update_exportable(candidates_senior_avulsos)
+    #export_candidates_to_senior(candidates_senior_avulsos,main_oc_conn)
+    #update_exportable(candidates_senior_avulsos)
 
 
     #Candidatos do carreiras que estão inscritos em vagas ativas e última sincronização com senior foi anterior a ultima atualização/inscrição do candidato em
-    candidates_carreiras=sql_select("SELECT DISTINCT candidates.*,group_concat(subscribed_has_states.subscribed_id) as subscriptions  FROM candidates JOIN subscribed ON subscribed.candidate_id=candidates.id JOIN subscribed_has_states ON subscribed_has_states.subscribed_id=subscribed.id LEFT JOIN subscribed_has_states AS denied_states ON denied_states.subscribed_id=subscribed.id AND denied_states.state_id IN (5,2) LEFT JOIN states ON states.id=subscribed_has_states.state_id  WHERE  candidates.senior_num_can IS NULL AND states.sync_to_senior=1 AND denied_states.id IS NULL AND (candidates.last_senior_synced<=candidates.updated_at OR candidates.last_senior_synced<=subscribed.updated_at OR candidates.last_senior_synced<=subscribed_has_states.updated_at OR candidates.last_senior_synced IS NULL) GROUP BY candidates.id",main_sql_conn)
+    #candidates_carreiras=sql_select("SELECT DISTINCT candidates.*,group_concat(subscribed_has_states.subscribed_id) as subscriptions  FROM candidates JOIN subscribed ON subscribed.candidate_id=candidates.id JOIN subscribed_has_states ON subscribed_has_states.subscribed_id=subscribed.id LEFT JOIN subscribed_has_states AS denied_states ON denied_states.subscribed_id=subscribed.id AND denied_states.state_id IN (5,2) LEFT JOIN states ON states.id=subscribed_has_states.state_id  WHERE  candidates.senior_num_can IS NULL AND states.sync_to_senior=1 AND denied_states.id IS NULL AND (candidates.last_senior_synced<=candidates.updated_at OR candidates.last_senior_synced<=subscribed.updated_at OR candidates.last_senior_synced<=subscribed_has_states.updated_at OR candidates.last_senior_synced IS NULL) GROUP BY candidates.id",main_sql_conn)
 
-    candidates_senior=carreiras_to_senior_candidate(candidates_carreiras)
-    export_candidates_to_senior(candidates_senior,main_oc_conn)
-    add_carreiras_subscribed_state(candidates_carreiras,main_sql_conn)
+    #candidates_senior=carreiras_to_senior_candidate(candidates_carreiras)
+    #export_candidates_to_senior(candidates_senior,main_oc_conn)
+    #add_carreiras_subscribed_state(candidates_carreiras,main_sql_conn)
 
 
     #test=oc_select("SELECT NOMCAN,COUNT(NUMCAN) as CONNTA from R122CEX  GROUP BY NOMCAN ORDER BY CONNTA DESC  FETCH NEXT 3 ROWS ONLY ",main_oc_conn)
