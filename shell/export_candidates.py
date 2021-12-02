@@ -119,8 +119,8 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper['NOMCJG']=data['spouse_name']
         helper['CARCON']=data['spouse_job']
 
-        helper['DATINC']=datetime.date.today().strftime('%Y-%m-%d')
-
+        helper['DATINC']=datetime.now().strftime('%Y-%m-%d')
+        
         if (data['deficiency']==1):
             helper['CODDEF']=get_deficiency_senior_id_from_carreiras_code(data['deficiency_id'])
 
