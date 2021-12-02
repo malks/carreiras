@@ -33,7 +33,7 @@ class Register extends Mailable
     {
         $data=StateMail::first();
         return $this
-        ->from('contato@programaune.com.br','Lunelli Carreiras')
+        ->from('recrutamento@lunelli.com.br','Recrutamento Lunelli')
         ->subject('Seja bem vindo(a) ao Lunelli Carreiras!')
         ->view('adm.states_mails.mail')->with([
             'candidate'=>$this->candidate,

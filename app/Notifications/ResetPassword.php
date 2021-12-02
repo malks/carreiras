@@ -42,7 +42,7 @@ class ResetPassword extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->from('contato@programaune.com.br',"Luneli")
+                    ->from('recrutamento@lunelli.com.br',"Luneli")
                     ->subject('Resetar Senha | Lunelli')
                     ->greeting('Olá!')
                     ->line('Clique no botão abaixo para resetar sua senha')

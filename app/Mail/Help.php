@@ -29,7 +29,7 @@ class Help extends Mailable
     public function build()
     {
         return $this
-        ->from('contato@programaune.com.br',$this->contact['contact_name']." | Ajuda Luneli Carreiras")
+        ->from('recrutamento@lunelli.com.br',$this->contact['contact_name']." | Ajuda Luneli Carreiras")
         ->subject($this->contact['contact_subject'])
         ->view('help_mail')->with([
             'contact'=>$this->contact,
