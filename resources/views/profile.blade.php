@@ -473,7 +473,7 @@
                                                         <b v-if="tagIdx==0">
                                                             @{{tag.name}} &nbsp
                                                         </b>
-                                                        <span v-else>
+                                                        <span style='cursor:pointer;' v-on:click="pickMe(tagIdx)" v-else>
                                                             @{{tag.name}} &nbsp
                                                         </span>
                                                     </template>
@@ -483,7 +483,9 @@
 
                                             <div class=" col-sm-12 margin-top-10">
                                                 <input id='data-interests' name='interests' type='hidden' value={{urlencode(json_encode($data->interests->toArray()))}}>
-                                                <ul class='interests-holder' id='interests-holder' v-on:mousedown.stop.prevent="targetInterestsInputShow" v-on:mouseup.stop.prevent="targetInterestsInputFocus" >
+                                                <ul class='interests-holder' id='interests-holder' 
+                                                v-on:mousedown.stop.prevent="targetInterestsInputShow" 
+                                                v-on:mouseup.stop.prevent="targetInterestsInputFocus" >
                                                     <template v-for='(tag,idx) in selectedTags'>
                                                         <li><span  class='badge'>@{{tag.name}} <i class="fa fa-times-circle" v-on:click="removeTag(idx)"></i></span></li>
                                                     </template>

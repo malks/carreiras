@@ -817,6 +817,17 @@ function startProfile(screenNameHelper='',firstTab=''){
                 that.selectedTags=tempTags;
                 that.currentInterest="";
             },
+            pickMe:function(tagIdx){
+                let that=this;
+                let tempTags=that.selectedTags;
+                let newTag=that.filteredTags[tagIdx];
+                if (newTag)
+                    tempTags.push(newTag);
+                else
+                    tempTags.push({id:null,name:that.currentInterest});
+                that.selectedTags=tempTags;
+                that.currentInterest="";
+            },
             removeTag:function (idx){
                 let that=this;
                 let tempTags=that.selectedTags;
