@@ -323,8 +323,8 @@
                                     @if ($job->home_slider==1)
                                         <div class="item">
                                             <div class="brand-logo-holder">
-                                                <span class='job-item' style='cursor:pointer;text-transform:capitalize' v-on:click="viewJob({{ $job->id }})">
-                                                    {{strtolower($job->name)}}
+                                                <span class='job-item' style='cursor:pointer;font-size:13pt!important;' v-on:click="viewJob({{ $job->id }})">
+                                                    {{$job->name}}
                                                 </span>
                                             </div>
                                         </div>

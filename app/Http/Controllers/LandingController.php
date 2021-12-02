@@ -153,9 +153,11 @@ class LandingController extends Controller
     }
 
     public function newsletterSubscribe(Request $request){
-        $subscriber=new Subscriber;
-        $subscriber->email=$request->email;
-        $subscriber->save();
+        if (!empty($request->email)){
+            $subscriber=new Subscriber;
+            $subscriber->email=$request->email;
+            $subscriber->save();    
+        }
 		return '';
     }
 
