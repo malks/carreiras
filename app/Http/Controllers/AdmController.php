@@ -246,13 +246,15 @@ class AdmController extends Controller
     public function recruiting (Request $request){
 
         $schooling_grades=[
+            '' => 'Não definido',
+            'professional' => 'Profissionalizante',
             'technology' => 'Tecnólogo',
+            'technician' => 'Técnico',
             'graduation' => 'Graduação',
             'postgrad' => 'Pós Graduação',
             'masters' => 'Mestrado',
             'doctor' => 'Doutorado',
-            'phd' => 'PHD',
-        ];
+            'phd' => 'PHD',        ];
 
         $schooling_status=[
             'complete'=>'Concluído',
@@ -814,6 +816,7 @@ class AdmController extends Controller
         ];
 
         $schooling_grades=[
+            '' => 'Não definido',
             'professional' => 'Profissionalizante',
             'technology' => 'Tecnólogo',
             'technician' => 'Técnico',
@@ -825,6 +828,7 @@ class AdmController extends Controller
         ];
 
         $schooling_formation=[
+            ''=>'Não definido',
             'fundamental'=>'Fundamental',
             'highschool'=>'Médio',
             'technical'=>'Técnico',
@@ -832,6 +836,7 @@ class AdmController extends Controller
         ];
 
         $course_status=[
+            ''=>'Não definido',
             'complete'=>'completo',
             'coursing'=>'cursando',
             'incomplete'=>'Incompleto',
@@ -900,6 +905,7 @@ class AdmController extends Controller
 
         
         $schooling_grades=[
+            '' => 'Não definido',
             'professional' => 'Profissionalizante',
             'technology' => 'Tecnólogo',
             'technician' => 'Técnico',
@@ -1096,7 +1102,10 @@ class AdmController extends Controller
         $deficiencies = Deficiency::all();
 
         $schooling_grades=[
+            '' => 'Não definido',
+            'professional' => 'Profissionalizante',
             'technology' => 'Tecnólogo',
+            'technician' => 'Técnico',
             'graduation' => 'Graduação',
             'postgrad' => 'Pós Graduação',
             'masters' => 'Mestrado',
@@ -1263,13 +1272,15 @@ class AdmController extends Controller
         $deficiencies = Deficiency::all();
 
         $schooling_grades=[
+            '' => 'Não definido',
+            'professional' => 'Profissionalizante',
             'technology' => 'Tecnólogo',
+            'technician' => 'Técnico',
             'graduation' => 'Graduação',
             'postgrad' => 'Pós Graduação',
             'masters' => 'Mestrado',
             'doctor' => 'Doutorado',
-            'phd' => 'PHD',
-        ];
+            'phd' => 'PHD',        ];
 
         $schooling_status=[
             'complete'=>'Concluído',
