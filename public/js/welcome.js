@@ -220,22 +220,22 @@ function candidateJobs(){
                 return true;
             },
             printDescription:function (){
-                if (this.viewingJob.id!=null)
+                if (this.viewingJob.id!=null && this.viewingJob.description!=null)
                     return this.viewingJob.description.split("\r\n").join("<br>");
                 return "";
             },
             printActivities:function (){
-                if (this.viewingJob.id!=null)
+                if (this.viewingJob.id!=null && this.viewingJob.activities!=null)
                     return this.viewingJob.activities.split("\r\n").join("<br>");
                 return "";
             },
             printRequired:function (){
-                if (this.viewingJob.id!=null)
+                if (this.viewingJob.id!=null && this.viewingJob.required!=null)
                     return this.viewingJob.required.split("\r\n").join("<br>");
                 return "";
             },
             printDesirable:function (){
-                if (this.viewingJob.id!=null)
+                if (this.viewingJob.id!=null && this.viewingJob.desirable!=null)
                     return this.viewingJob.desirable.split("\r\n").join("<br>");
                 return "";
             }
