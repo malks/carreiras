@@ -472,6 +472,8 @@ function recruiting(){
                 let ret = this.runData.units.find(obj=>{
                     return obj.id==id; 
                 })
+                if (ret==null || ret==undefined)
+                    return {'name':''};
                 console.log(ret);
                 return ret;
             },
