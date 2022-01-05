@@ -95,10 +95,12 @@
     background:none!important;
     border:0px!important;
     font-weight:bold;
+    font-size:16pt;
 }
 
-.btn-close:hover{
-    color:#666!important;
+
+.btn-close:hover, .btn-close:hover > *{
+    color:#333!important;
 }
 
 #welcoLogin .btn{

@@ -306,14 +306,17 @@ function recruiting(){
                         }
                     },
                     deep:{
-                        "subscriptions":{
+                        subscriptions:{
                             mustHave:{
                                 states:{
                                     in: {
-                                        state_id:[1],
+                                        state_id: [1],
                                     }
                                 },
-                            }
+                            },
+                            in: {
+                                active: [1]
+                            },
                         },
                         tags:{
                             like:{

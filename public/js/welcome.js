@@ -379,7 +379,7 @@ function candidateJobs(){
                                 for (t in tempJob[j]){
                                     contain=false;
                                     console.log("typeof jt"+typeof tempJob[j][t]);
-                                    if (typeof tempJob[j][t] != undefined)
+                                    if (tempJob[j][t] != undefined && tempJob[j][t] != null)
                                         contain = tempJob[j][t]['name'].toLowerCase().includes(activeFilters[i].toLowerCase());
                                     if (contain)
                                         break;

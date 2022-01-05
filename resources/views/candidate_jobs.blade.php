@@ -33,7 +33,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title">@{{ viewingJob.name}}</h5>
-                                        <button type="button" class="btn-close" v-on:click="resetViewingJob" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" v-on:click="resetViewingJob" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-window-close"></i></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class='maxed-height-500'>

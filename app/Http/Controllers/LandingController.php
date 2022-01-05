@@ -411,7 +411,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
         $candidate_id="";
         if (!empty($candidate)){
-            $subscriptions = Subscribed::where('candidate_id','=',$candidate->id)->with(['states'=>function ($states_query) {
+            $subscriptions = Subscribed::where('candidate_id','=',$candidate->id)->where('active','=',1)->with(['states'=>function ($states_query) {
                 $states_query->where('candidate_visible','=','1');
             }])->get();
             $candidate_id=$candidate->id;

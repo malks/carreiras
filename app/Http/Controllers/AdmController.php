@@ -303,6 +303,7 @@ class AdmController extends Controller
         $subscribed = Subscribed::
         where('candidate_id','=',$request->candidate_id)
         ->where('job_id','=',$request->job_id)
+        ->where('active','=',1)
         ->first();
 
         DB::connection('mysql')->table('subscribed_has_states')->insert(
@@ -341,6 +342,7 @@ class AdmController extends Controller
                 $other_subscribed=Subscribed::
                 where('job_id','=',$request->job_id)
                 ->where('candidate_id','!=',$request->candidate_id)
+                ->where('active','=',1)
                 ->whereDoesntHave('states', function ($query) {
                     $query->where('state_id','=',2);
                 })
@@ -355,7 +357,6 @@ class AdmController extends Controller
                     );
                 }    
             }
-
         }
 
         return '';
@@ -500,7 +501,7 @@ class AdmController extends Controller
             $query->with($arr_deep_filters);
         })
         ->with(['tags','subscribers','subscribers.interests','subscribers.experience','field','unit'])
-        ->withCount('subscriptions as subscription_amount')
+        ->withCount(['subscriptions as subscription_amount'=>function ($query) {$query->where('active','=',1);}])
         ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])
         ->get()->toArray();
 

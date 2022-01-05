@@ -22,7 +22,7 @@ class Job extends Model
     }
 
     public function subscribers(){
-        return $this->belongsToMany('App\Candidate', 'subscribed', 'job_id','candidate_id')->withTimestamps()->withPivot('notes');
+        return $this->belongsToMany('App\Candidate', 'subscribed', 'job_id','candidate_id')->withTimestamps()->withPivot('notes','active');
     }
 
     public function subscriptions(){
