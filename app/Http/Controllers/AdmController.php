@@ -72,6 +72,20 @@ class AdmController extends Controller
         ]);
     }
 
+    protected function userValidator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
+        ],[
+            'email.unique'=>'E-mail já cadastrado',
+            'name.required'=>'Nome é necessário',
+            'naem.max'=>'Nome excede limite de caracteres',
+            'password.min'=>'Senha deve ter no mínimo 8 caracteres',
+        ]);
+    }
+
     public function templateFromJob(Request $request){
 
     }
@@ -1644,6 +1658,11 @@ class AdmController extends Controller
     
         unset($arr['_token']);
         unset($arr['role']);
+
+        $validator = $this->userValidator($request->all())->validate();
+           
+        if(!is_array($validator) && $validator->fails())
+            return Redirect::back()->withErrors($validator)->withInput($request->all());
 
         if(!empty($arr['id']))
             $user=User::where('id','=',$arr['id'])->first();

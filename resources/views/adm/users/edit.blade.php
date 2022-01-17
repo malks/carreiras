@@ -13,6 +13,13 @@
 	    		<h5>Edição de Usuário</h5>
 	    	</div>
 	        <div class="card-body">
+                <div class="row">
+                    @if ($errors->any())
+                        <div class="col-7">
+                            @php echo implode('</div><div class="col-7">', $errors->all("<div class='alert alert-danger alert-dismissible'>:message</div>")) @endphp
+                        </div>
+                    @endif        
+                </div>
 	        	<div class='row'>
 	        		<div class="col-lg-1 col-sm-12">
 	        			<a class="btn btn-secondary" href='/adm/users'>Voltar</a>
