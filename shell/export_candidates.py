@@ -182,7 +182,7 @@ def export_candidates_to_senior(candidates,conn):
         keys = ",".join(map(string_and_strip,list(candidate.keys())))
         values = "','".join(map(string_and_strip,list(candidate.values())))
         #updates = ",".join(map(mount_updates,list(candidate.keys()),list(candidate.values())))
-        sql="INSERT  INTO R122CEX ("+keys+") VALUES ('"+values+"') "
+        sql="INSERT  INTO R122CEX ("+keys+") VALUES ('"+values.upper()+"') "
         oc_sql(sql,conn)
         
         if carreiras_id!='0':
