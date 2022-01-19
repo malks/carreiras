@@ -8,7 +8,7 @@ def get_country_code_from_name(country_name):
     ret='0'
     if country_name!=None:
         country_conn=oc_conn()
-        country_code=oc_select("SELECT CODPAI FROM R074PAI WHERE NOMPAI LIKE '"+str(country_name)+"'",country_conn)
+        country_code=oc_select("SELECT CODPAI FROM R074PAI WHERE NOMPAI LIKE '"+string_and_strip(country_name)+"'",country_conn)
         if len(country_code)>0 and country_code[0]['CODPAI']!=None:
             ret=country_code[0]['CODPAI']
         country_conn.close()
@@ -19,7 +19,7 @@ def get_city_code_from_name(city_name):
     ret='0'
     if city_name!=None:
         city_conn=oc_conn()
-        city_code=oc_select("SELECT CODCID FROM R074CID WHERE NOMCID LIKE '"+str(city_name)+"'",city_conn)
+        city_code=oc_select("SELECT CODCID FROM R074CID WHERE NOMCID LIKE '"+string_and_strip(city_name)+"'",city_conn)
         if len(city_code)>0 and city_code[0]['CODCID']!=None:
             ret=city_code[0]['CODCID']
         city_conn.close()
@@ -30,7 +30,7 @@ def get_state_code_from_name(state_name):
     ret='0'
     if state_name!=None:
         state_conn=oc_conn()
-        state_code=oc_select("SELECT CODEST FROM R074EST WHERE DESEST LIKE '"+str(state_name)+"'",state_conn)
+        state_code=oc_select("SELECT CODEST FROM R074EST WHERE DESEST LIKE '"+string_and_strip(state_name)+"'",state_conn)
         if len(state_code)>0 and state_code[0]['CODEST']!=None:
             ret=state_code[0]['CODEST']
         state_conn.close()
@@ -42,9 +42,9 @@ def get_district_code_from_name(district_name,city_code):
     if district_name!=None:
         district_conn=oc_conn()
         if city_code!=None and city_code!=0:
-            district_code=oc_select("SELECT CODBAI FROM R074BAI WHERE CODCID='"+city_code+"' AND NOMBAI LIKE '"+str(district_name)+"'",district_conn)
+            district_code=oc_select("SELECT CODBAI FROM R074BAI WHERE CODCID='"+city_code+"' AND NOMBAI LIKE '"+string_and_strip(district_name)+"'",district_conn)
         else:
-            district_code=oc_select("SELECT CODBAI FROM R074BAI WHERE NOMBAI LIKE '"+str(district_name)+"'",district_conn)
+            district_code=oc_select("SELECT CODBAI FROM R074BAI WHERE NOMBAI LIKE '"+string_and_strip(district_name)+"'",district_conn)
         if len(district_code)>0 and district_code[0]['CODBAI']!=None:
             ret=district_code[0]['CODBAI']
         district_conn.close()
@@ -82,10 +82,10 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper['CODCID']=get_city_code_from_name(data['address_city'])
         helper['CODBAI']=get_district_code_from_name(data['address_district'],str(helper['CODCID']))
         helper['ENDCAN']=data['address_street']
-        helper['ENDNUM']=data['address_number']
+        helper['ENDNUM']=str(data['address_number'])[0:6]
         helper['CODCEP']=data['zip']
 
-        helper['NOMCAN']=data['name']
+        helper['NOMCAN']=str(data['name'])[0:40]
         helper['DATNAS']=data['dob']
         helper['TIPSEX']=data['gender']
         helper['ALTCAN']=data['height']
@@ -102,7 +102,7 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper['CPFCAN']=data['cpf']
         helper['PISCAN']=data['pis']
         helper['IDECAN']=data['rg']
-        helper['EMICID']=data['rg_emitter']
+        helper['EMICID']=str(data['rg_emitter'])[0:20]
         helper['NUMCTP']=data['work_card']
         helper['SERCTP']=data['work_card_series']
         helper['DIGCAR']=data['work_card_digit']
@@ -207,7 +207,7 @@ if __name__ == "__main__":
     candidates_carreiras_avulsos=sql_select("SELECT candidates.*  FROM candidates JOIN exportables ON candidates.id=exportables.candidate_id WHERE exportables.status=0 AND candidates.senior_num_can IS NULL",main_sql_conn)
     candidates_senior_avulsos=carreiras_to_senior_candidate(candidates_carreiras_avulsos)
     export_candidates_to_senior(candidates_senior_avulsos,main_oc_conn)
-    update_exportable(candidates_senior_avulsos)
+    update_exportable(candidates_senior_avulsos,main_sql_conn)
 
 
     #Candidatos do carreiras que estão inscritos em vagas ativas e última sincronização com senior foi anterior a ultima atualização/inscrição do candidato em
