@@ -619,10 +619,12 @@ function validate(whichTab){
                 $('#schooling-start0').val()==null ||
                 $('#schooling-end0').val()==null
             ){
-                ret.push({'schooling-data': 'Ao menos uma formação necessária. As formações precisam ter todos os dados preenchidos.'});
+                ret.push({'schooling-data': 'Ao menos uma formação necessária.'});
+                ret.push({"schooling-data": "As formações precisam ter todos os dados preenchidos."});
+                ret.push({"schooling-data":"Você pode selecionar Fundamental ou Médio em formação para ensino fundamental e médio."});
             }
-            if ($('#interests-holder .badge')[0]==undefined)
-                ret.push({'extra': 'Informe ao menos uma área de interesse'});
+            /*if ($('#interests-holder .badge')[0]==undefined)
+                ret.push({'extra': 'Informe ao menos uma área de interesse'});*/
             break;
         case 'experience-data':
             break;
