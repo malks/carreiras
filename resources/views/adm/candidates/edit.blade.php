@@ -32,17 +32,27 @@
 	        		</div-->
 	        	</div>
                 <div class="row margin-top-20">
-                    <div class="col-sm-12 col-lg-12">
-                        <h5 class='' ><i>Candidato: &nbsp {{$data->name}}</i></h5>
-                        <h5 class='' ><i>NUMCAN do Senior: &nbsp {{$data->senior_num_can}}</i></h5>
-                    </div>
-                    <div class=" col-sm-12 col-lg">
-                        <i>Última Atualização:</i><i style='margin-left:10px;'>{{ (!empty($data->updated_at)) ? date_format($data->updated_at,'d/m/Y') : ''}}</i>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="col">
-                        <a href="/adm/candidates/print/{{$data->id}}" target='_blank'>Currículo para impressão</a>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-12">
+                                        <h5 class='' >Nome: &nbsp {{$data->name}}</h5>
+                                        @php $chg_years = ((idate('m')-explode("-",$data->dob)[1])<0) ? 1 : 0 @endphp
+                                        <h5 class='' >Idade: &nbsp @php echo (!empty($data->dob)) ? (idate('Y')-explode("-",$data->dob)[0]) - $chg_years : '' @endphp anos</h5>
+                                        <h5 class='' >Numcan do Senior: &nbsp {{$data->senior_num_can}}</h5>
+                                    </div>
+                                    <div class=" col-sm-12 col-lg">
+                                       <h5> Última Atualização:<span style='margin-left:10px;'>{{ (!empty($data->updated_at)) ? date_format($data->updated_at,'d/m/Y') : ''}}</span></h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <a href="/adm/candidates/print/{{$data->id}}" target='_blank'>Currículo para impressão</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <ul class="nav nav-tabs margin-top-20">
@@ -525,6 +535,13 @@
                                         'natural'=>'Fluente',
                                     ];
                                 @endphp
+                                @if(count($data->langs)<=0)
+                                    <div class="row">
+                                        <div class="col">
+                                            Nenhum informado
+                                        </div>
+                                    </div>
+                                @endif
                                 @foreach($data->langs as $lang)
                                     <div class="row margin-top-10">
                                         <div class="col-lg-3">
@@ -540,6 +557,13 @@
                                  <h5>Graduações</h5>
                             </div>
                             <div class="card-body">
+                                @if(count($data->schooling)<=0)
+                                    <div class="row">
+                                        <div class="col">
+                                            Nenhuma
+                                        </div>
+                                    </div>
+                                @endif
                                 @foreach($data->schooling as $schooling)
                                     <div class="row margin-top-30">
                                         <div class="col">
@@ -548,7 +572,7 @@
                                                     <div class="row">
                                                         <div class=" col-sm-12 col-lg">
                                                             <label for="schooling-formation">Formação</label>
-                                                            <input type='text' class='form-control' id='schooling-formation' name='schooling[].formation' value='{{$schooling->formation}}'/>
+                                                            <input type='text' class='form-control' id='schooling-formation' name='schooling[].formation' value='{{$schooling_formation[$schooling->formation|'']}}'/>
                                                         </div>
                                                         <div class=" col-sm-12 col-lg">
                                                             <label for="schooling-status">Status</label>
@@ -598,46 +622,57 @@
                     </div>
 
                     <div class='tab-pane fade' v-bind:class="{ active: isItMe('experience-data') , show: isItMe('experience-data') }" id="experience">
-                        <div class="row margin-top-30">
-                            <div class="col"><h6>Trabalhos Anteriores</h6></div>
-                        </div>                        
-                        @foreach($data->experience as $experience)
-                            <div class="row margin-top-10">
-                                <div class="col">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row ">
-                                                <div class=" col-sm-12 col-lg">
-                                                    <label for="experience-business">Empresa</label>
-                                                    <input type='text' class='form-control' id='experience-business' name='experience[].business' value='{{$experience->business}}'/>
-                                                </div>
-                                                <div class=" col-sm-12 col-lg">
-                                                    <label for="experience-job">Cargo</label>
-                                                    <input type='text' class='form-control' id='experience-job' name='experience[].job' value='{{$experience->job}}'/>
-                                                </div>                                
-                                            </div>
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg">
-                                                    <label for="experience-activities">Atividades</label>
-                                                    <textarea type='text' class='form-control' id='experience-activities' name='experience[].activities'>{{$experience->activities}}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg-3">
-                                                    <label for="experience-admission">Admissão</label>
-                                                    <input type='text' class='form-control text-center' id='experience-admission' name='experience[].admission' 
-                                                    value='{{$carbon->parse($experience->admission)->format('d/m/Y')}}'/>
-                                                </div>
-                                                <div class=" col-sm-12 col-lg-3">
-                                                    <label for="experience-demission">Demissão</label>
-                                                    <input type='text' class='form-control text-center' id='experience-demission' name='experience[].demission' value='{{$carbon->parse($experience->demission)->format('d/m/Y')}}'/>
+                        <div class="card margin-top-30">
+                            <div class="card-header">
+                                 <h5>Trabalhos Anteriores</h5>
+                            </div>
+                            <div class="card-body">
+                                @if(count($data->experience)<=0)
+                                    <div class="row">
+                                        <div class="col">
+                                            Nenhum informado
+                                        </div>
+                                    </div>
+                                @endif
+                                @foreach($data->experience as $experience)
+                                    <div class="row margin-top-10">
+                                        <div class="col">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row ">
+                                                        <div class=" col-sm-12 col-lg">
+                                                            <label for="experience-business">Empresa</label>
+                                                            <input type='text' class='form-control' id='experience-business' name='experience[].business' value='{{$experience->business}}'/>
+                                                        </div>
+                                                        <div class=" col-sm-12 col-lg">
+                                                            <label for="experience-job">Cargo</label>
+                                                            <input type='text' class='form-control' id='experience-job' name='experience[].job' value='{{$experience->job}}'/>
+                                                        </div>                                
+                                                    </div>
+                                                    <div class="row margin-top-10">
+                                                        <div class=" col-sm-12 col-lg">
+                                                            <label for="experience-activities">Atividades</label>
+                                                            <textarea type='text' class='form-control' id='experience-activities' name='experience[].activities'>{{$experience->activities}}</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row margin-top-10">
+                                                        <div class=" col-sm-12 col-lg-3">
+                                                            <label for="experience-admission">Admissão</label>
+                                                            <input type='text' class='form-control text-center' id='experience-admission' name='experience[].admission' 
+                                                            value='{{$carbon->parse($experience->admission)->format('d/m/Y')}}'/>
+                                                        </div>
+                                                        <div class=" col-sm-12 col-lg-3">
+                                                            <label for="experience-demission">Demissão</label>
+                                                            <input type='text' class='form-control text-center' id='experience-demission' name='experience[].demission' value='{{$carbon->parse($experience->demission)->format('d/m/Y')}}'/>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
-                        @endforeach
+                        </div>
                     </div>
                     
                     <div class='tab-pane fade' v-bind:class="{ active: isItMe('documents') , show: isItMe('documents') }" id="documents">
@@ -890,6 +925,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if (count($data->subscriptions) <=0)
+                                            <tr><td colspan=3>Nenhuma</td></tr>
+                                        @endif
                                         @foreach($data->subscriptions as $sub)
                                             <tr>
                                                 <td>{{$sub->name}}</td>

@@ -884,24 +884,40 @@ class AdmController extends Controller
     }
 
     public function candidatesList (Request $request){
+
         $data=Candidate::
         select('candidates.*','exportables.status as exportado')
         ->when(!empty($request->search),function($query) use ($request) {
-            $query->where('candidates.name','like',"%$request->search%");
-            $query->orWhere('cpf','like',"%$request->search%");
-            $query->orWhere('phone','like',"%$request->search%");
-            $query->orWhere('address_street','like',"%$request->search%");
-            $query->orWhere('address_city','like',"%$request->search%");
-            $query->orWhere('address_state','like',"%$request->search%");
-            $query->orWhere('address_country','like',"%$request->search%");
-            $query->orWhere('skills','like',"%$request->search%");
-            $query->orWhere('others','like',"%$request->search%");
+            $query->where( function ($query) use ($request){
+                $query->where('candidates.name','like',"%$request->search%");
+                $query->orWhere('cpf','like',"%$request->search%");
+                $query->orWhere('email','like',"%$request->search%");
+                $query->orWhere('phone','like',"%$request->search%");
+            });
+        })
+        ->when(!empty($request->searchAddress),function($query) use ($request) {
+            $query->where( function ($query) use ($request){
+                $query->where('address_street','like',"%$request->search%");
+                $query->orWhere('address_city','like',"%$request->search%");
+                $query->orWhere('address_state','like',"%$request->search%");
+                $query->orWhere('address_country','like',"%$request->search%");
+            });
+        })
+        ->when(!empty($request->searchInterests),function($query) use ($request) {
             $query->leftJoin('candidates_tags','candidates_tags.candidate_id','=','candidates.id');
             $query->leftJoin('tags','tags.id','=','candidates_tags.tag_id');
-            $query->orWhere('tags.name','like',"%$request->search%");
+            $query->where( function ($query) use ($request){
+                $query->where('skills','like',"%$request->search%");
+                $query->orWhere('others','like',"%$request->search%");
+                $query->orWhere('tags.name','like',"%$request->search%");
+            });
+        })
+        ->when(!empty($request->searchExperiences),function($query) use ($request) {
             $query->leftJoin('experience','experience.candidate_id','=','candidates.id');
-            $query->orWhere('experience.activities','like',"%$request->search%");
-            $query->orWhere('experience.job','like',"%$request->search%");
+            $query->where( function ($query) use ($request){
+                $query->where('experience.activities','like',"%$request->search%");
+                $query->orWhere('experience.job','like',"%$request->search%");
+            });
         })
         ->when(!empty($request->filter_updated_at_start), function ($query) use ($request) {
             $query->where('candidates.updated_at','>=',$request->filter_updated_at_start);
@@ -952,6 +968,9 @@ class AdmController extends Controller
                 'data'=>$data,
                 'data_list'=>$data_list,
                 'search'=>$request->search,
+                'searchAddress'=>$request->searchAddress,
+                'searchInterests'=>$request->searchInterests,
+                'searchExperiences'=>$request->searchExperiences,
                 'export_states'=>$export_states,
                 'schooling_grades'=>$schooling_grades,
                 'schooling_status'=>$schooling_status,
@@ -1303,6 +1322,14 @@ class AdmController extends Controller
             'incomplete'=>'Incompleto',
         ];
 
+        $schooling_formation=[
+            ''=>'Não definido',
+            'fundamental'=>'Fundamental',
+            'highschool'=>'Médio',
+            'technical'=>'Técnico',
+            'superior'=>'Superior',
+        ];
+
         if (empty($data->updated_at))
             $data->updated_at='2021-01-01';
 
@@ -1312,6 +1339,7 @@ class AdmController extends Controller
                 'states'=>$states,
                 'deficiencies'=>$deficiencies,
                 'schooling_grades'=>$schooling_grades,
+                'schooling_formation'=>$schooling_formation,
                 'schooling_status'=>$schooling_status,
                 'carbon'=>new Carbon,
             ]

@@ -99,16 +99,16 @@
 						<!--div class="col-1">
 							<a class="btn btn-primary" id='new' href='/adm/candidates/create'>Novo</a>
 						</div-->
-						<div class="col-1">
+						<div class="col-2 col-xl-1">
 							<button class="btn btn-secondary" id='edit' v-on:click='edit()' type='button' v-bind:disabled='canEdit'>Editar</button>
 						</div>
-						<div class="col-1">
+						<!--div class="col-1">
 							<button class="btn btn-danger" id='destroy' v-on:click='destroy()' type='button' v-bind:disabled='canDestroy'>Excluir</button>
-						</div>
-						<div class="col-2">
+						</div-->
+						<div class="col-3 col-xl-2">
 							<button class="btn btn-success" v-on:click='openJobs' type='button' v-bind:disabled='canDestroy'>Inscrever em vaga</button>
 						</div>
-						<div class="col-2">
+						<div class="col-3 col-xl-2">
 							<button class="btn btn-primary" v-on:click='exportCandidates' type='button' v-bind:disabled='canDestroy'>Exportar para Senior</button>
 						</div>
 
@@ -128,8 +128,19 @@
 					</div>
 
 					<div class='row margin-top-10'>
-						<div class='col'>
-							<input class='form-control' placeholder='Busca...' id='search' name='search' @if(!empty($search)) value='{{$search}}' @endif>
+						<div class='col-12 col-lg-6'>
+							<input class='form-control' placeholder='Busca nome, cpf, telefone, email' id='search' name='search' @if(!empty($search)) value='{{$search}}' @endif>
+						</div>
+						<div class="col-12 col-lg-6">
+							<input class='form-control' placeholder='Busca endereço, cidade, estado' id='searchAddress' name='searchAddress' @if(!empty($searchAddress)) value='{{$searchAddress}}' @endif>
+						</div>
+					</div>
+					<div class='row margin-top-10'>
+						<div class="col-12 col-lg-6">
+							<input class='form-control' placeholder='Busca interesses, habilidades' id='searchInterests' name='searchInterests' @if(!empty($searchInterests)) value='{{$searchInterests}}' @endif>
+						</div>
+						<div class="col-12 col-lg-6">
+							<input class='form-control' placeholder='Busca trabalhos e experiencias anteriores' id='searchExperiences' name='searchExperiences' @if(!empty($searchExperiences)) value='{{$searchExperiences}}' @endif>
 						</div>
 					</div>
 					<div class='row margin-top-10'>
@@ -138,7 +149,6 @@
 								<thead>
 									<tr>
 										<th style='width:40px;'><input type='checkbox' id='check-all' v-on:click='reverseSelection()'></th>
-										<th>Id</th>
 										<th>Nome</th>
 										<th>Cidade</th>
 										<th>Estado</th>
@@ -146,6 +156,8 @@
 										<th>Candidaturas</th>
 										<th>Última Candidatura</th>
 										<th>Exportado Senior</th>
+										<th></th>
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -156,7 +168,6 @@
 										<tr class='hoverable' v-on:click='addItem({{$d->id}})' > 
 											<td style='width:40px;' for='data-check-{{$d->id}}' class='checker'>
 												<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
-											<td>{{$d->id}}</td>
 											<td>{{$d->name}}</td>
 											<td>{{$d->address_city}}</td>
 											<td>{{$d->address_state}}</td>
@@ -164,6 +175,16 @@
 											<td>{{$d->subscription_amount}}</td>
 											<td>{{(!empty($d->subscriptions[0]->created_at)) ? date_format($d->subscriptions[0]->created_at,'d/m/Y') : ''}}</td>
 											<td>{{(!empty($d->senior_num_can)) ? 'Exportado: '.$d->senior_num_can : ( ($d->exportado!==null) ? $export_states[$d->exportado] : 'Não' ) }}</td>
+											<td class='text-center'>
+												<a href="/adm/candidates/edit/{{$d->id}}" target='_blank' > 
+													<i class="fas fa-eye action-icon" title="Visualizar Candidato"></i> 
+												</a>
+											</td>
+											<td class='text-center'>
+												<a href="/adm/candidates/print/{{$d->id}}" target='_blank' > 
+													<i class="fas fa-clipboard-list action-icon" title="Visualizar Curriculum do Candidato"></i> 
+												</a>
+											</td>
 										</tr>
 									@endforeach
 								</tbody>
