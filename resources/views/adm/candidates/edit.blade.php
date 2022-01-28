@@ -38,7 +38,9 @@
                                 <div class="row">
                                     <div class="col-sm-12 col-lg-12">
                                         <h5 class='' >Nome: &nbsp {{$data->name}}</h5>
-                                        @php $chg_years = ((idate('m')-explode("-",$data->dob)[1])<0) ? 1 : 0 @endphp
+                                        @php 
+                                            $chg_years = ( !empty($data->dob) && strpos($data->dob,"-")!==false && (idate('m')-explode("-",$data->dob)[1]<0) ) ? 1 : 0;
+                                        @endphp
                                         <h5 class='' >Idade: &nbsp @php echo (!empty($data->dob)) ? (idate('Y')-explode("-",$data->dob)[0]) - $chg_years : '' @endphp anos</h5>
                                         <h5 class='' >Numcan do Senior: &nbsp {{$data->senior_num_can}}</h5>
                                     </div>

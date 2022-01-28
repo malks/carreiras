@@ -245,7 +245,7 @@
                                                         <option value='5' @if ($data->civil_state=='5') selected @endif>Concubinato</option>
                                                         <option value='6' @if ($data->civil_state=='6') selected @endif>Separado</option>
                                                         <option value='7' @if ($data->civil_state=='7') selected @endif>Uniao estavel</option>
-                                                        <option value='8' @if ($data->civil_state=='9') selected @endif>Outros</option>
+                                                        <option value='8' @if ($data->civil_state=='8') selected @endif>Outros</option>
                                                 </select>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">

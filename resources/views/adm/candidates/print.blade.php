@@ -28,7 +28,7 @@
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <p>@php echo (!empty($data->dob)) ? (idate('Y')-explode("-",$data->dob)[0]) : ''; @endphp anos - {{(!empty($data->civil_state) && is_numeric($data->civil_state)) ? $civil_states[$data->civil_state-1] : ''}}</p>
+                                    <p>@php echo (!empty($data->dob)) ? (idate('Y')-explode("-",$data->dob)[0]) : ''; @endphp anos - {{(!empty($data->civil_state) && is_numeric($data->civil_state)) ? $civil_states[$data->civil_state-1 | 0] : ''}}</p>
                                 </div>
                             </div>
                             <div class="row" style='margin-top:-10px;'>
@@ -63,7 +63,7 @@
                             <div class="row margin-top-30">
                                 <div class="col">
                                     <p>Natural de {{$data->natural_city}} - {{$data->natural_state}}, {{$data->natural_country}}</p>
-                                    <p>Reside em {{$data->address_city}} - {{$data->address_state}}, {{$data->address_country}}</p>
+                                    <p>Reside em {{$data->address_district}}, {{$data->address_city}} - {{$data->address_state}}, {{$data->address_country}}</p>
                                     <p>{{$data->email}} - {{(!empty($data->ddd_mobile)) ? $data->ddd_mobile : $data->ddd_phone}} {{(!empty($data->mobile)) ? substr($data->mobile,0,1)."-".substr($data->mobile,1,4)."-".substr($data->mobile,5,4) : substr($data->phone,0,4)."-".substr($data->phone,4,4)}}</p>    
                                 </div>
                             </div>
