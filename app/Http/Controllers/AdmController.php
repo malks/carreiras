@@ -897,26 +897,26 @@ class AdmController extends Controller
         })
         ->when(!empty($request->searchAddress),function($query) use ($request) {
             $query->where( function ($query) use ($request){
-                $query->where('address_street','like',"%$request->search%");
-                $query->orWhere('address_city','like',"%$request->search%");
-                $query->orWhere('address_state','like',"%$request->search%");
-                $query->orWhere('address_country','like',"%$request->search%");
+                $query->where('address_street','like',"%$request->searchAddress%");
+                $query->orWhere('address_city','like',"%$request->searchAddress%");
+                $query->orWhere('address_state','like',"%$request->searchAddress%");
+                $query->orWhere('address_country','like',"%$request->searchAddress%");
             });
         })
         ->when(!empty($request->searchInterests),function($query) use ($request) {
             $query->leftJoin('candidates_tags','candidates_tags.candidate_id','=','candidates.id');
             $query->leftJoin('tags','tags.id','=','candidates_tags.tag_id');
             $query->where( function ($query) use ($request){
-                $query->where('skills','like',"%$request->search%");
-                $query->orWhere('others','like',"%$request->search%");
-                $query->orWhere('tags.name','like',"%$request->search%");
+                $query->where('skills','like',"%$request->searchInterests%");
+                $query->orWhere('others','like',"%$request->searchInterests%");
+                $query->orWhere('tags.name','like',"%$request->searchInterests%");
             });
         })
         ->when(!empty($request->searchExperiences),function($query) use ($request) {
             $query->leftJoin('experience','experience.candidate_id','=','candidates.id');
             $query->where( function ($query) use ($request){
-                $query->where('experience.activities','like',"%$request->search%");
-                $query->orWhere('experience.job','like',"%$request->search%");
+                $query->where('experience.activities','like',"%$request->searchExperiences%");
+                $query->orWhere('experience.job','like',"%$request->searchExperiences%");
             });
         })
         ->when(!empty($request->filter_updated_at_start), function ($query) use ($request) {
