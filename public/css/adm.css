@@ -100,12 +100,17 @@ input[type=checkbox]
 
 i.action-icon{
   cursor:pointer;
-  margin-top: 11px;
+  margin-top: 6px;
   color:#000;
 }
 
 i.action-icon:hover {
   color: #666;
+}
+
+i.just-icon{
+  margin-top:2px;
+  margin-left:5px;
 }
 
 .hide{

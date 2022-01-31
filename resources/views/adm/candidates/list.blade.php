@@ -6,6 +6,7 @@
 @stop
 
 <input type='hidden' id='full-data' value='@php echo json_encode($data_list);@endphp'/>
+<input type='hidden' id='viewed-data' value='{{$viewed_list}}'/>
 
 @section('content')
 	<div id="app" action='/adm/candidates'>
@@ -122,6 +123,16 @@
 							<label for="data-end">Fim Última Atualização:</label>
 							<input type="date" class="form-control" id='data-end' name='filter_updated_at_end' value='{{$filter_updated_at_end}}'>
 						</div>
+					</div>
+					<div class="row margin-top-10">
+						<div class="col-sm-12 col-lg-3">
+							<label for="dob-start">Início Data de Nascimento:</label>
+							<input type="date" class="form-control" id='dob-start' name='filter_dob_start' value='{{$filter_dob_start}}'>
+						</div>
+						<div class="col-sm-12 col-lg-3">
+							<label for="dob-end">Fim Data de Nascimento:</label>
+							<input type="date" class="form-control" id='dob-end' name='filter_dob_end' value='{{$filter_dob_end}}'>
+						</div>
 						<div class="col-sm-12 col-lg-2 margin-top-30">
 							<button class="btn btn-primary" type='submit'>Buscar</button>
 						</div>
@@ -158,6 +169,7 @@
 										<th>Exportado Senior</th>
 										<th></th>
 										<th></th>
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -175,13 +187,14 @@
 											<td>{{$d->subscription_amount}}</td>
 											<td>{{(!empty($d->subscriptions[0]->created_at)) ? date_format($d->subscriptions[0]->created_at,'d/m/Y') : ''}}</td>
 											<td>{{(!empty($d->senior_num_can)) ? 'Exportado: '.$d->senior_num_can : ( ($d->exportado!==null) ? $export_states[$d->exportado] : 'Não' ) }}</td>
+											<td> <i class="fas just-icon" :class="{ 'fa-eye': isViewed({{$d->id}}), 'fa-window-minimize': !isViewed({{$d->id}}) } "> </i> </td>
 											<td class='text-center'>
-												<a href="/adm/candidates/edit/{{$d->id}}" target='_blank' > 
-													<i class="fas fa-eye action-icon" title="Visualizar Candidato"></i> 
+												<a href="/adm/candidates/edit/{{$d->id}}" target='_blank' v-on:click="addViewed({{$d->id}})" > 
+													<i class="fas fa-id-card action-icon" title="Visualizar Candidato"></i> 
 												</a>
 											</td>
 											<td class='text-center'>
-												<a href="/adm/candidates/print/{{$d->id}}" target='_blank' > 
+												<a href="/adm/candidates/print/{{$d->id}}" target='_blank' v-on:click="addViewed({{$d->id}})" > 
 													<i class="fas fa-clipboard-list action-icon" title="Visualizar Curriculum do Candidato"></i> 
 												</a>
 											</td>

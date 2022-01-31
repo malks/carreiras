@@ -134,6 +134,7 @@ $router->group(['middleware' => ['auth','is.admin','can:access admin']], functio
         Route::post('/adm/candidates/export-candidates', 'AdmController@exportCandidates')->name('export-candidates');
         Route::get('/adm/candidates/save', 'AdmController@candidatesSave')->name('candidates-save');
         Route::get('/adm/candidates/print/{id}', 'AdmController@candidatePrint')->name('candidates-print');
+        Route::get('/adm/candidates/view/{id}', 'AdmController@candidateView')->name('candidates-view');
     });
 
     Route::group(['middleware' => ['can:users']], function() {

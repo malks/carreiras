@@ -842,12 +842,14 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             allUnits:[],
             jobChoosing:false,
             selectedJob:null,
+            viewedItem:[],
         },
         mounted:function (){
             if ($('[check-candidates-list]').length>0){
                 this.loadAvailableJobs();
                 this.loadFields();
                 this.loadUnits();
+                this.loadViewed();
             }
         }, 
         computed:{
@@ -933,6 +935,15 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     this.selectedJob=id;
                 else
                     this.selectedJob=null;
+            },
+            loadViewed:function (){
+                let that=this;
+                let viewed_list=$('#viewed-data').val().split(",");
+                console.log(viewed_list);
+                for (let i =0;i<viewed_list.length;i++){
+                    if (viewed_list[i]!="")
+                        that.viewedItem.push(viewed_list[i]);
+                }
             },
             loadAvailableJobs:function(){
                 let that = this;
@@ -1021,6 +1032,26 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     this.selectedIds.splice(idx,1);
                 else
                     this.selectedIds.push(id);
+            },
+            addViewed:function(id){
+                let idx=this.viewedItem.findIndex(el=>el == id);
+                let that=this;
+                if(idx<0){
+                    $.ajax({
+                        url:'/adm/candidates/view/'+id,
+                        type:'GET',
+                        success:function(data){
+                            that.viewedItem.push(id);
+                        }
+                    })
+                }
+            },
+            isViewed:function(id){
+                let ret=false;
+                let idx=this.viewedItem.findIndex(el=>el == id);
+                if (idx>=0)
+                    ret=true;
+                return ret;
             },
             reverseSelection:function(){
                 console.log(fullData);
