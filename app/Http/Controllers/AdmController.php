@@ -883,6 +883,11 @@ class AdmController extends Controller
         ]);
     }
 
+    public function candidateView ($id){
+        $data=['viewed'=>1];
+        DB::table('candidates')->where('id','=',$id)->update($data);
+    }
+
     public function candidatesList (Request $request){
 
         $data=Candidate::
@@ -925,6 +930,12 @@ class AdmController extends Controller
         ->when(!empty($request->filter_updated_at_end), function ($query) use ($request) {
             $query->where('candidates.updated_at','<=',$request->filter_updated_at_end);
         })
+        ->when(!empty($request->filter_dob_start), function ($query) use ($request) {
+            $query->where('candidates.dob','>=',$request->filter_dob_start);
+        })
+        ->when(!empty($request->filter_dob_end), function ($query) use ($request) {
+            $query->where('candidates.dob','<=',$request->filter_dob_end);
+        })
         ->distinct()
         ->with(['Schooling','Experience'])
         ->withCount('subscriptions as subscription_amount')
@@ -933,7 +944,14 @@ class AdmController extends Controller
         ->orderBy('candidates.updated_at','desc')
         ->orderBy('subscribed.created_at','desc')
         ->paginate(15);
+        $viewed_list=array_map(function($arr){
+            if($arr['viewed'])
+                return $arr['id'];
+            else
+                return false;
+        },$data->toArray()['data']);
 
+        $viewed_list=implode(",",$viewed_list);
         
         $schooling_grades=[
             '' => 'Não definido',
@@ -976,6 +994,9 @@ class AdmController extends Controller
                 'schooling_status'=>$schooling_status,
                 'filter_updated_at_end'=>$request->filter_updated_at_end,
                 'filter_updated_at_start'=>$request->filter_updated_at_start,
+                'filter_dob_start'=>$request->filter_dob_start,
+                'filter_dob_end'=>$request->filter_dob_end,
+                'viewed_list'=>$viewed_list,
             ]
         );
 
