@@ -944,6 +944,7 @@ class AdmController extends Controller
         ->orderBy('candidates.updated_at','desc')
         ->orderBy('subscribed.created_at','desc')
         ->paginate(15);
+        
         $viewed_list=array_map(function($arr){
             if($arr['viewed'])
                 return $arr['id'];
