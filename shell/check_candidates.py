@@ -11,7 +11,7 @@ if __name__ == "__main__":
     exported=sql_select("SELECT candidates.*  FROM candidates where candidates.senior_num_can IS NOT NULL",main_sql_conn)
     
     for cnd in exported:
-        sql="SELECT * FROM R122CEX WHERE NUMCAN="+cnd["NUMCAN"]
+        sql="SELECT * FROM R122CEX WHERE NUMCAN="+cnd["senior_num_can"]
         ret=oc_select(sql,main_oc_conn)
         print(ret)
 
