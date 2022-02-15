@@ -81,8 +81,8 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper['CODEST']=get_state_code_from_name(data['address_state'])
         helper['CODCID']=get_city_code_from_name(data['address_city'])
         helper['CODBAI']=get_district_code_from_name(data['address_district'],str(helper['CODCID']))
-        helper['ENDCAN']=data['address_street']
         helper['ENDNUM']=str(data['address_number'])[0:6]
+        helper['ENDCAN']=str(data['address_street'])[0:40]
         helper['CODCEP']=data['zip']
 
         helper['NOMCAN']=str(data['name'])[0:40]
