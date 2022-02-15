@@ -82,12 +82,16 @@ function candidateSubscription(){
                 let ret = this.fields.find(obj=>{
                     return obj.id==field_id;
                 });
+                if (ret==undefined)
+                    ret={name:''};
                 return ret;
             },
             getUnit:function (unit_id){
                 let ret = this.units.find(obj=>{
                     return obj.id==unit_id;
                 });
+                if (ret==undefined)
+                    ret={name:''};
                 return ret;
             },
             getSubscriptionState:function (job){
@@ -112,9 +116,14 @@ function candidateSubscription(){
             },
             getSubscriptionsJob: function(subscription){
                 let that = this;
-                return that.jobs.find(obj => {
+                console.log(subscription);
+                let ret=null;
+                ret= that.jobs.find(obj => {
                     return obj.id==subscription.job_id;
                 })
+                if (ret==undefined)
+                    ret={name:''};
+                return ret;
             },
             isSubscribed:function (job){
                 let that = this;
@@ -245,12 +254,16 @@ function candidateJobs(){
                 let ret = this.fields.find(obj=>{
                     return obj.id==field_id;
                 });
+                if (ret==undefined)
+                    ret={name:''};
                 return ret;
             },
             getUnit:function (unit_id){
                 let ret = this.units.find(obj=>{
                     return obj.id==unit_id;
                 });
+                if (ret==undefined)
+                    ret={name:''};
                 return ret;
             },
             getSubscriptionState:function (job){

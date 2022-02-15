@@ -163,15 +163,25 @@ class LandingController extends Controller
 
     public function policy() {
         $logged_in=Auth::user();
+        $role="";
+        if (!empty($logged_in)){
+            $role=User::where('id','=',$logged_in->id)->with('roles')->first()->roles[0]->name;
+        }
         return view('policy')->with([
+            'role'=>$role,
             'logged_in'=>$logged_in,
         ]);
     }
 
     public function help(){
         $logged_in=Auth::user();
+        $role="";
+        if (!empty($logged_in)){
+            $role=User::where('id','=',$logged_in->id)->with('roles')->first()->roles[0]->name;
+        }
         return view('help')->with([
             'logged_in'=>$logged_in,
+            'role'=>$role,
         ]);
     }
 
@@ -194,6 +204,10 @@ class LandingController extends Controller
 
     public function profile(){
         $logged_in=Auth::user();
+        $role="";
+        if (!empty($logged_in)){
+            $role=User::where('id','=',$logged_in->id)->with('roles')->first()->roles[0]->name;
+        }
         $data=Candidate::where('user_id','=',$logged_in->id)->with(['Schooling','Experience','interests','langs'])->first();
         if (empty($data))
             $data=new Candidate;
@@ -232,6 +246,7 @@ class LandingController extends Controller
         
         return view('profile')->with([
             'tags'=>$tags,
+            'role'=>$role,
             'data'=>$data,
             'logged_in'=>$logged_in,
             'deficiencies'=>$deficiencies,
@@ -404,6 +419,10 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
     public function jobsList(){
         $logged_in=Auth::user();
+        $role="";
+        if (!empty($logged_in)){
+            $role=User::where('id','=',$logged_in->id)->with('roles')->first()->roles[0]->name;
+        }
         if (!empty($logged_in))
             $candidate=Candidate::where('user_id','=',$logged_in->id)->first();
         else
@@ -430,6 +449,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
             $user_id=$logged_in->id;
         return view('candidate_jobs')->with([
             'jobs'=>$jobs,
+            'role'=>$role,
             'fields'=>$fields,
             'units'=>$units,
             'logged_in'=>$logged_in,
@@ -441,6 +461,11 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
     public function candidateSubscriptions() {
         $logged_in=Auth::user();
+        $role="";
+        if (!empty($logged_in)){
+            $role=User::where('id','=',$logged_in->id)->with('roles')->first()->roles[0]->name;
+        }
+
         $candidate=Candidate::where('user_id','=',$logged_in->id)->with(['subscriptions'])->first();
         $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
         $fields = Field::get();
@@ -448,9 +473,14 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
         $candidate_id=0;
         if (!empty($candidate)){
-            $subscriptions = Subscribed::where('candidate_id','=',$candidate->id)->with(['states'=>function ($states_query) {
+            $subscriptions = Subscribed::where('candidate_id','=',$candidate->id)
+            ->with(['states'=>function ($states_query) {
                 $states_query->where('candidate_visible','=','1');
-            }])->get();
+            }])
+            ->whereHas('job',function($query){
+                $query->where('status','=','1');
+            })
+            ->get();
             $candidate_id=$candidate->id;
         }
         else
@@ -462,6 +492,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
         return view('candidate_subscriptions')->with([
             'jobs'=>$jobs,
+            'role'=>$role,
             'subscriptions'=>$subscriptions,
             'logged_in'=>$logged_in,
             'user_id'=>$user_id,

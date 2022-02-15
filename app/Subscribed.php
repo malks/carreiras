@@ -18,4 +18,8 @@ class Subscribed extends Pivot
         return $this->belongsTo('App\Candidate');
     }
 
+    public function job(){
+        return $this->belongsTo('App\Job');
+    }
+
 }

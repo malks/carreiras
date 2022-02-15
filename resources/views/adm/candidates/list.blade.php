@@ -207,7 +207,7 @@
 					<div class='row'>
 						<div class='col-lg-12'>
 							<div style='float:left;line-height:35px;'>
-								Exibindo {{$data->firstItem()}} a {{$data->total()/max(1,$data->currentPage())}} de {{$data->total()}}
+								Exibindo {{(int) $data->withQueryString()->firstItem()}} a {{$data->withQueryString()->firstItem()+$data->withQueryString()->perPage()}} de {{$data->withQueryString()->lastItem()}}
 							</div>
 							<div style='float:right;'>
 								{{$data->withQueryString()->links()}}

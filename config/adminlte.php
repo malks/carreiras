@@ -231,15 +231,15 @@ return [
         ],
         [
             'text' => 'Página Inicial',
-            'url'  => '/',
+            'url'  => '/login',
             'icon' => 'fas fa-external-link-alt',
         ],
-        [
+        /*[
             'text' => 'Configurar Home',
             'url'  => 'adm/config',
             'icon' => 'fas fa-tools',
             'can' => ['config'],
-        ],
+        ],*/
         [
             'text' => 'Usuários do Sistema',
             'url'  => 'adm/users',

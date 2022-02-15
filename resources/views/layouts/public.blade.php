@@ -75,13 +75,13 @@
                                             @if(empty($logged_in))
                                                 <ul class="hedone-menu" id='welcoLogin'>
                                                     <li class="menu-item">
-                                                        <a href="/">Início</a>
-                                                    </li>
-                                                    <li class="menu-item">
-                                                        <a href="/policy">Termos</a>
+                                                        <a href="/portal">Portal</a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="/jobs">Vagas</a>
+                                                    </li>
+                                                    <li class="menu-item">
+                                                        <a href="/policy">Termos</a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="/help">Ajuda</a>
@@ -127,8 +127,13 @@
                                             @else 
                                                 <ul class="hedone-menu" id='welcoLogin'>
                                                     <li class="menu-item">
-                                                        <a href="/">Início</a>
+                                                        <a href="/portal">Portal</a>
                                                     </li>
+                                                    @if($role=='admin')
+                                                        <li class="menu-item">
+                                                            <a href="/home">Admin</a>
+                                                        </li>
+                                                    @endif
 
                                                     <li class="menu-item">
                                                         <a href="/policy">Termos</a>
@@ -140,10 +145,10 @@
                                                         <a href="/jobs">Vagas</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="/profile">Perfil</a>
+                                                        <a href="/help">Ajuda</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="/help">Ajuda</a>
+                                                        <a href="/profile">Perfil</a>
                                                     </li>
                                                     <li>
                                                         <span class='small margin-left-20'>

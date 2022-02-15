@@ -15,7 +15,12 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 App::setLocale('ptbr');
-Route::get('/', 'LandingController@index')->name('home');
+Route::get('/', function (){
+    return redirect('/login');
+})->name('home');
+Route::get('/portal', function () {
+    return redirect()->away('https://www.lunelli.com.br');
+});
 //Route::get('/login', 'LandingController@index')->name('login');
 Route::get('/login', 'LandingController@access')->name('login');
 Route::get('/logout', 'Auth\LoginController@logout');

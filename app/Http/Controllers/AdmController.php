@@ -517,6 +517,7 @@ class AdmController extends Controller
         ->with(['tags','subscribers','subscribers.interests','subscribers.experience','field','unit'])
         ->withCount(['subscriptions as subscription_amount'=>function ($query) {$query->where('active','=',1);}])
         ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])
+        ->orderByRaw('subscription_amount desc')
         ->get()->toArray();
 
         $data['states'] = State::all()->toArray();
