@@ -182,13 +182,13 @@
                 <div class="row">
 
                     <div class="footer-social-block">
-                        <a href="https://www.instagram.com/grupolunelli/" target='_blank' class="w-inline-block social-wrap">
+                        <a href="https://www.instagram.com/lunellioficial/" target='_blank' class="w-inline-block social-wrap">
                             <i style='font-size:16pt;line-height:37px;' class="fab fa-instagram"></i>
                         </a>
                         <a href="https://www.linkedin.com/company/grupo-lunelli" target='_blank' class="w-inline-block social-wrap">
                             <i style='font-size:16pt;line-height:37px;' class="fab fa-linkedin"></i>
                         </a>
-                        <a href="https://www.facebook.com/grupolunelli" target='_blank' class="w-inline-block social-wrap">
+                        <a href="https://www.facebook.com/lunellioficial" target='_blank' class="w-inline-block social-wrap">
                             <i style='font-size:16pt;line-height:37px;' class="fab fa-facebook"></i>
                         </a>
                         <a href="https://www.youtube.com/channel/UCPfbbICzMyJAgkC3iDtFlHA/featured"  target='_blank' class="w-inline-block social-wrap">
