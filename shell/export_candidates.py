@@ -110,7 +110,7 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper['NUMRES']=data['veteran_card']
         helper['DATCHE']=data['arrival_date']
         helper['DVLEST']=data['visa_expiration']
-        helper['VISEST']=data['foreign_register']
+        helper['VISEST']=re.sub("\D","",str(data['foreign_register']))[0:2]
 
         helper['NOMPAI']=data['father_name']
         helper['NOMMAE']=data['mother_name']
