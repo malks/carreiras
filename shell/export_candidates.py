@@ -207,7 +207,7 @@ if __name__ == "__main__":
     candidates_carreiras_avulsos=sql_select("SELECT candidates.*  FROM candidates JOIN exportables ON candidates.id=exportables.candidate_id WHERE exportables.status=0 AND candidates.senior_num_can IS NULL",main_sql_conn)
     candidates_senior_avulsos=carreiras_to_senior_candidate(candidates_carreiras_avulsos)
     export_candidates_to_senior(candidates_senior_avulsos,main_oc_conn)
-    update_exportable(candidates_senior_avulsos,main_sql_conn)
+    update_exportable(candidates_carreiras_avulsos,main_sql_conn)
 
 
     #Candidatos do carreiras que estão inscritos em vagas ativas e última sincronização com senior foi anterior a ultima atualização/inscrição do candidato em
