@@ -73,12 +73,20 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper={}
         num_can=""
 
+        natstate=data['natural_state']
+        if len(str(natstate)) > 2:
+            natstate=get_state_code_from_name(natstate)
+
+        adrstate=data['address_state']
+        if len(str(adrstate)) > 2:
+            adrstate=get_state_code_from_name(adrstate)
+
         helper['PAINAS']=get_country_code_from_name(data['natural_country'])
-        helper['ESTNAS']=get_state_code_from_name(data['natural_state'])
+        helper['ESTNAS']=natstate
         helper['CIDNAS']=get_city_code_from_name(data['natural_city'])
   
         helper['CODPAI']=get_country_code_from_name(data['address_country'])
-        helper['CODEST']=get_state_code_from_name(data['address_state'])
+        helper['CODEST']=adrstate
         helper['CODCID']=get_city_code_from_name(data['address_city'])
         helper['CODBAI']=get_district_code_from_name(data['address_district'],str(helper['CODCID']))
         helper['ENDNUM']=str(data['address_number'])[0:6]
