@@ -595,7 +595,7 @@ function validate(whichTab){
             if ($('#data-dob').val().length<10){
                 ret.push({'candidate-data': 'Data de nascimento é obrigatório'});
             }
-            if ($('#data-address-street').val().length<4 || $('#data-address-city').val().length<4 || $('#data-address-district').val().length<4 || $('#data-address-state').val().length<2 || $('#data-address-country').val().length<3 || $('#data-address-zip').val().length<10){
+            if ($('#data-address-street').val().length<4 || $('#data-address-city').val().length<4 || $('#data-address-district').val().length<4 || $('#data-address-state').val().length<2 || $('#data-address-country').val().length<3 ){
                 ret.push({'candidate-data': 'Endereço residencial é obrigatório'});
             }
             if ($('#data-cpf').val().length!=14){
