@@ -626,7 +626,6 @@ function validate(whichTab){
             if ($('#schooling-formation0')[0]==undefined || 
                 $('#schooling-formation0').val()==null ||
                 $('#schooling-status0').val()==null ||
-                $('#schooling-course-0').val()==null ||
                 $('#schooling-grade0').val()==null ||
                 $('#schooling-institution0').val()==null ||
                 $('#schooling-start0').val()==null ||
@@ -634,7 +633,7 @@ function validate(whichTab){
             ){
                 ret.push({'schooling-data': 'Ao menos uma formação necessária.'});
                 ret.push({"schooling-data": "As formações precisam ter todos os dados preenchidos."});
-                ret.push({"schooling-data":"Você pode selecionar Fundamental ou Médio em formação para ensino fundamental e médio."});
+                ret.push({"schooling-data":"Você pode selecionar Fundamental ou Médio em formação."});
             }
             /*if ($('#interests-holder .badge')[0]==undefined)
                 ret.push({'extra': 'Informe ao menos uma área de interesse'});*/
