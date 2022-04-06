@@ -308,7 +308,12 @@ function candidateJobs(){
                 })
             }, 
             applyForJob:function (job){
-                $('#observation-modal').show();
+                if (this.user_id==0){
+                    window.location.href='/register';
+                }
+                else{
+                    this.jobApply()
+                }
             },
             jobApply:function(){
                 let job = this.viewingJob.id;
