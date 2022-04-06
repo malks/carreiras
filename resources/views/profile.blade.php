@@ -608,7 +608,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="row margin-top-10">
+                                                    <div class="row margin-top-10" v-show="schooling.formation=='superior' | schooling.formation=='technical'">
                                                         <div class=" col-sm-12 col-lg-6">
                                                             <label :for="'schooling-course'+index">*Curso</label>
                                                             <input type='text' class='w-input text-field white-background' :id="'schooling-course-'+index" v-model="schooling.course" />
@@ -624,7 +624,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="row margin-top-10">
+                                                    <div class="row margin-top-10" v-show="schooling.formation=='superior' | schooling.formation=='technical'">
                                                         <div class=" col-sm-12 col-lg-6">
                                                             <label :for="'schooling-institution'+index">*Instituição</label>
                                                             <input type='text' class='w-input text-field white-background' :id="'schooling-institution'+index" v-model='schooling.institution' />

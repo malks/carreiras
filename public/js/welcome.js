@@ -630,14 +630,9 @@ function validate(whichTab){
         case 'schooling-data':
             if ($('#schooling-formation0')[0]==undefined || 
                 $('#schooling-formation0').val()==null ||
-                $('#schooling-status0').val()==null ||
-                $('#schooling-grade0').val()==null ||
-                $('#schooling-institution0').val()==null ||
-                $('#schooling-start0').val()==null ||
-                $('#schooling-end0').val()==null
+                $('#schooling-status0').val()==null 
             ){
                 ret.push({'schooling-data': 'Ao menos uma formação necessária.'});
-                ret.push({"schooling-data": "As formações precisam ter todos os dados preenchidos."});
                 ret.push({"schooling-data":"Você pode selecionar Fundamental ou Médio em formação."});
             }
             /*if ($('#interests-holder .badge')[0]==undefined)
@@ -943,6 +938,9 @@ function getCustomData(screenNameHelper,firstTab){
     };
     if (screenNameHelper=='profile-edit'){
         customData.schoolings=JSON.parse(document.getElementById('schooling-data').value);
+        if (customData.schoolings.length==0){
+            customData.schoolings.push({'formation':'highschool','status':'complete','grade':'graduation', 'start':'', 'end':''});
+        }
         customData.experiences=JSON.parse(document.getElementById('experience-data').value);
         customData.tags=JSON.parse(document.getElementById('tags-data').value);
         customData.interestInput=false;
