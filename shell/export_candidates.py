@@ -57,8 +57,8 @@ def get_deficiency_senior_id_from_carreiras_code(deficiency_id):
         carreiras_conn=sql_conn()
         senior_conn=oc_conn()
 
-        deficiency_desc=sql_select("SELECT name FROM lunellicarreiras.deficiencies WHERE id='"+deficiency_id+"'",carreiras_conn)
-        senior_code=oc_select("SELECT CODDEF FROM R022DEF WHERE DESDEF LIKE '"+deficiency_desc[0]['name']+"'")
+        deficiency_desc=sql_select("SELECT name FROM lunellicarreiras.deficiencies WHERE id='"+str(deficiency_id)+"'",carreiras_conn)
+        senior_code=oc_select("SELECT CODDEF FROM R022DEF WHERE DESDEF LIKE '"+deficiency_desc[0]['name']+"'",senior_conn)
         if len(senior_code)>0 and (senior_code[0]['CODDEF']!=None):
             ret=senior_code[0]['CODDEF']
 
@@ -170,7 +170,7 @@ def add_carreiras_subscribed_state(candidates,conn):
 #Altera status do exportador para candidatos exportados
 def update_exportable(candidates,conn):
     for candidate in candidates:
-        run_sql("UPDATE exportables SET status=1 WHERE candidate_id="+candidate["id"]+",updated_at=now()",conn)
+        run_sql("UPDATE exportables SET status=1 WHERE candidate_id="+str(candidate["id"])+",updated_at=now()",conn)
     return
 
 #Na senior não tem autoincrement na PK, então eu obtenho o valor maximo dela aqui e somo 1 antes de inserir
