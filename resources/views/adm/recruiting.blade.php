@@ -55,14 +55,6 @@
                     <div class="card-header">
                         <h4>Vagas</h4>
                         <div class="row">
-                            <div class="col-xs-12 col-lg-6">
-                                <h6 class='margin-top-10'>Vagas criadas de:</h6>
-                                <input type="date" class="form-control" name='filter-date-from' v-model='pushData.filters.jobs.direct.gt.created_at' v-on:change='updateData'>
-                            </div>
-                            <div class="col-xs-12 col-lg-6">
-                                <h6 class='margin-top-10'>Vagas criadas até:</h6>
-                                <input type="date" class="form-control" name='filter-date-to' v-model='pushData.filters.jobs.direct.lt.created_at' v-on:change='updateData'>
-                            </div>
 
                             <div class="col-xs-12 col-lg-6">
                                 <h6 class='margin-top-10'>Filtrar por Nome</h6>
@@ -221,14 +213,23 @@
                             </template>
                         </div>
                         <div class="row margin-top-20">
+                            <div class="col-lg-12">
+                                <hr>
+                                <button v-on:click='updateSelectedJobData()' class='btn btn-default'>
+                                    <i class="fas fa-sync"></i>
+                                    Atualizar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row margin-top-20">
                             <div class="col-xs-12 col-lg-12 table-responsive">
                                 <table class='table dataTable'>
                                     <thead>
                                         <tr>
+                                            <th>NUMCAN</th>
                                             <th>Nome</th>
                                             <th>Cidade</th>
                                             <th>Estado</th>
-                                            <th class='text-right'>Telefone</th>
                                             <th>Email</th>
                                             <th class='text-center'>Status</th>
                                             <th></th>
@@ -240,13 +241,14 @@
                                         <tr v-show="notYet(runData.selectedJob.id)">
                                             <td colspan=4> Selecione uma vaga para ver os candidatos</td>
                                         </tr>
-        
-                                        <template v-for="(subscription,subx) in runData.subscriptions">
+                                        <tr v-if="runData.updating && (runData.subscriptions==null || runData.subscriptions.length==0)"><td>Carregando...</td></tr>
+                                        <tr v-else-if="!runData.updating && (runData.subscriptions==null || runData.subscriptions.length==0)"><td>Nenhum resultado encontrado.</td></tr>
+                                        <template v-else v-for="(subscription,subx) in runData.subscriptions">
                                             <tr v-if="candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription)" class='select-sized'>
+                                                <td>@{{ getCandidate(subscription).senior_num_can }}</td>
                                                 <td>@{{ getCandidate(subscription).name }}</td>
                                                 <td>@{{ getCandidate(subscription).address_city }}</td>
                                                 <td>@{{ getCandidate(subscription).address_state }}</td>
-                                                <td class='text-right'>@{{ getCandidate(subscription).phone }}</td>
                                                 <td>@{{ getCandidate(subscription).email }}</td>
                                                 <td class='text-center'>
                                                     <select class="form-control" v-on:change="addSubscriptionState(getCandidate(subscription).id,runData.selectedJob.id,getState(runData.subscriptions[subx].current_state).name)" v-model="runData.subscriptions[subx].current_state">

@@ -511,16 +511,42 @@ function recruiting(){
                 that.runData.selectedJob={...bootstrapData.selectedJob};
                 that.runData.subscriptions={...bootstrapData.subscriptions};
             },
+            updateSelectedJobData:function (){
+                let that = this;
+                let pushData={...that.pushData};
+                that.runData.subscriptions=[];
+                pushData.filters.jobs.direct.in.id=that.runData.selectedJob.id;
+                pushData['_token']=$('[name="_token"]').val();
+                that.runData.updating=true;
+                console.log(pushData);
+                $.ajax({
+                    url:'/adm/recruiting-data',
+                    type:'POST',
+                    data:pushData,
+                    success:function (data){
+                        let objData=JSON.parse(data);
+                        let theJobIdx=that.runData.jobs.findIndex(obj=>{
+                            return obj.id===objData.jobs[0].id;
+                        })
+                        that.runData.jobs[theJobIdx]=objData.jobs[0];
+                        that.runData.selectedJob=objData.jobs[0];
+                        that.runData.subscriptions=objData.jobs[0].subscriptions;
+                        for (let i in that.runData.selectedJob.subscriptions){
+                            that.runData.selectedJob.subscriptions[i].current_state=that.runData.selectedJob.subscriptions[i].states[that.runData.selectedJob.subscriptions[i].states.length-1].id;
+                        }
+                        that.runData.updating=false;
+                    }
+                });
+            },
             updateSelectedJob:function (){
                 console.log("updateSelectedJob");
                 let that = this;
-                if (this.runData.selectedJob.id!=null){
-                    this.runData.selectedJob=this.runData.jobs.find(obj=>{
-                       return obj.id==this.runData.selectedJob.id;
+                if (that.runData.selectedJob.id!=null){
+                    that.runData.selectedJob=that.runData.jobs.find(obj=>{
+                       return obj.id==that.runData.selectedJob.id;
                     });
-                    if (this.runData.selectedJob==undefined){
-                        this.runData.selectedJob={...bootstrapData.selectedJob};
-                        console.log(this.runData.selectedJob);
+                    if (that.runData.selectedJob==undefined){
+                        that.runData.selectedJob={...bootstrapData.selectedJob};
                     }
                     else{
                         for (let i in that.runData.selectedJob.subscriptions){
@@ -557,10 +583,6 @@ function recruiting(){
                         that.updateSelectedJob();
                         console.log(that.runData);
                         that.runData.updating=false;
-                        if(that.pushData.filters.jobs.direct.lt.created_at=='')
-                            that.pushData.filters.jobs.direct.lt.created_at=objData['date_filter_end'];
-                        if(that.pushData.filters.jobs.direct.gt.created_at=='')
-                            that.pushData.filters.jobs.direct.gt.created_at=objData['date_filter_start'];
                     }
                 });
             },

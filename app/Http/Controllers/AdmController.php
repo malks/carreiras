@@ -405,7 +405,7 @@ class AdmController extends Controller
         $directLikeDone=0;
         $deepLikeDone=0;
 
-        $date_filter_start=Carbon::now('America/Sao_Paulo')->subMonths(4)->startOfDay()->format('Y-m-d');
+        $date_filter_start=Carbon::now('America/Sao_Paulo')->subMonths(2)->startOfDay()->format('Y-m-d');
         $date_filter_end=Carbon::tomorrow('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
 
         $data['jobs']=Job::orderBy('updated_at','desc')
