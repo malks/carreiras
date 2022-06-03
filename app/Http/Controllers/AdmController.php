@@ -893,7 +893,7 @@ class AdmController extends Controller
     public function candidatesList (Request $request){
 
         $data=Candidate::
-        select('candidates.*','exportables.status as exportado')
+        select('candidates.*','exportables.status as exportado','subscribed.created_at')
         ->when(!empty($request->search),function($query) use ($request) {
             $query->where( function ($query) use ($request){
                 $query->where('candidates.name','like',"%$request->search%");
