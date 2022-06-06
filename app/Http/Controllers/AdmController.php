@@ -893,7 +893,19 @@ class AdmController extends Controller
     public function candidatesList (Request $request){
 
         $data=Candidate::
-        select('candidates.*','exportables.status as exportado','subscribed.created_at')
+        distinct()
+        ->select(
+            'candidates.id',
+            'candidates.name',
+            'candidates.cpf',
+            'candidates.email',
+            'candidates.phone',
+            'candidates.updated_at',
+            'candidates.dob',
+            'candidates.viewed',
+        )
+        ->selectRaw(DB::Raw('ANY_VALUE(subscribed.created_at) as data_candidatura'))
+        ->selectRaw(DB::Raw('ANY_VALUE(exportables.status)  as exportado'))
         ->when(!empty($request->search),function($query) use ($request) {
             $query->where( function ($query) use ($request){
                 $query->where('candidates.name','like',"%$request->search%");
@@ -938,13 +950,13 @@ class AdmController extends Controller
         ->when(!empty($request->filter_dob_end), function ($query) use ($request) {
             $query->where('candidates.dob','<=',$request->filter_dob_end);
         })
-        ->distinct()
         ->with(['Schooling','Experience'])
         ->withCount('subscriptions as subscription_amount')
         ->leftJoin('subscribed','subscribed.candidate_id','=','candidates.id')
         ->leftJoin('exportables','exportables.candidate_id','=','candidates.id')
         ->orderBy('candidates.updated_at','desc')
-        ->orderBy('subscribed.created_at','desc')
+        ->orderBy('data_candidatura','desc')
+        ->groupBy('candidates.id')
         ->paginate(15);
         
         $viewed_list=array_map(function($arr){
