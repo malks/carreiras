@@ -902,7 +902,7 @@ class AdmController extends Controller
             'candidates.phone',
             'candidates.updated_at',
             'candidates.dob',
-            'candidates.viewed',
+            'candidates.viewed'
         )
         ->selectRaw(DB::Raw('ANY_VALUE(subscribed.created_at) as data_candidatura'))
         ->selectRaw(DB::Raw('ANY_VALUE(exportables.status)  as exportado'))
