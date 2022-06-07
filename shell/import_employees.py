@@ -9,5 +9,5 @@ if __name__ == "__main__":
 
     employees=oc_select("SELECT * FROM R034FUN",main_oc_conn)
     for emp in employees:
-        insert_carreiras="INSERT INTO lunellicarreiras.employees (name,senior_num_cad,senior_num_emp,senior_cod_fil,senior_tip_col) VALUES('"+emp["NOMFUN"]+"','"+emp["NUMCAD"]+"','"+emp["NUMEMP"]+"','"+emp["CODFIL"]+"','"+emp["TIPCOL"]+"')"
+        insert_carreiras="INSERT INTO lunellicarreiras.employees (name,senior_num_cad,senior_num_emp,senior_cod_fil,senior_tip_col) VALUES('"+str(emp["NOMFUN"])+"','"+str(emp["NUMCAD"])+"','"+str(emp["NUMEMP"])+"','"+str(emp["CODFIL"])+"','"+str(emp["TIPCOL"])+"')"
         run_sql(insert_carreiras,main_sql_conn)
