@@ -28,6 +28,11 @@
                             </div>
                             <div class="row">
                                 <div class="col">
+                                    <p>Nascimento: @php echo (!empty($data->dob)) ? implode("/",array_reverse(explode("-",$data->dob))) : '' @endphp</p>
+                                </div>
+                            </div>
+                            <div class="row" style='margin-top:-10px;'>
+                                <div class="col">
                                     <p>@php echo (!empty($data->dob)) ? (idate('Y')-explode("-",$data->dob)[0]) : ''; @endphp anos - {{(!empty($data->civil_state) && is_numeric($data->civil_state)) ? $civil_states[$data->civil_state-1 | 0] : ''}}</p>
                                 </div>
                             </div>
