@@ -904,6 +904,7 @@ class AdmController extends Controller
             'candidates.dob',
             'candidates.viewed',
             'candidates.address_city',
+            'candidates.senior_num_can',
             'candidates.address_state'
         )
         ->selectRaw(DB::Raw('ANY_VALUE(subscribed.created_at) as data_candidatura'))
