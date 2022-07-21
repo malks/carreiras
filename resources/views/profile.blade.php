@@ -175,7 +175,7 @@
                                             </div-->
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-rg">RG</label>
-                                                <input type='text'  v-mask="'##.###.###-#'" v-model="holdingData.rg" placeholder="12.123.123-1" class='w-input text-field white-background' id='data-rg' name='rg' value='{{$data->rg}}'/>
+                                                <input type='text'  v-mask="'##.###.###-####'" v-model="holdingData.rg" placeholder="12.123.123-1234" class='w-input text-field white-background' id='data-rg' name='rg' value='{{$data->rg}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-rg-emitter">Órgão Expedidor</label>
@@ -198,7 +198,7 @@
                                             </div>
                                             <div class=" col-sm-12 col-lg-3">
                                                 <label for="data-elector-card">Título de Eleitor</label>
-                                                <input type='text'  v-mask="'#### #### ####'" v-model="holdingData.elector_card" placeholder="1234 1234 1234" class='w-input text-field white-background' id='data-elector-card' name='elector_card' value='{{$data->elector_card}}'/>
+                                                <input type='text'  v-mask="'#### #### #### #'" v-model="holdingData.elector_card" placeholder="1234 1234 1234 1" class='w-input text-field white-background' id='data-elector-card' name='elector_card' value='{{$data->elector_card}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-3">
                                                 <label for="data-veteran-card">Certificado de Reservista</label>
