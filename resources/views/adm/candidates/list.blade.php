@@ -161,6 +161,7 @@
 									<tr>
 										<th style='width:40px;'><input type='checkbox' id='check-all' v-on:click='reverseSelection()'></th>
 										<th>Nome</th>
+										<th>PCD</th>
 										<th>Cidade</th>
 										<th>Estado</th>
 										<th>Última Atualização</th>
@@ -181,6 +182,7 @@
 											<td style='width:40px;' for='data-check-{{$d->id}}' class='checker'>
 												<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
 											<td>{{$d->name}}</td>
+											<td>@php echo ($d->deficiency) ? '<span style="color:green">Sim<span>' : '<span style="color:red">Não</span>' @endphp</td>
 											<td>{{$d->address_city}}</td>
 											<td>{{$d->address_state}}</td>
 											<td>{{(!empty($d->updated_at)) ? date_format($d->updated_at,'d/m/Y') : ''}}</td>

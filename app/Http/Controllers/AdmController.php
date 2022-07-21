@@ -902,6 +902,7 @@ class AdmController extends Controller
             'candidates.phone',
             'candidates.updated_at',
             'candidates.dob',
+            'candidates.deficiency',
             'candidates.viewed',
             'candidates.address_city',
             'candidates.senior_num_can',
