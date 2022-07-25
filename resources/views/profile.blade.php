@@ -175,7 +175,7 @@
                                             </div-->
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-rg">RG</label>
-                                                <input type='text'  v-mask="'##.###.###-####'" v-model="holdingData.rg" placeholder="12.123.123-1234" class='w-input text-field white-background' id='data-rg' name='rg' value='{{$data->rg}}'/>
+                                                <input type='text'  v-mask="'##.###.###-#####'" v-model="holdingData.rg" placeholder="12.123.123-12345" class='w-input text-field white-background' id='data-rg' name='rg' value='{{$data->rg}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-rg-emitter">Órgão Expedidor</label>

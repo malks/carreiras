@@ -82,7 +82,7 @@
                             </div>
                             <div class="row margin-top-30" >
                                 <div class="col">
-                                    RG: {{$mask($data->rg,'#.###.###-##')}} - Emissor: {{$data->rg_emitter}}
+                                    RG: {{$mask($data->rg,'##.###.###-#####')}} - Emissor: {{$data->rg_emitter}}
                                 </div>
                             </div>
                             <div class="row margin-top-10" >
@@ -102,7 +102,7 @@
                             </div>
                             <div class="row margin-top-10" >
                                 <div class="col">
-                                    Certificado de Reservista: {{$mask($data->veteran_card,'#### #### ####')}}
+                                    Certificado de Reservista: {{$mask($data->veteran_card,'#### #### #### #')}}
                                 </div>
                             </div>
                             <div class="row margin-top-10" >
