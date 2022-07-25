@@ -339,7 +339,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
         if (!empty($dados['work_card_digit']))
             $dados['work_card_digit'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['work_card_digit']),0,2);
         if (!empty($dados['elector_card']))
-            $dados['elector_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['elector_card']),0,13);
+            $dados['elector_card'] = substr(str_replace(['.','-',',','_','!',';',' '],'',$dados['elector_card']),0,16);
         if (!empty($dados['veteran_card']))
             $dados['veteran_card'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['veteran_card']),0,13);
         $dados['cid'] = str_replace(['.','-',',','_','!',';'],'',$dados['cid']);
