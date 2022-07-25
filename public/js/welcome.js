@@ -594,19 +594,19 @@ function validate(whichTab){
             if ($('#data-email').val().match(/^[a-z0-9._]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)==null){
                 ret.push({'candidate-data': 'E-mail precisa ser válido'});
             }
-            if (($('#data-ddd-phone').val().length<2 || $('#data-phone').val().length<9) && ($('#data-ddd-mobile').val().length<2 || $('#data-mobile').val().length<10 ) ){
+            if (($('#data-ddd-phone').val().length<2 || $('#data-phone').val().length<6) && ($('#data-ddd-mobile').val().length<2 || $('#data-mobile').val().length<8 ) ){
                 ret.push({'candidate-data': 'Telefone ou Celular são necessários'});
             }
             if ($('#data-dob').val().length<10){
                 ret.push({'candidate-data': 'Data de nascimento é obrigatório'});
             }
-            if ($('#data-address-street').val().length<4 || $('#data-address-city').val().length<4 || $('#data-address-district').val().length<4 || $('#data-address-state').val().length<2 || $('#data-address-country').val().length<2 ){
+            if ($('#data-address-street').val().length<2 || $('#data-address-city').val().length<2 || $('#data-address-district').val().length<2 || $('#data-address-state').val().length<2 || $('#data-address-country').val().length<2 ){
                 ret.push({'candidate-data': 'Endereço residencial é obrigatório'});
             }
             if ($('#data-cpf').val().length!=14){
                 ret.push({'candidate-data': 'Documentos são obrigatórios'});
             }
-            if ( $('#data-natural-city').val().length<4 || $('#data-natural-state').val().length<2 || $('#data-natural-country').val().length<2 ){
+            if ( $('#data-natural-city').val().length<2 || $('#data-natural-state').val().length<2 || $('#data-natural-country').val().length<2 ){
                 ret.push({'candidate-data': 'Naturalidade é obrigatória'});
             }
             if ( $('#data-foreigner').val()==1){
