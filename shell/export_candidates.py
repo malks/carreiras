@@ -90,6 +90,7 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper['CODCID']=get_city_code_from_name(data['address_city'])
         helper['CODBAI']=get_district_code_from_name(data['address_district'],str(helper['CODCID']))
         helper['ENDNUM']=str(data['address_number'])[0:6]
+        helper['TIPLGR']=str(data['address_type'])[0:5]
         helper['ENDCAN']=str(data['address_street'])[0:40]
         helper['CODCEP']=data['zip']
 
@@ -101,6 +102,7 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper['ESTCIV']=data['civil_state']
         helper['SITCEX']=1
 
+        helper['FORCON']=7
         helper['DDDCO1']=data['ddd_mobile']
         helper['TELCO1']=data['mobile']
         helper['DDDCO2']=data['ddd_phone']

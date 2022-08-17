@@ -946,6 +946,8 @@ function getCustomData(screenNameHelper,firstTab){
         customData.holdingData=JSON.parse(decodeURIComponent(profile_data).replace(/\+/g," "));
         if (customData.holdingData.prefered_work_period==undefined || customData.holdingData.prefered_work_period.length==0)
             customData.holdingData.prefered_work_period=[];
+        if (customData.holdingData.address_type==undefined || customData.holdingData.address_type=="")
+            customData.holdingData.address_type="r";
     }
     console.log(customData);
     return customData;

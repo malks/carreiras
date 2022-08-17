@@ -97,13 +97,15 @@
                                         <div class="row margin-top-10">
                                             <div class=" col-sm-12 col-lg-6">
                                                 <label for="data-ddd-phone">Fone</label>
-                                                <input type='text'  v-mask="'###'"  placeholder='DDD' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddd-phone' v-model='holdingData.ddd_phone' name='ddd_phone' value='{{$data->ddd_phone}}'/>
-                                                <input type='text'  v-mask="'####-####'" v-model="holdingData.phone"  placeholder='3370-0000' style='margin-left:5px;width:80%;float:left;' class='w-input text-field white-background' id='data-phone' name='phone' value='{{$data->phone}}'/>
+                                                <input type='text'  v-mask="'###'"  placeholder='DDI' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddi-phone' v-model='holdingData.ddi_phone' name='ddi_phone' value='{{$data->ddi_phone}}'/>
+                                                <input type='text'  v-mask="'###'"  placeholder='DDD' style='width:10%;float:left;margin-left:5px;' class='w-input text-field white-background' id='data-ddd-phone' v-model='holdingData.ddd_phone' name='ddd_phone' value='{{$data->ddd_phone}}'/>
+                                                <input type='text'  v-mask="'####-####'" v-model="holdingData.phone"  placeholder='3370-0000' style='margin-left:5px;width:70%;float:left;' class='w-input text-field white-background' id='data-phone' name='phone' value='{{$data->phone}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-6">
                                                 <label for="data-ddd-mobile">Celular</label>
-                                                <input type='text'  v-mask="'###'" placeholder='DDD' style='width:10%;float:left;'  class='w-input text-field white-background' id='data-ddd-mobile' v-model='holdingData.ddd_mobile' name='ddd_mobile' value='{{$data->ddd_mobile}}'/>
-                                                <input type='text' placeholder='9-9999-9999' v-model='holdingData.mobile'  v-mask="'#-####-####'" style='margin-left:5px;width:80%;float:left;'  class='w-input text-field white-background' id='data-mobile' name='mobile' value='{{$data->mobile}}'/>
+                                                <input type='text'  v-mask="'###'"  placeholder='DDI' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddi-mobile' v-model='holdingData.ddi_mobile' name='ddi_mobile' value='{{$data->ddi_mobile}}'/>
+                                                <input type='text'  v-mask="'###'" placeholder='DDD' style='width:10%;float:left;margin-left:5px;'  class='w-input text-field white-background' id='data-ddd-mobile' v-model='holdingData.ddd_mobile' name='ddd_mobile' value='{{$data->ddd_mobile}}'/>
+                                                <input type='text' placeholder='9-9999-9999' v-model='holdingData.mobile'  v-mask="'#-####-####'" style='margin-left:5px;width:70%;float:left;'  class='w-input text-field white-background' id='data-mobile' name='mobile' value='{{$data->mobile}}'/>
                                             </div>
                                         </div>
         
@@ -136,17 +138,30 @@
                                                 <label for="data-address-district">*Bairro</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_district" id='data-address-district' name='address_district' value='{{$data->address_district}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-address-street">*Rua</label>
+                                            <div class=" col-sm-12 col-lg-2">
+                                                <label for="data-address-type">*Tipo Log.</label>
+                                                <select 
+                                                    class='w-input text-field white-background' 
+                                                    v-model="holdingData.address_type" 
+                                                    name='address_type' 
+                                                    id='data-address-type'
+                                                >
+                                                    @foreach($logradouros as $klog=>$log)
+                                                        <option value="{{$klog}}">{{$log}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-3">
+                                                <label for="data-address-street">*Logradouro</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_street" name='address_street' id='data-address-street' value='{{$data->address_street}}'/>
+                                            </div>
+                                            <div class=" col-sm-12 col-lg-1">
+                                                <label for="data-address-number">Nº</label>
+                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_number" name='address_number' id='data-address-number' value='{{$data->address_number}}'/>
                                             </div>
                                             <div class=" col-sm-12 col-lg-2">
                                                 <label for="data-address-complement">Complemento</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_complement" name='address_complement' id='data-address-complement' value='{{$data->address_complement}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-2">
-                                                <label for="data-address-number">Numero</label>
-                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_number" name='address_number' id='data-address-number' value='{{$data->address_number}}'/>
                                             </div>
                                         </div>
                                     </div>
