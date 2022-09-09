@@ -126,7 +126,7 @@ def carreiras_to_senior_candidate(data_carreiras):
         helper['NOMMAE']=data['mother_name']
         helper['DATNPA']=data['father_dob']
         helper['DATNMA']=data['mother_dob']
-        helper['NOMCJG']=data['spouse_name']
+        helper['NOMCJG']=str(data['spouse_name'])[0:40]
         helper['CARCON']=data['spouse_job']
 
         helper['DATINC']=datetime.now().strftime('%Y-%m-%d')
