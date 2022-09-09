@@ -591,7 +591,7 @@ function validate(whichTab){
             if ($('#data-name').val().length<3){
                 ret.push({'candidate-data': 'Nome completo é necessário'});
             }
-            if ($('#data-email').val().match(/^[a-z0-9._]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)==null){
+            if ($('#data-email').val().match(/^[a-z0-9._+]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)==null){
                 ret.push({'candidate-data': 'E-mail precisa ser válido'});
             }
             if (($('#data-ddd-phone').val().length<2 || $('#data-phone').val().length<6) && ($('#data-ddd-mobile').val().length<2 || $('#data-mobile').val().length<8 ) ){
@@ -619,9 +619,8 @@ function validate(whichTab){
                     ret.push({'candidate-data': 'Se você tem alguma deficiência, os dados relacionados são obrigatórios'});
                 }
             }
-            if ( $('#data-mother-name').val().length<3 || 
-                 $('#data-mother-dob').val().length<2 ){
-                ret.push({'candidate-data': 'Dados da mãe obrigatórios'});
+            if ( $('#data-mother-name').val().length<3){
+                ret.push({'candidate-data': 'Nome da mãe obrigatório'});
             }
             if ($('#data-pretended-salary').val().length<2 ){
                 ret.push({'candidate-data': 'Pretensão salarial obrigatória'});

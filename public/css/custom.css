@@ -399,6 +399,10 @@ ul.errors:hover > li:first-child {
     background-color: transparent;
 }
 
+#Hedone.hedone-menu-container {
+    background-color:#fff!important;
+}
+
 @media (max-width:600px){
     #welcoLogin {
         background-color: rgba(255,255,255)!important;
