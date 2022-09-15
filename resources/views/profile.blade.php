@@ -292,7 +292,7 @@
                                                 </div>
                                                 <div class=" col-sm-12 col-lg-4">
                                                     <label for="data-mother-dob">*Data de nascimento da Mãe</label>
-                                                    <input type='date' class='w-input text-field white-background' id='data-mother-dob' name='mother_dob' value='{{$data->mother_dob}}'/>
+                                                    <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background' id='data-mother-dob' name='mother_dob' v-model='holdingData.mother_dob'/>
                                                 </div>
                                             </div>
                                             
@@ -303,7 +303,7 @@
                                                 </div>
                                                 <div class=" col-sm-12 col-lg-4">
                                                     <label for="data-father-dob">Data de nascimento do Pai</label>
-                                                    <input type='date' class='w-input text-field white-background' id='data-father-dob' name='father_dob' value='{{$data->father_dob}}'/>
+                                                    <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background' id='data-father-dob' name='father_dob' v-model='holdingData.father_dob'/>
                                                 </div>
                                             </div>
                                         </div>
@@ -315,7 +315,7 @@
                                         <div class="row">
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-dob">*Data de Nascimento</label>
-                                                <input type='date' class='w-input text-field white-background' id='data-dob' name='dob' value='{{$data->dob}}'/>
+                                                <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background' id='data-dob' name='dob' v-model='holdingData.dob'/>
                                             </div>
                                             <!--div class=" col-sm-12 col-lg-4">
                                                 <label for="data-gender">Genero</label>
@@ -354,7 +354,7 @@
                                             </div>
                                             <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4">
                                                 <label for="data-arrival-date">*Data de Chegada</label>
-                                                <input type='date' class='w-input text-field white-background' id='data-arrival-date' name='arrival_date' value='{{$data->arrival_date}}'/>
+                                                <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background' id='data-arrival-date' name='arrival_date' v-model='holdingData.arrival_date'/>
                                             </div>
                                             <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4 margin-top-10">
                                                 <label for="data-foreign-register">*Registro de Estrangeiro</label>
@@ -366,7 +366,7 @@
                                             </div>
                                             <div v-show='holdingData.foreigner==1' class="col-sm-12 col-lg-4 margin-top-10">
                                                 <label for="data-visa-expiration">*Validade do Visto</label>
-                                                <input type='date' class='w-input text-field white-background' id='data-visa-expiration' name='visa_expiration' value='{{$data->visa_expiration}}'/>
+                                                <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background' id='data-visa-expiration' name='visa_expiration' v-model='holdingData.visa_expiration'/>
                                             </div>                                    
                                         </div>
                                         <div class="row margin-top-10">
@@ -401,11 +401,11 @@
                                             </div>
                                             <div class="col-lg-4">
                                                 <label for="data-worked-earlier-at-lunelli-period-start">Início</label>
-                                                <input class='w-input text-field white-background' type='date' value="{{$data->lunelli_earlier_work_period_start}}" name='lunelli_earlier_work_period_start' id='data-lunelli-earlier-work-period-start'/>
+                                                <input class='w-input text-field white-background' type='text' v-mask="'##/##/####'" v-model="holdingData.lunelli_earlier_work_period_start" name='lunelli_earlier_work_period_start' id='data-lunelli-earlier-work-period-start'/>
                                             </div>
                                             <div class="col-lg-4">
                                                 <label for="data-worked-earlier-at-lunelli-period-end">Fim</label>
-                                                <input class='w-input text-field white-background' type='date' value="{{$data->lunelli_earlier_work_period_end}}" name='lunelli_earlier_work_period_end' id='data-worked-earlier-at-lunelli-period-end'/>
+                                                <input class='w-input text-field white-background' type='text' v-mask="'##/##/####'" v-model="holdingData.lunelli_earlier_work_period_end" name='lunelli_earlier_work_period_end' id='data-worked-earlier-at-lunelli-period-end'/>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
@@ -646,12 +646,12 @@
                                                         </div>
                                                         <div class=" col-sm-12 col-lg-3">
                                                             <label :for="'schooling-start'+index">*Início</label>
-                                                            <input type='date' class='w-input text-field white-background text-center' :id="'schooling-start'+index"  v-model="schooling.start"
+                                                            <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background text-center' :id="'schooling-start'+index"  v-model="schooling.start"
                                                             />
                                                         </div>
                                                         <div class=" col-sm-12 col-lg-3">
                                                             <label :for="'schooling-end'+index">Fim</label>
-                                                            <input type='date' class='w-input text-field white-background text-center' :id="'schooling-end'+index" v-model='schooling.end' />
+                                                            <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background text-center' :id="'schooling-end'+index" v-model='schooling.end' />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -699,12 +699,12 @@
                                             <div class="row margin-top-10">
                                                 <div class=" col-sm-12 col-lg-3">
                                                     <label for="experience-admission">Admissão</label>
-                                                    <input type='date' class='w-input text-field white-background text-center' id='experience-admission' name='experience[].admission' v-model="experience.admission"
+                                                    <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background text-center' id='experience-admission' name='experience[].admission' v-model="experience.admission"
                                                     />
                                                 </div>
                                                 <div class=" col-sm-12 col-lg-3">
                                                     <label for="experience-demission">Demissão</label>
-                                                    <input type='date' class='w-input text-field white-background text-center' id='experience-demission' v-model='experience.demission'/>
+                                                    <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background text-center' id='experience-demission' v-model='experience.demission'/>
                                                 </div>
                                             </div>
                                         </div>

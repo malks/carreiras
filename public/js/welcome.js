@@ -999,8 +999,8 @@ function loadDefault(which){
             course:'',
             grade:'',
             institution:'',
-            start:'2008-01-01',
-            end:'2011-04-01'
+            start:'01/01/2008',
+            end:'04/01/2011'
         };
         return  helper;
     }
@@ -1010,8 +1010,8 @@ function loadDefault(which){
             business:'',
             job:'',
             activities:'',
-            admission:'2021-01-01',
-            demission:'2021-06-01',
+            admission:'01/01/2021',
+            demission:'06/01/2021',
         };
         return  helper;
     }

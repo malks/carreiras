@@ -263,6 +263,16 @@ class LandingController extends Controller
             $schooling = new Schooling;
             $data->schooling=$schooling;
         }
+        if (empty($data->experience)||count($data->experience)==0){
+            $experience = [ 
+                'business'=>'', 
+                'job'=>'', 
+                'activities'=>'', 
+                'admission'=>'', 
+                'demission'=>'', 
+            ];
+            $data->experience=[$experience,$experience,$experience];
+        }
         $data['prefered_work_period']=explode(",",$data['prefered_work_period']);
         
         return view('profile')->with([
@@ -434,6 +444,8 @@ $arr['what_irritates_you']="20. O que o irrita?";
             foreach($experience_data as $k=>$d){
                 $experience->{$k}=$d;
             }
+            if (empty($experience->business) && empty($experience->job) && empty($experience->activities))
+                continue;
             $experience->save();
             $experience->admission=$experience_data['admission'];
             $experience->demission=$experience_data['demission'];

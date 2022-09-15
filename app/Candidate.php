@@ -35,73 +35,88 @@ class Candidate extends Model
         return $this->belongsToMany('App\Tag', 'candidates_tags', 'candidate_id', 'tag_id');
     }
 
-    /*protected $casts = [
+    protected $casts = [
         'last_seen' => 'datetime:d/m/Y',
         'mother_dob' => 'date:d/m/Y',
         'father_dob' => 'date:d/m/Y',
-    ];*/
+        'lunelli_earlier_work_period_start' => 'date:d/m/Y',
+        'lunelli_earlier_work_period_end' => 'date:d/m/Y',
+        'last_time_doctor' => 'date:d/m/Y',
+        'visa_expiration' => 'date:d/m/Y',
+        'arrival_date' => 'date:d/m/Y',
+        'dob' => 'date:d/m/Y',
+    ];
     
     public function setLunelliEarlierWorkPeriodStartAttribute($value)
     {
-        $carbon = new Carbon($value);
+        /*$carbon = new Carbon($value);
         $carbon->toDateTimeString();
-        $this->attributes['lunelli_earlier_work_period_start'] = $carbon;
+        $this->attributes['lunelli_earlier_work_period_start'] = $carbon;*/
+        $this->attributes['lunelli_earlier_work_period_start'] = implode("-",array_reverse(explode("/",$value)));
     }
 
     public function setLunelliEarlierWorkPeriodEndAttribute($value)
     {
-        $carbon = new Carbon($value);
+        /*$carbon = new Carbon($value);
         $carbon->toDateTimeString();
-        $this->attributes['lunelli_earlier_work_period_end'] = $carbon;
+        $this->attributes['lunelli_earlier_work_period_end'] = $carbon;*/
+        $this->attributes['lunelli_earlier_work_period_end'] = implode("-",array_reverse(explode("/",$value)));
     }
 
     public function setLastTimeDoctorAttribute($value)
     {
-        $carbon = new Carbon($value);
+        /*$carbon = new Carbon($value);
         $carbon->toDateTimeString();
-        $this->attributes['last_time_doctor'] = $carbon;
+        $this->attributes['last_time_doctor'] = $carbon;*/
+        $this->attributes['last_time_doctor'] = implode("-",array_reverse(explode("/",$value)));
     }
     
     public function setVisaExpirationAttribute($value)
     {
-        $carbon = new Carbon($value);
+        /*$carbon = new Carbon($value);
         $carbon->toDateTimeString();
-        $this->attributes['visa_expiration'] = $carbon;
+        $this->attributes['visa_expiration'] = $carbon;*/
+        $this->attributes['visa_expiration'] = implode("-",array_reverse(explode("/",$value)));
     }
     
     public function setArrivalDateAttribute($value)
     {
-        $carbon = new Carbon($value);
+        /*$carbon = new Carbon($value);
         $carbon->toDateTimeString();
-        $this->attributes['arrival_date'] = $carbon;
+        $this->attributes['arrival_date'] = $carbon;*/
+        $this->attributes['arrival_date'] = implode("-",array_reverse(explode("/",$value)));
     }
 
     public function setDobAttribute($value)
     {
-        $carbon = new Carbon($value);
+        /*$carbon = new Carbon($value);
         $carbon->toDateTimeString();
-        $this->attributes['dob'] = $carbon;
+        $this->attributes['dob'] = $carbon;*/
+        $this->attributes['dob'] = implode("-",array_reverse(explode("/",$value)));
     }
 
     public function setLastSeenAttribute($value)
     {
-        $carbon = new Carbon($value);
+        /*$carbon = new Carbon($value);
         $carbon->toDateTimeString();
-        $this->attributes['last_seen'] = $carbon;
+        $this->attributes['last_seen'] = $carbon;*/
+        $this->attributes['last_seen'] = implode("-",array_reverse(explode("/",$value)));
     }
 
     public function setMotherDobAttribute($value)
     {
-        $carbon = new Carbon($value);
+        /*$carbon = new Carbon($value);
         $carbon->toDateTimeString();
-        $this->attributes['mother_dob'] = $carbon;
+        $this->attributes['mother_dob'] = $carbon;*/
+        $this->attributes['mother_dob'] = implode("-",array_reverse(explode("/",$value)));
     }
 
     public function setFatherDobAttribute($value)
     {
-        $carbon = new Carbon($value);
+        /*$carbon = new Carbon($value);
         $carbon->toDateTimeString();
-        $this->attributes['father_dob'] = $carbon;
+        $this->attributes['father_dob'] = $carbon;*/
+        $this->attributes['father_dob'] = implode("-",array_reverse(explode("/",$value)));
     }
 
     public function setMobileAttribute($value)
