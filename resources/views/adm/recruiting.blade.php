@@ -212,6 +212,22 @@
                                 </button>
                             </template>
                         </div>
+                        <hr>
+                        <div class="row" v-show='!notYet(runData.selectedJob.id)'>
+                            <div class="col-12">
+                                <h6 for="">Filtrar Turnos</h6>
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    @foreach ($work_periods as $wkk => $wkperiod)
+                                        <div class="col-lg-2 col-sm-6 col-xs-12">
+                                            <input type="checkbox" v-model="otherData.candidateWorkPeriodSearch[{{$wkk}}]" value="{{$wkk}}" id="work-period-{{$wkk}}">
+                                            <label style='margin-left:3px;' for="work-period-{{$wkk}}">{{$wkperiod}}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                         <div class="row margin-top-20">
                             <div class="col-lg-12">
                                 <hr>
@@ -244,7 +260,7 @@
                                         <tr v-if="runData.updating && (runData.subscriptions==null || runData.subscriptions.length==0)"><td>Carregando...</td></tr>
                                         <tr v-else-if="!runData.updating && (runData.subscriptions==null || runData.subscriptions.length==0)"><td>Nenhum resultado encontrado.</td></tr>
                                         <template v-else v-for="(subscription,subx) in runData.subscriptions">
-                                            <tr v-if="candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription)" class='select-sized'>
+                                            <tr v-if="candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription) && candidateWokrPeriodFilter(getCandidate(subscription))" class='select-sized'>
                                                 <td>@{{ getCandidate(subscription).senior_num_can }}</td>
                                                 <td>@{{ getCandidate(subscription).name }}</td>
                                                 <td>@{{ getCandidate(subscription).address_city }}</td>

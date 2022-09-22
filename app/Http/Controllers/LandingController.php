@@ -268,6 +268,7 @@ class LandingController extends Controller
                 'business'=>'', 
                 'job'=>'', 
                 'activities'=>'', 
+                'current_job'=>false, 
                 'admission'=>'', 
                 'demission'=>'', 
             ];

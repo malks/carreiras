@@ -291,9 +291,17 @@ class AdmController extends Controller
             'incomplete'=>'Incompleto',
         ];
 
+        $work_periods=[
+            '1'=>'1º Turno',
+            '2'=>'2º Turno',
+            '3'=>'3º Turno',
+            '4'=>'Horário comercial',
+        ];
+
         return view('adm.recruiting')->with([
             'schooling_grades'=>$schooling_grades,
             'schooling_status'=>$schooling_status,
+            'work_periods'=>$work_periods,
         ]);
     }
 
@@ -530,6 +538,19 @@ class AdmController extends Controller
             };
             $query->with($arr_deep_filters);
         })
+        /*->when(!empty($request->uniqueFilters['candidates']['prefered_work_period']),function ($query) use ($request) {
+            return $query->whereHas('subscribers', function ($subquery) use ($request) {
+                $gone=0;
+                foreach ($request->uniqueFilters['candidates']['prefered_work_period'] as $workperiod){
+                    if (!$gone)
+                        $subquery->where('prefered_work_period','like',"%".$workperiod."%");
+                    else
+                        $subquery->orWhere('prefered_work_period','like',"%".$workperiod."%");
+                    $gone=1;
+                }
+                return $subquery;
+            });
+        })*/
         ->with(['tags','subscribers','subscribers.interests','subscribers.experience','field','unit'])
         ->withCount(['subscriptions as subscription_amount'=>function ($query) {$query->where('active','=',1);}])
         ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])

@@ -395,6 +395,14 @@ ul.errors:hover > li:first-child {
     background-color: rgb(197, 25, 25);
 }
 
+.error-field {
+    border-bottom:1px solid rgb(197, 25, 25);
+}
+
+.error-label {
+    color: rgb(197, 25, 25);
+}
+
 #welcoLogin {
     background-color: transparent;
 }

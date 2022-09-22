@@ -517,6 +517,7 @@
                                                             v-on:keydown.prevent.stop.tab="selectTag()" 
                                                             v-on:keydown.prevent.stop.enter="selectTag()"
                                                         >
+                                                        <button type='button' v-on:click="selectTag()" style="height:36px;" class='btn btn-default'><i class='fa fa-plus'></i></button>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -662,54 +663,67 @@
                             </div>
         
                             <div class='tab-pane fade' v-bind:class="{ active: isItMe('experience-data') , show: isItMe('experience-data') }" id="experience">
-                                <div class="row" style='margin-top:-30px;'>
+                                <div class="row" style='margin-top:-20px;'> 
                                     <div class="col-2">
                                         <button class="btn btn-default" v-on:click='addExperience'   type='button'>Adicionar</button>
                                     </div>
                                 </div>
-                                <template v-for="(experience,index) in experiences">
-                                    <div class="card elegant shadow large-header margin-top-30">
-                                        <h5>#@{{index+1}}</h5>
-                                        <div class="card-body">
 
-                                            <div class="row">
-                                                <div class="col-3">
-                                                    <button class="btn btn-danger" v-on:click='excludeExperience(index)' type='button'>
-                                                        Excluir
-                                                    </button>
+                                <div class="row">
+                                    <div class="col">
+                                        <template  v-for="(experience,index) in experiences">
+                                            <div class="card elegant shadow large-header margin-top-30">
+                                                <h5>#@{{index+1}}</h5>
+                                                <div class="card-body">
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input style='float:left;' type="checkbox" v-on:click="uncheckOtherExperiences(index)" v-bind:id="'experience-current-'+index" v-model="experience.current_job">
+                                                            <label style='float:left;line-height:10px;' v-bind:for="'experience-current-'+index">Meu emprego atual</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row margin-top-20">
+                                                        <div class="col-3">
+                                                            <button class="btn btn-danger" v-on:click='excludeExperience(index)' type='button'>
+                                                                Excluir
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row margin-top-10">
+                                                        <div class=" col-sm-12 col-lg-6">
+                                                            <label for="experience-business">Empresa</label>
+                                                            <input type='text' class='w-input text-field white-background' id='experience-business' v-model='experience.business' />
+                                                        </div>
+                                                        <div class=" col-sm-12 col-lg-6">
+                                                            <label for="experience-job">Cargo</label>
+                                                            <input type='text' class='w-input text-field white-background' id='experience-job' v-model='experience.job'/>
+                                                        </div>                                
+                                                    </div>
+                                                    <div class="row margin-top-10">
+                                                        <div class=" col-sm-12 col-lg">
+                                                            <label for="experience-activities">Atividades</label>
+                                                            <textarea type='text' class='w-input text-field white-background' id='experience-activities' v-model="experience.activities">
+                                                            </textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row margin-top-10">
+                                                        <div class=" col-sm-12 col-lg-3">
+                                                            <label for="experience-admission">Admissão</label>
+                                                            <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background text-center' v-bind:class="{ 'error-field':!validDate(experience.admission) }" id='experience-admission' name='experience[].admission' v-model="experience.admission"/>
+                                                            <small class='error-label' v-show="!validDate(experience.admission)">Data inválida</small>
+                                                        </div>
+                                                        <div class=" col-sm-12 col-lg-3">
+                                                            <label for="experience-demission">Demissão</label>
+                                                            <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background text-center' id='experience-demission'  v-bind:class="{ 'error-field':!validDate(experience.demission) }" v-model='experience.demission'/>
+                                                            <small class='error-label' v-show="!validDate(experience.demission)">Data inválida</small>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg-6">
-                                                    <label for="experience-business">Empresa</label>
-                                                    <input type='text' class='w-input text-field white-background' id='experience-business' v-model='experience.business' />
-                                                </div>
-                                                <div class=" col-sm-12 col-lg-6">
-                                                    <label for="experience-job">Cargo</label>
-                                                    <input type='text' class='w-input text-field white-background' id='experience-job' v-model='experience.job'/>
-                                                </div>                                
-                                            </div>
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg">
-                                                    <label for="experience-activities">Atividades</label>
-                                                    <textarea type='text' class='w-input text-field white-background' id='experience-activities' v-model="experience.activities">
-                                                    </textarea>
-                                                </div>
-                                            </div>
-                                            <div class="row margin-top-10">
-                                                <div class=" col-sm-12 col-lg-3">
-                                                    <label for="experience-admission">Admissão</label>
-                                                    <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background text-center' id='experience-admission' name='experience[].admission' v-model="experience.admission"
-                                                    />
-                                                </div>
-                                                <div class=" col-sm-12 col-lg-3">
-                                                    <label for="experience-demission">Demissão</label>
-                                                    <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background text-center' id='experience-demission' v-model='experience.demission'/>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </template>
                                     </div>
-                                </template>
+                                </div>
+
                             </div>
 
                             <!--div class='tab-pane fade'   v-bind:class="{ active: isItMe('language-data') , show: isItMe('language-data') }" id="language-data">

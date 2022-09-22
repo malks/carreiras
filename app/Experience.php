@@ -13,6 +13,7 @@ class Experience extends Model
     protected $casts = [
         'admission' => 'datetime:d/m/Y',
         'demission' => 'datetime:d/m/Y',
+        'current_job' =>'boolean',
     ];
 
     public function setAdmissionAttribute($value)

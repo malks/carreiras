@@ -902,15 +902,36 @@ function startProfile(screenNameHelper='',firstTab=''){
                     this.excluded_schoolings=tempArray;
             },
             excludeExperience: function(index) {
-                let tempExperience=this.experiences;
-                let helper = {...this.experiences[index]};
-                tempExperience.splice(index,1);
-                this.experiences=tempExperience;
-                let tempArray=this.excluded_experiences;
-                tempArray.push(helper.id);
-                if (typeof helper.id != undefined)
-                    this.excluded_experiences=tempArray;
+                let yes=true;
+                if (
+                        this.experiences[index].business.length>0 ||
+                        this.experiences[index].job.length>0 ||
+                        this.experiences[index].activities.length>0
+                    )
+                    yes=confirm("Tem certeza que deseja excluir essa experiência?");
+                if (yes){
+                    let tempExperience=this.experiences;
+                    let helper = {...this.experiences[index]};
+                    tempExperience.splice(index,1);
+                    this.experiences=tempExperience;
+                    let tempArray=this.excluded_experiences;
+                    tempArray.push(helper.id);
+                    if (typeof helper.id != undefined)
+                        this.excluded_experiences=tempArray;
+                }
             },
+            uncheckOtherExperiences: function (index){
+                for (i in this.experiences){
+                    if (i!=index)
+                        this.experiences[i].current_job=false;
+                }
+            },
+            validDate: function (val){
+                if (val=="")
+                    return true;
+                let pattern=/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
+                return pattern.test(val);
+            }
         }
     })
 }
@@ -1010,6 +1031,7 @@ function loadDefault(which){
             business:'',
             job:'',
             activities:'',
+            current_job:false,
             admission:'01/01/2021',
             demission:'06/01/2021',
         };

@@ -339,6 +339,7 @@ function recruiting(){
             candidateExpSearch:'',
             candidateLocSearch:'',
             tagFilters:'',
+            candidateWorkPeriodSearch:{1:false,2:false,3:false,4:false},
         }
     };
     console.log(bootstrapData);
@@ -519,6 +520,7 @@ function recruiting(){
                 pushData['_token']=$('[name="_token"]').val();
                 that.runData.updating=true;
                 console.log(pushData);
+
                 $.ajax({
                     url:'/adm/recruiting-data',
                     type:'POST',
@@ -617,6 +619,20 @@ function recruiting(){
                             break;
                         }
                         if (candidate.name.toLowerCase().includes(activeFilters[i].toLowerCase())){
+                            contain=true;
+                            break;
+                        }
+                    }
+                }
+                return contain;
+            },
+            candidateWokrPeriodFilter:function (candidate){
+                let contain=true;
+                let activeFilters="";
+                for (let i in this.otherData.candidateWorkPeriodSearch){
+                    if(this.otherData.candidateWorkPeriodSearch[i]){
+                        contain=false;
+                        if (candidate.prefered_work_period.split(",").indexOf(i)!==-1){
                             contain=true;
                             break;
                         }
