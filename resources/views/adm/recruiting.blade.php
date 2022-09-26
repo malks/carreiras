@@ -250,6 +250,7 @@
                                             <th class='text-center'>Status</th>
                                             <th></th>
                                             <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -279,6 +280,11 @@
                                                 <td class='text-right'>
                                                     <a :href="'/adm/candidates/edit/'+getCandidate(subscription).id" target='_blank' v-on:click="viewCandidate(subscription)"> 
                                                         <i class="fas fa-eye action-icon" title="Visualizar Candidato"></i> 
+                                                    </a>
+                                                </td>
+                                                <td class='text-center'>
+                                                    <a :href="'/adm/candidates/print/'+getCandidate(subscription).id" target='_blank' v-on:click="viewCandidate(subscription)"> 
+                                                        <i class="fas fa-clipboard-list action-icon" title="Visualizar Curriculo"></i> 
                                                     </a>
                                                 </td>
                                                 <td>
