@@ -9,8 +9,8 @@
             <div class="card elegant">
                 <div class="card-header">
                     <div class="animatedParent animateOnce">
-                        <h3 class="head-h3">LOGIN</h3>
-                        <p class="head-subtitle">acesso</p>
+                        <h3 class="head-h3">{{ __('login.login') }}</h3>
+                        <p class="head-subtitle">{{ __('login.access') }}</p>
                     </div>
                 </div>
                 <div class="card-body">
@@ -39,7 +39,7 @@
                         <div class="input-group mb-3">
                             <input type="password" name="password"
                                 class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
-                                placeholder="Senha">
+                                placeholder="{{ __('login.password') }}">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span style='height:30px;line-height:30px;' class="fas fa-lock "></span>
@@ -56,13 +56,13 @@
                             <div class="col-lg-3">
                                 {{-- Login button --}}
                                 <button type="submit" class="btn btn-block btn-secondary">
-                                    Entrar
+                                    {{ __('login.enter') }}
                                 </button>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
-                                <small><a href='/forgot-password'>Esqueci minha senha</a></small>
+                                <small><a href='/forgot-password'>{{ __('login.forgotpassword') }}</a></small>
                             </div>
                         </div>
                         <div class="row margin-top-30">
@@ -70,11 +70,11 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
-                                <label for="">Não tem uma conta?</label>
+                                <label for="">{{ __('login.noaccount') }}</label>
 
                                 {{-- Register button --}}
                                 <a href='/register' class="btn btn-block btn-success">
-                                    Registre-se
+                                    {{ __('login.register') }}
                                 </a>
                             </div>
                         </div>

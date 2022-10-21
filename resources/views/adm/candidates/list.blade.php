@@ -116,6 +116,16 @@
 					</div>
 					<div class="row margin-top-10">
 						<div class="col-sm-12 col-lg-3">
+							<label for="dob-start">País:</label>
+							<select name="country_filter" id="filter-country" class='form-control'>
+								<option value="brasil" @if(!empty($country_filter) && $country_filter=="brasil") selected @endif>Brasil</option>
+								<option value="paraguai"  @if(!empty($country_filter) && $country_filter=="paraguai") selected @endif>Paraguai</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="row margin-top-10">
+						<div class="col-sm-12 col-lg-3">
 							<label for="data-start">Início Última Atualização:</label>
 							<input type="date" class="form-control" id='data-start' name='filter_updated_at_start' value='{{$filter_updated_at_start}}'>
 						</div>

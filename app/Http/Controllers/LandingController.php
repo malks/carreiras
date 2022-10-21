@@ -94,7 +94,7 @@ class LandingController extends Controller
         );
     }
 
-    public function access(){
+    public function access(Request $request){
         return view('access');
     }
 
@@ -208,7 +208,144 @@ class LandingController extends Controller
         return str_replace($a, $b, $str);
     }
 
+    private function varsContents($lang,$what){
+        $content=[
+            'es'=>[
+                'boolean'=>[
+                    '0'=>'No',
+                    '1'=>'Si'
+                ],
+                'schooling_grades'=>[
+                    'professional' => 'Profesionalización',
+                    'technology' => 'Tecnólogo',
+                    'technician' => 'Técnico',
+                    'graduation' => 'graduado universitario',
+                    'postgrad' => 'graduado universitario',
+                    'masters' => 'Maestría',
+                    'doctor' => 'Doctorado',
+                    'phd' => 'Doctor',
+                ],
+                'schooling_formation'=>[
+                    'fundamental'=>'Fundamental',
+                    'highschool'=>'Medio',
+                    'technical'=>'Técnico',
+                    'superior'=>'Más alto',
+                ],
+                'schooling_status'=>[
+                    'complete'=>'Concluido',
+                    'coursing'=>'Estudiando',
+                    'incomplete'=>'Incompleto',        
+                ],
+                'logradouros'=>[
+                    'r' => 'Calle',
+                    'est' => 'La carretera',
+                    'rod' => 'Camino',
+                    'av' => 'Avenida',
+                    'srv' => 'Esclavitud',
+                    'tv' => 'plato',
+                    'o' => 'Colina',
+                    'vl' => 'Callejón',
+                    'q' => 'Bloquear',
+                    'esm' => 'Municipal',
+                    'pc' => 'Cuadrado'
+                ],
+                'civil_states'=>[
+                    '1' =>'Soltero',
+                    '2' =>'Casado',
+                    '3' =>'Divorciado',
+                    '4' =>'Viudo',
+                    '5' =>'Concubinato',
+                    '6' =>'Separado',
+                    '7' =>'Unidad',
+                    '8' =>'Otros',        
+                ],
+                'work_periods'=>[
+                    '1'=>'1er turno',
+                    '2'=>'2do turno',
+                    '3'=>'3er turno',
+                    '4'=>'Horario comercial',
+                ],
+                'language_levels'=>[
+                    'basic'=>'Básico',
+                    'intermediary'=>'Intermediario',
+                    'advanced'=>'Avanzado',
+                    'natural'=>'Con fluidez',
+                ]
+            ],
+            'ptbr'=>[
+                'boolean'=>[
+                    '0'=>'Não',
+                    '1'=>'Sim'
+                ],
+                'schooling_grades'=>[
+                    'professional' => 'Profissionalizante',
+                    'technology' => 'Tecnólogo',
+                    'technician' => 'Técnico',
+                    'graduation' => 'Graduação',
+                    'postgrad' => 'Pós Graduação',
+                    'masters' => 'Mestrado',
+                    'doctor' => 'Doutorado',
+                    'phd' => 'PHD',
+                ],
+                'schooling_formation'=>[
+                    'fundamental'=>'Fundamental',
+                    'highschool'=>'Médio',
+                    'technical'=>'Técnico',
+                    'superior'=>'Superior',
+        
+                ],
+                'schooling_status'=>[
+                    'complete'=>'Concluído',
+                    'coursing'=>'Cursando',
+                    'incomplete'=>'Incompleto',        
+                ],
+                'logradouros'=>[
+                    'r' => 'Rua',
+                    'est' => 'Estrada',
+                    'rod' => 'Rodovia',
+                    'av' => 'Avenida',
+                    'srv' => 'Servidao',
+                    'tv' => 'Travessa',
+                    'o' => 'Outeiro',
+                    'vl' => 'Viela',
+                    'q' => 'Quadra',
+                    'esm' => 'Estrada Municipal',
+                    'pc' => 'Praça',        
+                ],
+                'civil_states'=>[
+                    '1' =>'Solteiro',
+                    '2' =>'Casado',
+                    '3' =>'Divorciado',
+                    '4' =>'Viuvo',
+                    '5' =>'Concubinato',
+                    '6' =>'Separado',
+                    '7' =>'Uniao',
+                    '8' =>'Outros',        
+                ],
+                'work_periods'=>[
+                    '1'=>'1º Turno',
+                    '2'=>'2º Turno',
+                    '3'=>'3º Turno',
+                    '4'=>'Horário Comercial',
+                ],
+                'language_levels'=>[
+                    'basic'=>'Básico',
+                    'intermediary'=>'Intermediário',
+                    'advanced'=>'Avançado',
+                    'natural'=>'Fluente',
+                ]
+            ]
+        ];
+        $ret=[];
+        if (!empty($content[$lang][$what]))
+            $ret=$content[$lang][$what];
+        return $ret;
+    }
+
     public function profile(){
+        $lang='ptbr';
+        if (!empty($_COOKIE['lang']))
+            $lang=$_COOKIE['lang'];
         $logged_in=Auth::user();
         $role="";
         if (!empty($logged_in)){
@@ -221,43 +358,15 @@ class LandingController extends Controller
         $languages=Language::all();
         $selected_languages=$data->langs->toArray();
         $tags = Tag::all();
-        $schooling_grades=[
-            'professional' => 'Profissionalizante',
-            'technology' => 'Tecnólogo',
-            'technician' => 'Técnico',
-            'graduation' => 'Graduação',
-            'postgrad' => 'Pós Graduação',
-            'masters' => 'Mestrado',
-            'doctor' => 'Doutorado',
-            'phd' => 'PHD',
-        ];
 
-        $schooling_formation=[
-            'fundamental'=>'Fundamental',
-            'highschool'=>'Médio',
-            'technical'=>'Técnico',
-            'superior'=>'Superior',
-        ];
-
-        $schooling_status=[
-            'complete'=>'Concluído',
-            'coursing'=>'Cursando',
-            'incomplete'=>'Incompleto',
-        ];
-
-        $logradouros = [
-            'r' => 'Rua',
-            'est' => 'Estrada',
-            'rod' => 'Rodovia',
-            'av' => 'Avenida',
-            'srv' => 'Servidao',
-            'tv' => 'Travessa',
-            'o' => 'Outeiro',
-            'vl' => 'Viela',
-            'q' => 'Quadra',
-            'esm' => 'Estrada Municipal',
-            'pc' => 'Praça',
-        ];
+        $logradouros=$this->varsContents($lang,'logradouros');
+        $civil_states=$this->varsContents($lang,'civil_states');
+        $schooling_status=$this->varsContents($lang,'schooling_status');
+        $schooling_grades=$this->varsContents($lang,'schooling_grades');
+        $schooling_formation=$this->varsContents($lang,'schooling_formation');
+        $work_periods=$this->varsContents($lang,'work_periods');
+        $language_levels=$this->varsContents($lang,'language_levels');
+        $bools=$this->varsContents($lang,'boolean');
 
         if (empty($data->schooling)){
             $schooling = new Schooling;
@@ -283,11 +392,15 @@ class LandingController extends Controller
             'logged_in'=>$logged_in,
             'deficiencies'=>$deficiencies,
             'languages'=>$languages,
+            'civil_states'=>$civil_states,
             'schooling_grades'=>$schooling_grades,
             'schooling_status'=>$schooling_status,
             'schooling_formation'=>$schooling_formation,
             'selected_languages'=>$selected_languages,
             'logradouros'=>$logradouros,
+            'work_periods'=>$work_periods,
+            'language_levels'=>$language_levels,
+            'bools'=>$bools,
         ]);
     }
 
@@ -479,7 +592,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
         $today=Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
 
-        $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
+        $jobs = Job::where('status','=',1)->with(['tags','field','unit'])->orderBy('created_at','desc')->get();
         //$jobs = Job::where('status','=',1)->where('start','<=',$today)->where('end','>=',$today)->with(['tags','field'])->orderBy('created_at','desc')->get();
         $fields = Field::get();
         $units = Unit::get();
@@ -506,7 +619,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
         }
 
         $candidate=Candidate::where('user_id','=',$logged_in->id)->with(['subscriptions'])->first();
-        $jobs = Job::where('status','=',1)->with(['tags','field'])->orderBy('created_at','desc')->get();
+        $jobs = Job::where('status','=',1)->with(['tags','field','unit'])->orderBy('created_at','desc')->get();
         $fields = Field::get();
         $units = Unit::get();
 

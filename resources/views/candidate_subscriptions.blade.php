@@ -22,51 +22,51 @@
                                 <div class='maxed-height-500'>        
                                     <div class="row">
                                         <div class="col-lg-6">
-                                            <label for="" class="control-label">Área</label>
+                                            <label for="" class="control-label">{{ __('candidatesjobs.area') }}</label>
                                             <span> @{{getField(viewingJob.field_id).name}}</span>
                                         </div>
                                         <div class="col-lg-6">
-                                            <label for="" class="control-label">Unidade</label>
+                                            <label for="" class="control-label">{{ __('candidatesjobs.unit') }}</label>
                                             <span> @{{getUnit(viewingJob.unit_id).name}}</span>
                                         </div>
                                     </div>
                                     <div class="row margin-top-30">
                                         <div class="col-lg-6">
-                                            <label for="" class="control-label">Cidade</label>
+                                            <label for="" class="control-label">{{ __('candidatesjobs.city') }}</label>
                                             <span> @{{getUnit(viewingJob.unit_id).city}}</span>
                                         </div>
                                         <div class="col-lg-6">
-                                            <label for="" class="control-label">Estado</label>
+                                            <label for="" class="control-label">{{ __('candidatesjobs.state') }}</label>
                                             <span> @{{getUnit(viewingJob.unit_id).state}}</span>
                                         </div>
                                     </div>
                                     <div class="row margin-top-30">
                                         <div class="col-lg-12">
-                                            <label for="" class="control-label">Vaga:</label>
+                                            <label for="" class="control-label">{{ __('candidatesjobs.job') }}:</label>
                                             <span> @{{viewingJob.name}}</span>
                                         </div>
                                     </div>
                                     <div class="row margin-top-30">
                                         <div class="col-lg-12">
-                                            <label for="" class="control-label">Descrição:</label>
+                                            <label for="" class="control-label">{{ __('candidatesjobs.description') }}:</label>
                                             <span v-html='printDescription'></span>
                                         </div>
                                     </div>
                                     <div class="row margin-top-30">
                                         <div class="col-lg-12">
-                                            <label for="" class="control-label">Atividades:</label>
+                                            <label for="" class="control-label">{{ __('candidatesjobs.activities') }}:</label>
                                             <span v-html='printActivities'> </span>
                                         </div>
                                     </div>
                                     <div class="row margin-top-30">
                                         <div class="col-lg-12">
-                                            <label for="" class="control-label">Requisitos:</label>
+                                            <label for="" class="control-label">{{ __('candidatesjobs.requirements') }}:</label>
                                             <span v-html='printRequired'> </span>
                                         </div>
                                     </div>
                                     <div class="row margin-top-30">
                                         <div class="col-lg-12">
-                                            <label for="" class="control-label">Desejável:</label>
+                                            <label for="" class="control-label">{{ __('candidatesjobs.desirable') }}:</label>
                                             <span v-html='printDesirable'></span>
                                         </div>
                                     </div>
@@ -78,7 +78,7 @@
                                     <i class="fa fa-check" style='margin-right:10px'></i>
                                     Cancelar Inscrição
                                 </button>    
-                                <button class="btn btn-danger" data-bs-dismiss="modal" v-on:click="closeModal">Fechar</button>
+                                <button class="btn btn-danger" data-bs-dismiss="modal" v-on:click="closeModal">{{ __('candidatesjobs.close') }}</button>
                             </div>
                         </div>
                     </div>
@@ -86,25 +86,33 @@
 
                 <div class='card-header'>
                     <div class="animatedParent animateOnce">
-                        <h3 class="head-h3">CANDIDATURAS</h3>
-                        <p class="head-subtitle">seleções em andamento</p>
+                        <h3 class="head-h3">{{ __('candidatesjobs.candidacies') }}</h3>
+                        <p class="head-subtitle">{{ __('candidatesjobs.undergoingselections') }}</p>
                     </div>
                 </div>
 
                 <div class="card-body">
+                    <div class="col-md-3 col">
+                        <label for="country-filter">{{ __('candidatesjobs.countries') }}</label>
+                        <select id="country-filter"  class='w-input text-field white-background' v-model='filterCountry'>
+                            <option value='1'>{{ __('candidatesjobs.brazil') }}</option>
+                            <option value='4'>{{ __('candidatesjobs.paraguay') }}</option>
+                        </select>
+                    </div>
+
                     <div class="row">
                         <div class="col">
-                            <label for="job-filters">Buscar</label>
+                            <label for="job-filters">{{ __('candidatesjobs.search') }}</label>
                             <input placeholder="vendas marketing comercial...." id='job-filters' type="text" class='w-input text-field white-background' v-model='filters'>
                         </div>
                     </div>
                     <div class="row">
                     
                         <div class="col-lg-12" v-if="jobs.length==0">
-                            Nenhuma candidatura encontrada
+                            {{ __('candidatesjobs.nocandidacies') }}
                         </div>
                         <template v-for='job in subscriptions'>
-                            <div class="col-lg-4 margin-top-20"  v-show='inFilter(getSubscriptionsJob(job))'>
+                            <div class="col-lg-4 margin-top-20"  v-show='inFilter(getSubscriptionsJob(job)) & countryFilter(getSubscriptionsJob(job))'>
 
                                 <div class="card elegant-mini">
                                     <div class="card-header  info">
@@ -113,7 +121,7 @@
                                     <div class="card-body">
                                         <div class="row" v-show="isSubscribed(getSubscriptionsJob(job).id)">
                                             <div class="col">
-                                                <b>Status:</b>
+                                                <b>{{ __('candidatesjobs.status') }}:</b>
                                                 <b :class='getStatusClass(getSubscriptionsJob(job).id)'>@{{getSubscriptionState(getSubscriptionsJob(job).id)}}</b>
                                             </div>
                                         </div>
@@ -128,7 +136,7 @@
                                         </div>
                                         <div class="row margin-top-20">
                                             <div class="col">
-                                                <button class="btn btn-default" v-on:click="viewJob(getSubscriptionsJob(job))" >Visualizar</button>
+                                                <button class="btn btn-default" v-on:click="viewJob(getSubscriptionsJob(job))" >{{ __('candidatesjobs.view') }}</button>
                                             </div>
                                         </div>
                                     </div>

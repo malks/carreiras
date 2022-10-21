@@ -392,7 +392,7 @@ class AdmController extends Controller
                             'state_id'=>2,
                         ]
                     );
-                }    
+                }
             }
         }
 
@@ -959,8 +959,10 @@ class AdmController extends Controller
                 $query->where('address_street','like',"%$request->searchAddress%");
                 $query->orWhere('address_city','like',"%$request->searchAddress%");
                 $query->orWhere('address_state','like',"%$request->searchAddress%");
-                $query->orWhere('address_country','like',"%$request->searchAddress%");
             });
+        })
+        ->when(!empty($request->country_filter),function($query) use ($request) {
+            $query->where('address_country','=',"$request->country_filter");
         })
         ->when(!empty($request->searchInterests),function($query) use ($request) {
             $query->leftJoin('candidates_tags','candidates_tags.candidate_id','=','candidates.id');
@@ -1052,6 +1054,7 @@ class AdmController extends Controller
                 'filter_dob_start'=>$request->filter_dob_start,
                 'filter_dob_end'=>$request->filter_dob_end,
                 'viewed_list'=>$viewed_list,
+                'country_filter'=>$request->country_filter,
             ]
         );
 

@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 App::setLocale('ptbr');
+if (isset($_COOKIE['lang'])){
+    //print_R($_COOKIE);die;
+    App::setLocale($_COOKIE['lang']);
+}
 Route::get('/', function (){
     return redirect('/login');
 })->name('home');
@@ -33,6 +37,15 @@ Route::post('/busca-cep', 'LandingController@buscaCep')->name('busca-cep');
 Route::get('/help', 'LandingController@help')->name('help');
 Route::post('/send-help', 'LandingController@sendHelp')->name('send-help');
 Route::get('/forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password-forgot');
+
+Route::get('/changeloc/{lang}', function ($lang) {
+    setcookie("lang",$lang,0,'/');
+    return redirect()->back();
+});
+Route::get('/resetlang', function () {
+    Cookie::queue(Cookie::forget('lang'));
+    return redirect()->back();
+});
 
 $router->group(['middleware' => ['auth']], function() {
     Route::get('/profile', 'LandingController@profile');

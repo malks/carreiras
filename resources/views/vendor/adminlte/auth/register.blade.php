@@ -8,8 +8,8 @@
             <div class="card elegant">
                 <div class="card-header">
                     <div class="animatedParent animateOnce">
-                        <h3 class="head-h3">REGISTRO</h3>
-                        <p class="head-subtitle">seu primeiro passo</p>
+                        <h3 class="head-h3">{{ __('register.register') }}</h3>
+                        <p class="head-subtitle">{{ __('register.firststep') }}</p>
                     </div>
                 </div>
 
@@ -24,7 +24,7 @@
                                     value="{{ old('name') }}" placeholder="Nome Completo" autofocus>
                                 @if($errors->has('name'))
                                     <div class="invalid-feedback">
-                                        <strong>Campo obrigatório</strong>
+                                        <strong>{{ __('register.requiredfield') }}</strong>
                                     </div>
                                 @endif
                             </div>
@@ -35,7 +35,7 @@
                                     value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}">
                                 @if($errors->has('email'))
                                     <div class="invalid-feedback">
-                                        <strong>Precisa ser um e-mail válido</strong>
+                                        <strong>{{ __('register.invalidemail') }}</strong>
                                     </div>
                                 @endif
                             </div>
@@ -47,7 +47,7 @@
                                     placeholder="Senha">
                                 @if($errors->has('password'))
                                     <div class="invalid-feedback">
-                                        <strong>Senha tem que ter no mínimo 8 caracteres</strong>
+                                        <strong>{{ __('register.8charpassword') }}</strong>
                                     </div>
                                 @endif
                             </div>
@@ -59,23 +59,23 @@
                                     placeholder="Confirme a senha">
                                 @if($errors->has('password_confirmation'))
                                     <div class="invalid-feedback">
-                                        <strong>Confirmação de senha tem que conferir com a senha</strong>
+                                        <strong>{{ __('register.unmatchedpasswords') }}</strong>
                                     </div>
                                 @endif
                             </div>
                             <div class="input-group mb-3">
                                 <input type="checkbox" name='policy_accept' value='1' style='margin-top:5px;'>
-                                <label for="">Estou ciente e aceito os <a href='/policy' target='_blank'>termos e condições</a> de privacidade do Lunelli Carreiras</label>
+                                <label for="">{{ __('register.imawareaccept') }} <a href='/policy' target='_blank'>{{ __('register.termsconditions') }}</a>{{ __('register.privacylunelli') }}</label>
                                 @if($errors->has('policy_accept'))
                                     <div class="invalid-feedback">
-                                        <strong>Você precisa aceitar os termos para se registrar</strong>
+                                        <strong>{{ __('register.imawareaccept') }}</strong>
                                     </div>
                                 @endif
                             </div>
                     
                             {{-- Register button --}}
                             <button type="submit" class="btn btn-block btn-default">
-                                CRIAR CONTA
+                                {{ __('register.accountcreate') }}
                             </button>
 
                         </form>
@@ -84,8 +84,8 @@
                         <hr>
                     </div>
                     <div class="col-8 offset-2">
-                        <label for="">Já tem uma conta?</label>
-                        <a href="/login" class='btn btn-block btn-success'>Faça o login</a>
+                        <label for="">{{ __('register.gotaccount') }}?</label>
+                        <a href="/login" class='btn btn-block btn-success'>{{ __('register.dologin') }}</a>
                     </div>
                 </div>
 

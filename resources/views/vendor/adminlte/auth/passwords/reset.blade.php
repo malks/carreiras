@@ -17,8 +17,8 @@
             <div class="card elegant">
                 <div class="card-header">
                     <div class="animatedParent animateOnce">
-                        <h3 class="head-h3">NOVA</h3>
-                        <p class="head-subtitle">senha</p>
+                        <h3 class="head-h3">{{ __('password.new') }}</h3>
+                        <p class="head-subtitle">{{ __('password.password') }}</p>
                     </div>
                 </div>
                 <div class="card-body">
@@ -39,7 +39,7 @@
                             </div>
                             @if($errors->has('email'))
                                 <div class="invalid-feedback">
-                                    <strong>Token inválido</strong>
+                                    <strong>{{ __('password.invalidtoken') }}</strong>
                                 </div>
                             @endif
                         </div>
@@ -56,7 +56,7 @@
                             </div>
                             @if($errors->has('password'))
                                 <div class="invalid-feedback">
-                                    <strong>Senha obrigatória</strong>
+                                    <strong>{{ __('password.obrigatorypassword') }}</strong>
                                 </div>
                             @endif
                         </div>
@@ -73,7 +73,7 @@
                             </div>
                             @if($errors->has('password_confirmation'))
                                 <div class="invalid-feedback">
-                                    <strong>Confirmação de senha obrigatória}</strong>
+                                    <strong>{{ __('password.obrigatorypasswordconfirm') }}</strong>
                                 </div>
                             @endif
                         </div>
@@ -81,7 +81,7 @@
                         {{-- Confirm password reset button --}}
                         <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
                             <span class="fas fa-sync-alt"></span>
-                            Alterar senha
+                            {{ __('password.changepassword') }}
                         </button>
 
                     </form>

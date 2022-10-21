@@ -50,6 +50,14 @@
 
         <!-- HEADER -->
         <header>
+            <div class="row" style="z-index: 9999999;border-bottom: 1px solid #eee">
+                <div class="col-xl-8 col-lg-9 col-md-8 col-sm-5 col-4"> &nbsp;</div>
+                <div class="col-xl-4 col-lg-3 col-md-4 col-sm-7 col-8" style="z-index: 999999;">
+                    <div style="float: left;margin-top: 14px;font-size: 10pt;">{{ __('profile.language') }}:</div>
+                    <a href="/changeloc/ptbr" style='margin-left: 6vh;'><img src="/img/ptbrflag.png" title="Português" style="width: 20px;margin-top: 15px;z-index: 999999;cursor: pointer;"></a>
+                    <a href="/changeloc/es" style='margin-left: 6vh;'><img src="/img/esflag.png"   title="Espanhol"  style="width: 20px;margin-top: 15px;z-index: 999999;cursor: pointer;"></a>
+                </div>
+            </div>
             <div class="animatedParent animateOnce">
                 <div class="nav-back animated fadeInDown">
                     <nav class="navbar">
@@ -68,26 +76,26 @@
                                                     Carreiras
                                                 </span-->
                                             </a>
-                                        </div>      
+                                        </div>
                                     </div>
                                     <div id="Hedone" class="hedone-menu-container">
                                         <div class="navbar-right">
                                             @if(empty($logged_in))
                                                 <ul class="hedone-menu" id='welcoLogin'>
                                                     <li class="menu-item">
-                                                        <a href="/portal">Portal</a>
+                                                        <a href="/portal">{{ __('menu.portal') }}</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="/jobs">Vagas</a>
+                                                        <a href="/jobs">{{ __('menu.jobs') }}</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="/policy">Termos</a>
+                                                        <a href="/policy">{{ __('menu.policies') }}</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="/help">Ajuda</a>
+                                                        <a href="/help">{{ __('menu.help') }}</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="/login">Login</a>
+                                                        <a href="/login">{{ __('menu.login') }}</a>
                                                     </li>
 
                                                     <!--li class="menu-item">
@@ -127,41 +135,38 @@
                                             @else 
                                                 <ul class="hedone-menu" id='welcoLogin'>
                                                     <li class="menu-item">
-                                                        <a href="/portal">Portal</a>
+                                                        <a href="/portal">{{ __('menu.portal') }}</a>
                                                     </li>
                                                     @if($role=='admin')
                                                         <li class="menu-item">
-                                                            <a href="/home">Admin</a>
+                                                            <a href="/home">{{ __('menu.admin') }}</a>
                                                         </li>
                                                     @endif
 
                                                     <li class="menu-item">
-                                                        <a href="/policy">Termos</a>
+                                                        <a href="/policy">{{ __('menu.policies') }}</a>
                                                     </li>
                                                     <li class="menu-item" @if(empty($logged_in) && empty($user_id)) style='display:none;' @endif >
-                                                        <a href="/subscriptions">Candidaturas</a>
+                                                        <a href="/subscriptions">{{ __('menu.subscriptions') }}</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="/jobs">Vagas</a>
+                                                        <a href="/jobs">{{ __('menu.jobs') }}</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="/help">Ajuda</a>
+                                                        <a href="/help">{{ __('menu.help') }}</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="/profile">Perfil</a>
+                                                        <a href="/profile">{{ __('menu.profile') }}</a>
                                                     </li>
                                                     <li>
                                                         <span class='small margin-left-20'>
-                                                            Bem Vindo, {{$logged_in->name}} (<a href="/logout" style='color:#9b0303;display:inline;padding:2px!important;'>Sair</a>)
+                                                            {{ __('menu.welcome') }}, {{$logged_in->name}} (<a href="/logout" style='color:#9b0303;display:inline;padding:2px!important;'>{{ __('menu.leave') }}</a>)
                                                         </span>
                                                     </li>
                                                 </ul>
-                                            
                                             @endif
-
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

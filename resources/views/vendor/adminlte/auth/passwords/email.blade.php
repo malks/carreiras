@@ -18,15 +18,15 @@
             <div class="card elegant">
                 <div class="card-header">
                     <div class="animatedParent animateOnce">
-                        <h3 class="head-h3">RECUPERAR</h3>
-                        <p class="head-subtitle">senha</p>
+                        <h3 class="head-h3">{{ __('password.recover') }}</h3>
+                        <p class="head-subtitle">{{ __('password.password') }}</p>
                     </div>
                 </div>
                 <div class="card-body">
 
                     @if(session('status'))
                         <div class="alert alert-success">
-                            Enviado com sucesso!
+                            {{ __('password.sentsuccess') }}
                         </div>
                     @endif
                 
@@ -44,7 +44,7 @@
                             </div>
                             @if($errors->has('email'))
                                 <div class="invalid-feedback">
-                                    <strong>Aguarde antes de tentar novamente</strong>
+                                    <strong>{{ __('password.waitbeforeretry') }}</strong>
                                 </div>
                             @endif
                         </div>
@@ -52,7 +52,7 @@
                         {{-- Send reset link button --}}
                         <button type="submit" class="btn btn-block btn-secondary }}">
                             <span class="fas fa-share-square"></span>
-                            Enviar e-mail de recuperação
+                            {{ __('password.recovermail') }}
                         </button>
                 
                     </form>

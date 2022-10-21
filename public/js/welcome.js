@@ -169,6 +169,20 @@ function candidateSubscription(){
                     }
                 })
             }, 
+            countryFilter:function(job){
+                let tempJob={...job};
+                let contain = false;
+                let countries={'1':'Brasil','4':'Paraguai'};
+
+                if (this.filterCountry.length>0)
+                    activeFilters = countries[this.filterCountry];
+
+                if (activeFilters.length>0){
+                    if (tempJob.unit.country==activeFilters)
+                        contain=true;
+                }
+                return contain;
+            },
             inFilter:function(job){
                 console.log(job);
                 let activeFilters ='';
@@ -366,6 +380,20 @@ function candidateJobs(){
             viewJob:function(job){
                 this.viewingJob={...job};
                 $('#job-modal').show();
+            },
+            countryFilter:function(job){
+                let tempJob={...job};
+                let contain = false;
+                let countries={'1':'Brasil','4':'Paraguai'};
+
+                if (this.filterCountry.length>0)
+                    activeFilters = countries[this.filterCountry];
+
+                if (activeFilters.length>0){
+                    if (tempJob.unit.country==activeFilters)
+                        contain=true;
+                }
+                return contain;
             },
             inFilter:function(job){
                 console.log(job);
@@ -981,6 +1009,7 @@ function getJobsData(){
     customData.units=JSON.parse(decodeURIComponent(document.getElementById('units-data').value).replace(/\+/g," "));
     customData.subscriptions=JSON.parse(decodeURIComponent(document.getElementById('subscriptions-data').value));
     customData.filters='';
+    customData.filterCountry='1';
     customData.observation='';
     customData.user_id=document.getElementById('user-id').value;
     customData.saving=false;
@@ -1002,6 +1031,7 @@ function getSubscriptionsData(){
     customData.fields=JSON.parse(decodeURIComponent(document.getElementById('fields-data').value).replace(/\+/g," "));
     customData.units=JSON.parse(decodeURIComponent(document.getElementById('units-data').value).replace(/\+/g," "));
     customData.filters='';
+    customData.filterCountry='1';
     customData.viewingJob={
         id:null,
         field_id:1,
