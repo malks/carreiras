@@ -496,6 +496,9 @@ $arr['what_irritates_you']="20. O que o irrita?";
         
         $normalize_fields=['name','address_state','address_country','address_city','addres_district','address_street','address_complement','rg_emitter','natural_city','natural_state','natural_country','spouse_name','mother_name','father_name'];
 
+        if (empty($dados['father_dob']))
+            $dados['father_dob']='01/01/1900';
+
         foreach($dados as $k => $d){
             if (in_array($k,$normalize_fields))
                 $candidate->{$k}=$this->normalize($d);
