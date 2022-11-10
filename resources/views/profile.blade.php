@@ -286,7 +286,7 @@
                                                     <input type='text' class='w-input text-field white-background' id='data-mother-name' name='mother_name' value='{{$data->mother_name}}'/>
                                                 </div>
                                                 <div class=" col-sm-12 col-lg-4">
-                                                    <label for="data-mother-dob">{{ __('profile.mothername') }}</label>
+                                                    <label for="data-mother-dob">{{ __('profile.motherdob') }}</label>
                                                     <input type='text' v-mask="'##/##/####'" class='w-input text-field white-background' id='data-mother-dob' name='mother_dob' v-model='holdingData.mother_dob'/>
                                                 </div>
                                             </div>
