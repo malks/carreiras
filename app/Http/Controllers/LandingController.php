@@ -498,7 +498,19 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
         if (empty($dados['father_dob']))
             $dados['father_dob']='01/01/1900';
-
+        if (empty($dados['arrival_date']))
+            $dados['arrival_date']='01/01/1900';
+        if (empty($dados['mother_dob']))
+            $dados['mother_dob']='01/01/1900';
+        if (empty($dados['dob']))
+            $dados['dob']='01/01/1900';
+        if (empty($dados['lunelli_earlier_work_period_start']))
+            $dados['dob']='01/01/1900';
+        if (empty($dados['lunelli_earlier_work_period_end']))
+            $dados['dob']='01/01/1900';
+        if (empty($dados['last_time_doctor']))
+            $dados['dob']='01/01/1900';
+            
         foreach($dados as $k => $d){
             if (in_array($k,$normalize_fields))
                 $candidate->{$k}=$this->normalize($d);
