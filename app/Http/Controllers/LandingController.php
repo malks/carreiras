@@ -496,6 +496,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
         
         $normalize_fields=['name','address_state','address_country','address_city','addres_district','address_street','address_complement','rg_emitter','natural_city','natural_state','natural_country','spouse_name','mother_name','father_name'];
 
+        //FIXME VER SE TEM COMO CORRIGIR PARA DEIXAR NULO OU EM BRANCO
         if (empty($dados['father_dob']))
             $dados['father_dob']='01/01/1900';
         if (empty($dados['arrival_date']))
@@ -505,12 +506,15 @@ $arr['what_irritates_you']="20. O que o irrita?";
         if (empty($dados['dob']))
             $dados['dob']='01/01/1900';
         if (empty($dados['lunelli_earlier_work_period_start']))
-            $dados['dob']='01/01/1900';
+            $dados['lunelli_earlier_work_period_start']='01/01/1900';
         if (empty($dados['lunelli_earlier_work_period_end']))
-            $dados['dob']='01/01/1900';
+            $dados['lunelli_earlier_work_period_end']='01/01/1900';
         if (empty($dados['last_time_doctor']))
-            $dados['dob']='01/01/1900';
-            
+            $dados['last_time_doctor']='01/01/1900';
+        if (empty($dados['visa_expiration']))
+            $dados['visa_expiration']='01/01/1900';
+
+
         foreach($dados as $k => $d){
             if (in_array($k,$normalize_fields))
                 $candidate->{$k}=$this->normalize($d);
