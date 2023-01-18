@@ -13,6 +13,7 @@ use App\HelpContact;
 use App\Job;
 use App\JobTemplate;
 use App\Tag;
+use App\Tagrh;
 use App\Unit;
 use App\Field;
 use App\User;
@@ -117,9 +118,26 @@ class AdmController extends Controller
         return $jobs;
     }
 
+    public function getAvailableTagsrh(){
+        $jobs=Tagrh::
+        get()
+        ->toJson();
+        return $jobs;
+    }
+
     public function addTag(Request $request){
         if (!empty($request->name)){
             $tag = new Tag;
+            $tag->name=strtolower($request->name);
+            $tag->save();
+        }
+
+		return redirect('/adm/tags/');
+    }
+
+    public function addTagrh(Request $request){
+        if (!empty($request->name)){
+            $tag = new Tagrh;
             $tag->name=strtolower($request->name);
             $tag->save();
         }
@@ -283,7 +301,8 @@ class AdmController extends Controller
             'postgrad' => 'Pós Graduação',
             'masters' => 'Mestrado',
             'doctor' => 'Doutorado',
-            'phd' => 'PHD',        ];
+            'phd' => 'PHD',
+        ];
 
         $schooling_status=[
             'complete'=>'Concluído',
@@ -298,7 +317,15 @@ class AdmController extends Controller
             '4'=>'Horário comercial',
         ];
 
+        $tagsrh=Tagrh::all();
+
+        $tagsrh_filters=[];
+        if (!empty($request->filter_tagrh))
+            $tagsrh_filters=$request->filter_tagrh;
+
         return view('adm.recruiting')->with([
+            'tagsrh'=>$tagsrh,
+            'tagsrh_filters'=>$tagsrh_filters,
             'schooling_grades'=>$schooling_grades,
             'schooling_status'=>$schooling_status,
             'work_periods'=>$work_periods,
@@ -551,7 +578,7 @@ class AdmController extends Controller
                 return $subquery;
             });
         })*/
-        ->with(['tags','subscribers','subscribers.interests','subscribers.experience','field','unit'])
+        ->with(['tags','subscribers','subscribers.interests','subscribers.experience','subscribers.tagsrh','field','unit'])
         ->withCount(['subscriptions as subscription_amount'=>function ($query) {$query->where('active','=',1);}])
         ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])
         ->orderByRaw('subscription_amount desc')
@@ -829,6 +856,20 @@ class AdmController extends Controller
         );
     }
 
+    public function tagsrhList (Request $request){
+        $data=Tagrh:: when(!empty($request->search),function($query) use ($request) {
+            $query->where('name','like',"%$request->search%");
+        })
+        ->paginate(15);
+
+        return view('adm.tagsrh')->with(
+            [
+                'data'=>$data,
+                'search'=>$request->search,
+            ]
+        );
+    }
+
     private function mask($val, $mask) {
         $maskared = '';
         $max=strlen($mask)-1;
@@ -926,7 +967,49 @@ class AdmController extends Controller
         DB::table('candidates')->where('id','=',$id)->update($data);
     }
 
+    public function summary(Request $request) {
+
+        if (empty($request->period_end)){
+            $request->period_end=Carbon::now('America/Sao_Paulo')->endOfDay()->format('Y-m-d');
+        }
+        if (empty($request->period_start)){
+            $request->period_start=Carbon::now('America/Sao_Paulo')->subMonths(1)->startOfDay()->format('Y-m-d');
+        }
+
+        $registered=DB::table('candidates')
+            ->selectRaw('count(id) as data')
+            ->where('candidates.created_at','>=',$request->period_start)
+            ->where('candidates.created_at','<=',$request->period_end)
+            ->first();
+
+        $daily=DB::table('candidates')
+            ->selectRaw('count(id) as data,date(created_at) as day')
+            ->where('candidates.created_at','>=',$request->period_start)
+            ->where('candidates.created_at','<=',$request->period_end)
+            ->groupBy('day')
+            ->orderBy('day','asc')
+            ->get();
+
+        $average=0;
+        if (count($daily)>0)
+            $average = round($registered->data/count($daily));
+
+        return view('adm.summary')->with([
+            'registered'=>$registered->data,
+            'daily'=>$daily,
+            'average'=>$average,
+            'period_start'=>$request->period_start,
+            'period_end'=>$request->period_end,
+        ]);
+    }
+
     public function candidatesList (Request $request){
+
+        $tagsrh=DB::table('candidates_tagsrh')
+        ->select('candidate_id','tag_id')
+        ->when(!empty($request->filter_tagrh), function ($query) use ($request){
+            $query->whereIn('tag_id',$request->filter_tagrh);
+        });
 
         $data=Candidate::
         distinct()
@@ -947,11 +1030,11 @@ class AdmController extends Controller
         ->selectRaw(DB::Raw('ANY_VALUE(subscribed.created_at) as data_candidatura'))
         ->selectRaw(DB::Raw('ANY_VALUE(exportables.status)  as exportado'))
         ->when(!empty($request->search),function($query) use ($request) {
-            $query->where( function ($query) use ($request){
-                $query->where('candidates.name','like',"%$request->search%");
-                $query->orWhere('cpf','like',"%$request->search%");
-                $query->orWhere('email','like',"%$request->search%");
-                $query->orWhere('phone','like',"%$request->search%");
+            $query->where( function ($inquery) use ($request){
+                $inquery->where('candidates.name','like',"%$request->search%");
+                $inquery->orWhere('candidates.cpf','like',"%$request->search%");
+                $inquery->orWhere('candidates.email','like',DB::Raw("'%{$request->search}%'"));
+                $inquery->orWhere('candidates.phone','like',"%$request->search%");
             });
         })
         ->when(!empty($request->searchAddress),function($query) use ($request) {
@@ -992,15 +1075,23 @@ class AdmController extends Controller
         ->when(!empty($request->filter_dob_end), function ($query) use ($request) {
             $query->where('candidates.dob','<=',$request->filter_dob_end);
         })
-        ->with(['Schooling','Experience'])
-        ->withCount('subscriptions as subscription_amount')
+        ->when((!empty($request->filter_tagrh) && $request->tagrh_filter_type=='only'), function ($query) use ($request) {
+            $query->join('candidates_tagsrh','candidates_tagsrh.candidate_id','=','candidates.id')->whereIn('candidates_tagsrh.tag_id',$request->filter_tagrh);
+        })
+        ->when((!empty($request->filter_tagrh) && $request->tagrh_filter_type=='except'), function ($query) use ($request,$tagsrh){
+            $query->leftJoinSub($tagsrh,'cdttagsrh', function ($join) use ($request) {
+                $join->on('cdttagsrh.candidate_id','=','candidates.id');
+            })->whereNull('cdttagsrh.tag_id'); 
+        })
+        ->with(['Schooling','Experience','Tagsrh'])
+        ->withCount('subscriptions as subscription_amount','tagsrh as tagsrhcount')
         ->leftJoin('subscribed','subscribed.candidate_id','=','candidates.id')
         ->leftJoin('exportables','exportables.candidate_id','=','candidates.id')
         ->orderBy('candidates.updated_at','desc')
         ->orderBy('data_candidatura','desc')
         ->groupBy('candidates.id')
         ->paginate(15);
-        
+
         $viewed_list=array_map(function($arr){
             if($arr['viewed'])
                 return $arr['id'];
@@ -1038,10 +1129,19 @@ class AdmController extends Controller
             array_push($data_list,['id'=>$cand->id]);
         }
 
+        $tagsrh=Tagrh::all();
+
+        $tagsrh_filters=[];
+        if (!empty($request->filter_tagrh))
+            $tagsrh_filters=$request->filter_tagrh;
+
         return view('adm.candidates.list')->with(
             [
                 'data'=>$data,
                 'data_list'=>$data_list,
+                'tagsrh'=>$tagsrh,
+                'tagsrh_filters'=>$tagsrh_filters,
+                'tagrh_filter_type'=>$request->tagrh_filter_type,
                 'search'=>$request->search,
                 'searchAddress'=>$request->searchAddress,
                 'searchInterests'=>$request->searchInterests,
@@ -1058,6 +1158,14 @@ class AdmController extends Controller
             ]
         );
 
+    }
+
+    public function loadCandidateTagsrh($candidate_id){
+        return DB::table('candidates_tagsrh')->where('candidate_id','=',$candidate_id)->get()->toJson();
+    }
+
+    public function loadCandidateData($candidate_id){
+        return Candidate::find($candidate_id)->toJson();
     }
 
     public function usersList (Request $request){
@@ -1203,6 +1311,15 @@ class AdmController extends Controller
     public function tagsCreate (Request $request) {
         $data=new Tag;
         return view('adm.tags.edit')->with(
+            [
+                'data'=>$data,
+            ]
+        );
+    }
+
+    public function tagsrhCreate (Request $request) {
+        $data=new Tagrh;
+        return view('adm.tagsrh_edit')->with(
             [
                 'data'=>$data,
             ]
@@ -1379,6 +1496,25 @@ class AdmController extends Controller
         );
     }
 
+    public function tagsrhEdit ($id) {
+        $data=Tagrh::where('id','=',$id)->first();
+        return view('adm.tagsrh_edit')->with(
+            [
+                'data'=>$data,
+            ]
+        );
+    }
+
+    public function candidateSetTagrh(Request $request){
+        DB::table('candidates_tagsrh')->where('candidate_id','=',$request->candidate_id)->delete();
+        if(!empty($request->tags_rh)){
+            foreach($request->tags_rh as $tagrh){
+                DB::table('candidates_tagsrh')->insert(['candidate_id'=>$request->candidate_id,'tag_id'=>$tagrh,'created_at'=>DB::Raw('now()'),'updated_at'=>DB::Raw('now()'),]);
+            }
+        }
+		return redirect('/adm/candidates');
+    }
+
     public function candidatesEdit ($id) {
         $data=Candidate::where('id','=',$id)->with(['subscriptions','subscriptions.subscriptions','subscriptions.subscriptions.states','langs'])->first();
         $states=State::all();
@@ -1482,6 +1618,12 @@ class AdmController extends Controller
         DB::table('jobs_tags')->whereIn('tag_id',explode(",",$request->ids))->delete();
         DB::table('candidates_tags')->whereIn('tag_id',explode(",",$request->ids))->delete();
         Tag::whereIn('id',explode(",",$request->ids))->delete();
+        return;
+    }
+
+    public function tagsrhDestroy (Request $request) {
+        DB::table('candidates_tagsrh')->whereIn('tag_id',explode(",",$request->ids))->delete();
+        Tagrh::whereIn('id',explode(",",$request->ids))->delete();
         return;
     }
 
@@ -1734,6 +1876,30 @@ class AdmController extends Controller
         }
         $data->save();
 		return redirect('/adm/tags/');
+    }
+
+    public function tagsrhSave (Request $request) {
+        $data=new Tagrh;
+        $arr=$request->toArray();
+        unset($arr['_token']);
+
+        if(!empty($arr['id']))
+            $data=Tagrh::where('id','=',$arr['id'])->first();
+
+        $hexalfa=['a','b','c','d','e','f'];
+        $hexnums=[10,11,12,13,14,15];
+        $fontcolor=str_split($data->color);
+        array_shift($fontcolor);
+        foreach($fontcolor as $k=>$fc)
+            $fontcolor[$k]=str_replace($hexalfa,$hexnums,$fc);
+        $nfontcolor = (array_sum($fontcolor)>45) ? '#000000' : '#ffffff';
+
+        foreach ($arr as $k=>$value){
+            $data->{$k}=$value;
+        }
+        $data->fontcolor=$nfontcolor;
+        $data->save();
+		return redirect('/adm/tagsrh/');
     }
 
     public function candidatesSave (Request $request) {

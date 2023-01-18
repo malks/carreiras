@@ -44,7 +44,8 @@ $(document).ready(function () {
         editJobs();
     if ($('#jobs-templates-tags').length>0)
         editJobsTemplates();
-
+    if ($('[check-tagsrh-edit]').length>0)
+        editTagsRH();
 })
 
 function editStatesMails(){
@@ -89,8 +90,6 @@ function editStatesMails(){
             addState:function (){
                 let that=this;
                 that.states.push(that.all_states[0]);
-                console.log(that.all_states[0]);
-                console.log(that.states);
             },
             changeHeaderImage:function(){
                 let that=this;
@@ -339,10 +338,12 @@ function recruiting(){
             candidateExpSearch:'',
             candidateLocSearch:'',
             tagFilters:'',
+            tagFiltersExcept:"false",
+            filterTagRh:JSON.parse($('#filtered-tagsrh').val()),
+            tagsRh:JSON.parse($('#tagsrh').val()),
             candidateWorkPeriodSearch:{1:false,2:false,3:false,4:false},
         }
     };
-    console.log(bootstrapData);
 
     recruitMachine=new Vue({
         el:'#app',
@@ -363,12 +364,33 @@ function recruiting(){
                 if (this.runData.notingSubscription.obs!==undefined)
                     obs=this.runData.notingSubscription.obs;
                 return obs.split("\n");
-            }
+            },
         },
         mounted:function () {
             this.updateData();
         },
         methods:{
+            tagRhBackground:function(id){
+                let idx=that.otherData.filterTagRh.findIndex(el=>el == id);
+                return 'background-color:'+this.tagsRh[idx].color;
+            },
+            addTagRhFilter:function(id){
+                let that = this;
+                let idx=that.otherData.filterTagRh.findIndex(el=>el == id);
+                if (idx==-1)
+                    that.otherData.filterTagRh.push(id);
+                else
+                    that.otherData.filterTagRh.splice(idx,1);
+                console.log(that.otherData.filterTagRh);
+            },
+            isSelectedTagrh:function (tagid){
+                let that = this;
+                let ret = false;
+                let idx=that.otherData.filterTagRh.findIndex(el=>el == tagid);
+                if (idx!==-1)
+                    ret=true;
+                return ret;
+            },
             specificFilter:function (who){
                 if (!this.runData.specificFilter || this.pushData.filters.jobs.deep.subscriptions.mustHave.states.in.state_id.indexOf(who.states[who.states.length-1].id)!=-1)
                     return true;
@@ -384,20 +406,17 @@ function recruiting(){
             },
             addSubscriptionState:function (who,where,what){
                 let that = this;
-                console.log(that.runData.selectedJob);
                 let persistentData=that.persistentData;
                 persistentData['_token']=$('[name="_token"]').val();
                 persistentData['candidate_id']=who;
                 persistentData['job_id']=where;
                 persistentData['status']=what;
-                console.log(persistentData);
                 $.ajax({
                     url:'/adm/add-subscription-state',
                     type:'POST',
                     data:persistentData,
                     success:function (data){
                         that.updateData();
-                        console.log(that.runData.selectedJob);
                     }
                 });
             },
@@ -478,7 +497,6 @@ function recruiting(){
                 })
                 if (ret==null || ret==undefined)
                     return {'name':''};
-                console.log(ret);
                 return ret;
             },
             getFieldById:function(id){
@@ -492,9 +510,7 @@ function recruiting(){
                 return ret;
             },
             inspectJob:function(job){
-                console.log("inspectJob");
                 let that = this;
-                console.log(this.runData.selectedJob);
                 if (this.runData.selectedJob.id==null || this.runData.selectedJob.id!=job.id){
                     this.runData.selectedJob={...job};
                     for (let i in that.runData.selectedJob.subscriptions){
@@ -519,7 +535,6 @@ function recruiting(){
                 pushData.filters.jobs.direct.in.id=that.runData.selectedJob.id;
                 pushData['_token']=$('[name="_token"]').val();
                 that.runData.updating=true;
-                console.log(pushData);
 
                 $.ajax({
                     url:'/adm/recruiting-data',
@@ -541,7 +556,6 @@ function recruiting(){
                 });
             },
             updateSelectedJob:function (){
-                console.log("updateSelectedJob");
                 let that = this;
                 if (that.runData.selectedJob.id!=null){
                     that.runData.selectedJob=that.runData.jobs.find(obj=>{
@@ -560,7 +574,6 @@ function recruiting(){
             },
             updateData:function (){
                 let that = this;
-                console.log(that.runData);
                 let pushData=that.pushData;
                 pushData.filters.jobs.direct.like.name="";
               //  pushData.filters.jobs.mustHave.tags.name="";
@@ -579,11 +592,9 @@ function recruiting(){
                     success:function (data){
                         let objData=JSON.parse(data);
                         for (let i in objData){
-                            console.log(i);
                             that.runData[i]=objData[i];
                         }
                         that.updateSelectedJob();
-                        console.log(that.runData);
                         that.runData.updating=false;
                     }
                 });
@@ -638,6 +649,37 @@ function recruiting(){
                         }
                     }
                 }
+                return contain;
+            },
+            candidateTagrhFilter:function (candidate) {
+                let contain = true;
+                let activeFilters = [];
+                let dudeTags = [];
+                if (candidate!=undefined){
+                    dudeTags=candidate['tagsrh'];
+                    if(this.otherData.filterTagRh.length>0){
+                        contain=false;
+                        activeFilters = this.otherData.filterTagRh;
+                        for (let i in activeFilters){
+                            if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
+                                contain = false;
+                                break;
+                            }
+                            for (let j in dudeTags){
+                                if (dudeTags[j].id==activeFilters[i]){
+                                    contain=true;
+                                    break;
+                                }
+                            }
+                            if (contain)
+                                break;
+                        }
+                    }
+                }
+                if (candidate.id==1091)
+                    console.log(this.otherData.tagFiltersExcept,activeFilters.length,contain,dudeTags);
+                if (activeFilters.length>0 && this.otherData.tagFiltersExcept=="true")
+                    contain=!contain;
                 return contain;
             },
             candidateTagFilter:function (candidate) {
@@ -719,10 +761,8 @@ function recruiting(){
                 return contain;
             },
             inFilter:function(job){
-                console.log(job);
                 let activeFilters ='';
                 let tempJob={...job};
-                console.log(tempJob);
                 let contain = false;
                 if (this.otherData.tagFilters.length>0)
                     activeFilters = this.otherData.tagFilters.split(" ");
@@ -730,7 +770,6 @@ function recruiting(){
                 if (activeFilters.length>0){
                     for (let i in activeFilters){
                         if(activeFilters[i].length>0){
-                            console.log("activefilter="+activeFilters[i]);
                             if (activeFilters[i]=="" || typeof activeFilters[i] == undefined || activeFilters[i]==null){
                                 contain = false;
                                 break;
@@ -857,7 +896,6 @@ function jobsTemplatesList(){
 }
 
 function startList(blockEditIds=[],blockDeleteIds=[]){
-    console.log('lalala');
     let list = null;
     let logged_id=$('#logged-id').val();
     list=new Vue({
@@ -868,6 +906,7 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             blockDeleteIds:blockDeleteIds,
             logged_id:logged_id,
             availableJobs:[],
+            availableTagsRh:[],
             availableJobsFilterData:{
                 status:[],
                 name:"",
@@ -878,19 +917,34 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             },
             allFields:[],
             allUnits:[],
+            filterTagRh:[],
             jobChoosing:false,
+            tagSetting:false,
+            tagCheck:false,
+            selectedTagrh:[],
             selectedJob:null,
+            selectedCandidateName:'',
+            selectedCandidateId:'',
             viewedItem:[],
+            saving:false,
         },
         mounted:function (){
             if ($('[check-candidates-list]').length>0){
                 this.loadAvailableJobs();
+                this.loadAvailableTagsRh();
                 this.loadFields();
                 this.loadUnits();
                 this.loadViewed();
+                this.filterTagRh=JSON.parse($('#filtered-tagsrh').val());
+                console.log(this.filterTagRh);
             }
         }, 
         computed:{
+            currentCandidate: function (){
+                if (this.selectedIds.length>0)
+                    return this.selectedIds[0];
+                return '';
+            },
             canEdit:function(){
                 let that = this;
                 if (that.blockEditIds.length>0){
@@ -905,7 +959,7 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             },
             canDestroy:function(){
                 let that = this;
-                if (logged_id!=null && that.selectedIds==logged_id)
+                if (logged_id!=null && that.selectedIds[0]==logged_id)
                     return true;
                 if (that.blockDeleteIds.length>0){
                     for (let i=0;i<that.blockDeleteIds.length;i++){
@@ -913,7 +967,7 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                             return true;
                     }
                 }
-                if (this.selectedIds.length>0)
+                if (that.selectedIds.length>0)
                     return false;
                 return true;
             },
@@ -921,7 +975,15 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                 if (this.selectedJob!=null)
                     return false;
                 return true;
-            }
+            },
+            inTagRhFilter: function (id){
+                let that = this;
+                let idx=that.filterTagRh.findIndex(el=>el == id);
+                let ret = false;
+                if (idx!==-1)
+                    ret = true;
+                return ret;
+            },
         },
         methods:{
             filterAvailableJobs: function (currentJob){
@@ -935,8 +997,6 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     that.availableJobsFilterData.dateEnd!=null
                     ){
                     ret=false;   
-                        console.log(that.availableJobsFilterData.status);
-                        console.log(currentJob.status);
                     if (that.availableJobsFilterData.status.length>0){
                         if (that.availableJobsFilterData.status[0]==currentJob.status || that.availableJobsFilterData.status[1]==currentJob.status)
                             ret=true;
@@ -968,20 +1028,95 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                 }
                 return ret;
             },
+            toggleTagCheck: function (candidate_id) {
+                let that = this;
+                that.tagCheck=!that.tagCheck;
+                that.selectedTagrh=[];
+                if (candidate_id!==false){
+                    $.ajax({
+                        url:'/adm/candidates/load-tagsrh/'+candidate_id,
+                        type:'GET',
+                        success: function (data){
+                            let temptags=[...JSON.parse(data)];
+                            for (let i in temptags){
+                                that.selectedTagrh.push(temptags[i].tag_id);                            
+                            }
+                        }
+                    })
+                    $.ajax({
+                        url:'/adm/candidates/load-data/'+candidate_id,
+                        type:'GET',
+                        success: function (data){
+                            that.selectedCandidateName=JSON.parse(data).name;
+                        }
+                    });
+    
+                }
+                if (that.tagCheck)
+                    $('#tagrh-modal').show();
+                else
+                    $('#tagrh-modal').hide();
+            },
             selectJob:function (id) {
                 if(this.selectedJob!=id)
                     this.selectedJob=id;
                 else
                     this.selectedJob=null;
             },
+            addTagRhFilter: function (id){
+                let that = this;
+                let idx=that.filterTagRh.findIndex(el=>el == id);
+                if (idx==-1)
+                    that.filterTagRh.push(id);
+                else
+                    that.filterTagRh.splice(idx,1);
+                console.log(that.filterTagRh);
+            },
             loadViewed:function (){
                 let that=this;
                 let viewed_list=$('#viewed-data').val().split(",");
-                console.log(viewed_list);
                 for (let i =0;i<viewed_list.length;i++){
                     if (viewed_list[i]!="")
                         that.viewedItem.push(viewed_list[i]);
                 }
+            },
+            isSelectedTagRh:function(tagid){
+                let that = this;
+                let ret = false;
+                console.log(that.selectedTagrh);
+                let idx=that.filterTagRh.findIndex(el=>el == tagid);
+                if (idx!==-1)
+                    ret=true;
+                return ret;
+            },
+            isUserSelectedTagRh:function(tagid){
+                let that = this;
+                let ret = false;
+                let idx=that.selectedTagrh.findIndex(el=>el == tagid);
+                if (idx!==-1)
+                    ret=true;
+                return ret;
+            },
+            switchTagRh:function(tagid){
+                let that = this;
+                let tagidx=that.selectedTagrh.findIndex(el=>el == tagid);
+                if (tagidx==-1)
+                    that.selectedTagrh.push(tagid);
+                else
+                    that.selectedTagrh.splice(tagidx,1);
+            },
+            loadAvailableTagsRh:function(){
+                let that = this;
+                $.ajax({
+                    url:ajaxUrl+'/available-tagsrh',
+                    type:'GET',
+                    processData: false,
+                    contentType: false,
+                    data:form,
+                    success:function(data){
+                        that.availableTagsRh=[...JSON.parse(data)];
+                    }
+                });
             },
             loadAvailableJobs:function(){
                 let that = this;
@@ -993,7 +1128,6 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     data:form,
                     success:function(data){
                         that.availableJobs=JSON.parse(data);
-                        console.log(that.availableJobs);
                     }
                 });
             },
@@ -1003,9 +1137,7 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     url:'/all-fields',
                     type:'GET',
                     success:function(data){
-                        console.log(data);
                         that.allFields=JSON.parse(data);
-                        console.log(that.allfields);
                     }
                 });
             },
@@ -1029,14 +1161,25 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     url:ajaxUrl+'/subscribe-candidates-to-job',
                     type:'POST',
                     processData: false,
-                    contentType: false,			    
+                    contentType: false,
                     data:form,
                     success:function(data){
-                        console.log(data);
                         alert("Inscritos com sucesso");
                         window.location.reload();
                     }
                 })
+            },
+            tagsRh: function (cdid=false){
+                let that=this;
+
+                console.log(cdid);
+                if (cdid!==false){
+                    that.selectedCandidateId=cdid;
+                }
+                else {
+                    that.selectedCandidateId=that.selectedIds[0];
+                }
+                that.openTags();
             },
             exportCandidates:function (){
                 let that=this;
@@ -1049,7 +1192,6 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                         contentType: false,			    
                         data:form,
                         success:function(data){
-                            console.log(data);
                             alert("Candidatos adicionados à fila de exportação, pode levar até 1 minuto para que ocorra a exportação.");
                             window.location.reload();
                         }
@@ -1063,6 +1205,35 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     $('#subscribe-job-modal').show();
                 else
                     $('#subscribe-job-modal').hide();
+            },
+            openTags:function (){
+                let that = this;
+                that.tagSetting=!that.tagSetting;
+                that.selectedTagrh=[];
+                that.selectedCandidateName="";
+                let candidatesTags=[];
+                $.ajax({
+                    url:'/adm/candidates/load-tagsrh/'+that.selectedCandidateId,
+                    type:'GET',
+                    success: function (data){
+                        let temptags=JSON.parse(data);
+                        for (let i in temptags){
+                            that.selectedTagrh.push(temptags[i].tag_id);                            
+                        }
+                        console.log(that.selectedTagrh);
+                    }
+                });
+                $.ajax({
+                    url:'/adm/candidates/load-data/'+that.selectedCandidateId,
+                    type:'GET',
+                    success: function (data){
+                        that.selectedCandidateName=JSON.parse(data).name;
+                    }
+                });
+                if (that.tagSetting)
+                    $('#subscribe-tagrh-modal').show();
+                else
+                    $('#subscribe-tagrh-modal').hide();
             },
             addItem:function(id){
                 let idx=this.selectedIds.findIndex(el=>el == id);
@@ -1092,7 +1263,6 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                 return ret;
             },
             reverseSelection:function(){
-                console.log(fullData);
                 for (let i in fullData){
                     let idx=this.selectedIds.findIndex(el=>el == fullData[i].id);
                     if(idx>=0)
@@ -1241,7 +1411,6 @@ function configurations(){
         data:form,
         success:function (data){
             let otherConf=JSON.parse(data);
-            console.log(otherConf);
             admConf.otherConf=otherConf;
             $('#testimonial-author-pic').attr('src','/img/'+otherConf.about_us.testimonial_author_picture);
             $('#video-pic').attr('src','/img/'+otherConf.video.face);
@@ -1253,7 +1422,6 @@ function configurations(){
     })
 
     $('#change-banner-background').click(function () {
-        console.log("lalal");
     })
 
     let defaultEditingBanner={
@@ -1313,9 +1481,7 @@ function configurations(){
                 let that = this;
                 let tmpConf=[...that.otherConf.our_numbers];
                 tmpConf[which].removal=1;
-                console.log(tmpConf);
                 that.otherConf.our_numbers=tmpConf;
-                console.log(that.otherConf.our_numbers);
             },
             addNumber:function () {
                 let that = this;
@@ -1331,9 +1497,7 @@ function configurations(){
                 let that = this;
                 let tmpConf=[...that.otherConf.our_team];
                 tmpConf[which].removal=1;
-                console.log(tmpConf);
                 that.otherConf.our_team=tmpConf;
-                console.log(that.otherConf.our_team);
             },
             addTeam:function () {
                 let that = this;
@@ -1356,10 +1520,8 @@ function configurations(){
                 else if (which=='our_team'){
                     $('.team-pic-picker').each(function ()  {
                         let it=this;
-                        console.log($(it)[0].files[0]);
                         form.append($(it).attr('id').replace(/-/g,"_"),$(it)[0].files[0]);
                     })
-                    console.log(form);
                 }
                 else if (which=='video'){
                     form.append('video_picture',document.getElementById('video-picture').files[0]);
@@ -1423,7 +1585,6 @@ function configurations(){
                     this.selectedBanner=null;
                     $('.dropzone').blur();
                 }
-                console.log(this.selectedBanner);
             },
             resetEditingBanner: function (){
                 this.editingBanner={...defaultEditingBanner};
@@ -1435,7 +1596,6 @@ function configurations(){
                 this.banners.filter(obj => {
                     if( obj.id === that.selectedBanner){
                         $('#banner-modal').show();
-                        console.log(obj);
                         that.editingBanner={...obj};
                     }
                     return false;
@@ -1506,7 +1666,6 @@ function configurations(){
                     contentType: false,
                     data:form,
                     success:function(data){
-                        console.log(data);
                         that.saving=false;
                         let bannerIframe=document.getElementById('banner-iframe');
                         bannerIframe.src=bannerIframe.src;
@@ -1548,7 +1707,6 @@ function configurations(){
                         this.banners = newbanners;
                         //Vue.set(admConf.banners,0,newbanners[0]);
 
-                        console.log(this.banners);
                     }
                 }
             }            

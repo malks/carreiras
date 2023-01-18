@@ -262,6 +262,12 @@ return [
 
         ['header' => 'GERENCIAR'],
         [
+            'text' => 'Resumo',
+            'url'  => 'adm/summary',
+            'can' => ['recruiting'],
+            'icon' => 'fas fa-list',
+        ],
+        [
             'text' => 'Seleção e Recrutamento',
             'url'  => 'adm/recruiting',
             'can' => ['recruiting'],
@@ -314,6 +320,12 @@ return [
             'url'  => 'adm/tags',
             'can' => ['tags'],
             'icon' => 'fas fa-tags',
+        ],
+        [
+            'text' => 'Tags RH',
+            'url'  => 'adm/tagsrh',
+            'can' => ['tags'],
+            'icon' => 'fas fa-user-tag',
         ],
         [   
             'text' => 'Inscritos Newsletter',

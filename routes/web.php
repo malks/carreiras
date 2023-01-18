@@ -89,6 +89,7 @@ $router->group(['middleware' => ['auth','is.admin','can:access admin']], functio
 
     Route::group(['middleware' => ['can:recruiting status']], function() {
         
+        Route::get('/adm/summary', 'AdmController@summary')->name('summary');
         Route::get('/adm/states', 'AdmController@statesList')->name('states-list');
         Route::get('/adm/states/edit/{id}', 'AdmController@statesEdit')->name('states-edit');
         Route::get('/adm/states/create', 'AdmController@statesCreate')->name('states-create');
@@ -142,6 +143,16 @@ $router->group(['middleware' => ['auth','is.admin','can:access admin']], functio
         Route::get('/adm/tags/save', 'AdmController@tagsSave')->name('tags-save');
     });
 
+    Route::group(['middleware' => ['can:tags']], function() {
+        Route::get('/adm/tagsrh', 'AdmController@tagsrhList')->name('tagsrh-list');
+        Route::get('/adm/tagsrh/create', 'AdmController@tagsrhCreate')->name('tagsrh-create');
+        Route::get('/adm/tagsrh/edit/{id}', 'AdmController@tagsrhEdit')->name('tagsrh-edit');
+        Route::post('/adm/tagsrh/destroy', 'AdmController@tagsrhDestroy')->name('tagsrh-destroy');
+        Route::get('/adm/tagsrh/save', 'AdmController@tagsrhSave')->name('tagsrh-save');
+        Route::get('/adm/candidates/available-tagsrh', 'AdmController@getAvailableTagsrh')->name('candidates-available-tagsrh');
+    });
+
+
     Route::group(['middleware' => ['can:candidates']], function() {
         Route::get('/adm/candidates', 'AdmController@candidatesList')->name('candidates-list');
         Route::get('/adm/candidates/available-jobs', 'AdmController@getAvailableJobs')->name('candidates-available-jobs');
@@ -153,6 +164,9 @@ $router->group(['middleware' => ['auth','is.admin','can:access admin']], functio
         Route::get('/adm/candidates/save', 'AdmController@candidatesSave')->name('candidates-save');
         Route::get('/adm/candidates/print/{id}', 'AdmController@candidatePrint')->name('candidates-print');
         Route::get('/adm/candidates/view/{id}', 'AdmController@candidateView')->name('candidates-view');
+        Route::post('/adm/candidates/subscribe-tagrh', 'AdmController@candidateSetTagRh')->name('candidates-subscribe-tagrh');
+        Route::get('/adm/candidates/load-data/{id}', 'AdmController@loadCandidateData')->name('candidate-load-data');
+        Route::get('/adm/candidates/load-tagsrh/{id}', 'AdmController@loadCandidateTagsrh')->name('candidates-load-tagsrh');
     });
 
     Route::group(['middleware' => ['can:users']], function() {

@@ -10,6 +10,9 @@
 <div class="card" id="app" check-recruiting>
     @csrf
     <input type="hidden" value='{{json_encode($schooling_grades)}}' id='data-schooling-grades'>
+    <input type='hidden' id='filtered-tagsrh' value='{{json_encode($tagsrh_filters)}}'/>
+    <input type='hidden' id='tagsrh' value='{{json_encode($tagsrh)}}'/>
+
     <div class='card-header'>
         <h5>Seleção e Recrutamento de Candidatos</h5>
     </div>
@@ -78,20 +81,24 @@
                     <div class="card-body" style='overflow-x:hidden'>
                         <div class="row">
                             <div class="col">
-                                <select v-on:change="updateData" v-model="pushData.filters.jobs.direct.in.unit_id" class='form-control' id="job-unit-filter">
-                                    <option value="">Todas as Unidades</option>
-                                    <template v-for='unit in runData.units'>
-                                        <option :value="unit.id">@{{unit.name}}</option>
-                                    </template>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <select v-on:change="updateData" v-model="pushData.filters.jobs.direct.in.field_id" class='form-control' id="job-field-filter">
-                                    <option value="">Todas as Áreas</option>
-                                    <template v-for='field in runData.fields'>
-                                        <option :value="field.id">@{{field.name}}</option>
-                                    </template>
-                                </select>
+                                <div class="row">
+                                    <div class="col">
+                                        <select v-on:change="updateData" v-model="pushData.filters.jobs.direct.in.unit_id" class='form-control' id="job-unit-filter">
+                                            <option value="">Todas as Unidades</option>
+                                            <template v-for='unit in runData.units'>
+                                                <option :value="unit.id">@{{unit.name}}</option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <select v-on:change="updateData" v-model="pushData.filters.jobs.direct.in.field_id" class='form-control' id="job-field-filter">
+                                            <option value="">Todas as Áreas</option>
+                                            <template v-for='field in runData.fields'>
+                                                <option :value="field.id">@{{field.name}}</option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row margin-top-30">
@@ -187,6 +194,35 @@
                                 <input type="text" placeholder="Buscar candidato por cidade/estado ex: guaramirim jaragua" class='form-control' id='candidate-location-search' v-model='otherData.candidateLocSearch'>
                             </div>
                         </div>
+                        <div class="row margin-top-20">
+                            <div class="col">
+                                <label for="">Filtrar por Tag RH:</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <select class='form-control' v-model="otherData.tagFiltersExcept">
+                                <option value="false">COM as Tags RH selecionadas</option>
+                                <option value="true">SEM as Tags RH selecionadas</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <template v-for="tagRh in otherData.tagsRh">
+                                <div class="hide">
+                                    <input type="checkbox" v-model="otherData.filterTagRh" name="filter_tagrh[]" :value="tagRh.id" :checked="isSelectedTagrh(tagRh.id)">
+                                </div>
+                                <div class="col-lg-4 margin-top-10">
+                                    <button 
+                                        type='button' 
+                                        v-on:click="addTagRhFilter(tagRh.id)"
+                                        style='z-index:9999999;width:100%;font-weight:bold;'
+                                        :style="[isSelectedTagrh(tagRh.id) ? { 'background-color':tagRh.color,'color':tagRh.fontcolor } : {'background-color':'#6c757d','color':'#fff'}]"
+                                        class="btn btn-secondary">
+                                        @{{tagRh.name}}
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+
                     </div>
                     <div class="card-body">
                         <div class="hide">
@@ -261,7 +297,7 @@
                                         <tr v-if="runData.updating && (runData.subscriptions==null || runData.subscriptions.length==0)"><td>Carregando...</td></tr>
                                         <tr v-else-if="!runData.updating && (runData.subscriptions==null || runData.subscriptions.length==0)"><td>Nenhum resultado encontrado.</td></tr>
                                         <template v-else v-for="(subscription,subx) in runData.subscriptions">
-                                            <tr v-if="candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription) && candidateWokrPeriodFilter(getCandidate(subscription))" class='select-sized'>
+                                            <tr v-if="candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagrhFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription) && candidateWokrPeriodFilter(getCandidate(subscription))" class='select-sized'>
                                                 <td>@{{ getCandidate(subscription).senior_num_can }}</td>
                                                 <td>@{{ getCandidate(subscription).name }}</td>
                                                 <td>@{{ getCandidate(subscription).address_city }}</td>

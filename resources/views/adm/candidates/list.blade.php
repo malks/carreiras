@@ -6,6 +6,7 @@
 @stop
 
 <input type='hidden' id='full-data' value='@php echo json_encode($data_list);@endphp'/>
+<input type='hidden' id='filtered-tagsrh' value='@php echo json_encode($tagsrh_filters);@endphp'/>
 <input type='hidden' id='viewed-data' value='{{$viewed_list}}'/>
 
 @section('content')
@@ -88,6 +89,44 @@
 				</div>
 			</form>
 		</div>
+		<div id='subscribe-tagrh-modal' class="modal" style='display:block;' tabindex="-1" v-show="tagSetting" v-if="availableTagsRh.length>0">
+			<form action="/adm/candidates/subscribe-tagrh" method='POST' id='tagsrhform'>
+				@csrf
+				<input type="hidden" name='candidate_id' v-model='selectedCandidateId'>
+				<div class="modal-dialog" style='width:820px;max-width:820px;'>
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Adicionar TAG ao Candidato:</h5>
+							<button type="button" class="btn-close"  v-on:click="openTags" data-bs-dismiss="modal" aria-label="Close">X</button>
+						</div>
+						<div class="modal-body">
+							<div class="card" >
+								<div class="card-header">
+									<label for="">@{{selectedCandidateName}}</label>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										<template v-for="leTagRh in availableTagsRh">
+											<div class="col-4 margin-top-10">
+												<button type='button' style='width:100%' v-on:click="switchTagRh(leTagRh.id)" :style="(isUserSelectedTagRh(leTagRh.id)) ? 'background-color:'+leTagRh.color : 'background-color:#eee'">
+													<b :style="(isUserSelectedTagRh(leTagRh.id)) ? 'color:'+leTagRh.fontcolor : 'color:#999'">@{{leTagRh.name}}</b>
+												</button>
+												<input style='display:none;' type="checkbox" name='tags_rh[]' :value="leTagRh.id" :checked="isUserSelectedTagRh(leTagRh.id)">
+											</div>
+										</template>
+									</div>
+								</div>
+								<div class="card-footer">
+									<button v-if="!saving & selectedCandidateName!=''" type='submit' v-on:click="saving=true;$('#tagsrhform').submit()" class='btn btn-primary'>Salvar</button>
+									<button v-if="!saving" type='button' class="btn btn-danger"  v-on:click="openTags" >Sair</button>
+									<label for=""  v-if="saving">Salvando...</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
 
 		<form method='GET' action='/adm/candidates' >
 			@csrf
@@ -112,7 +151,9 @@
 						<div class="col-3 col-xl-2">
 							<button class="btn btn-primary" v-on:click='exportCandidates' type='button' v-bind:disabled='canDestroy'>Exportar para Senior</button>
 						</div>
-
+						<div class="col-3 col-xl-2">
+							<button class="btn btn-warning" v-on:click='tagsRh(false)' type='button' v-bind:disabled='canEdit'>Tags RH</button>
+						</div>
 					</div>
 					<div class="row margin-top-10">
 						<div class="col-sm-12 col-lg-3">
@@ -123,7 +164,41 @@
 							</select>
 						</div>
 					</div>
-
+					<div class="row margin-top-10">
+						<div class="col-lg-6">
+							<div>
+								<label for="">Filtrar Tags RH:</label>
+								<div class="row">
+									<div class="col-lg-6">
+										<select name="tagrh_filter_type" class="form-control" id="" v-on:change="$('form').submit()">
+											<option value="only" @if ($tagrh_filter_type=='only') selected @endif>COM as Tags RH selecionadas</option>
+											<option value="except" @if ($tagrh_filter_type=='except') selected @endif>SEM as Tags RH selecionadas</option>
+										</select>
+									</div>
+								</div>
+								<div class="row">
+									<div class="hide">
+										<input type="checkbox" name='lala'>
+									</div>
+									<template v-for="tagRh in availableTagsRh">
+										<div class="hide">
+											<input type="checkbox" v-model="filterTagRh" name="filter_tagrh[]" :value="tagRh.id" :checked="isSelectedTagRh(tagRh.id)">
+										</div>
+										<div class="col-lg-4 margin-top-10">
+											<button 
+												type='button' 
+												v-on:click="addTagRhFilter(tagRh.id)"
+												style='z-index:9999999;width:100%;font-weight:bold;'
+												:style="[isSelectedTagRh(tagRh.id) ? { 'background-color':tagRh.color,'color':tagRh.fontcolor } : {'background-color':'#6c757d','color':'#fff'}]"
+												class="btn btn-secondary">
+												@{{tagRh.name}}
+											</button>
+										</div>
+									</template>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="row margin-top-10">
 						<div class="col-sm-12 col-lg-3">
 							<label for="data-start">Início Última Atualização:</label>
@@ -171,6 +246,7 @@
 									<tr>
 										<th style='width:40px;'><input type='checkbox' id='check-all' v-on:click='reverseSelection()'></th>
 										<th>Nome</th>
+										<th>TagsRH</th>
 										<th>PCD</th>
 										<th>Cidade</th>
 										<th>Estado</th>
@@ -192,6 +268,7 @@
 											<td style='width:40px;' for='data-check-{{$d->id}}' class='checker'>
 												<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
 											<td>{{$d->name}}</td>
+											<td> <button v-on:click.prevent="tagsRh({{$d->id}})" type='button' style='z-index:9999999;width:100%;font-weight:bold;@if(!empty($d->Tagsrh[0])) background-color:{{$d->Tagsrh[0]->color}};color:{{$d->Tagsrh[0]->fontcolor}} @endif' class="btn btn-secondary" >{{$d->tagsrhcount}}</button></td>
 											<td>@php echo ($d->deficiency) ? '<span style="color:green">Sim<span>' : '<span style="color:red">Não</span>' @endphp</td>
 											<td>{{$d->address_city}}</td>
 											<td>{{$d->address_state}}</td>

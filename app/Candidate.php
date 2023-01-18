@@ -35,6 +35,10 @@ class Candidate extends Model
         return $this->belongsToMany('App\Tag', 'candidates_tags', 'candidate_id', 'tag_id');
     }
 
+    public function tagsrh(){
+        return $this->belongsToMany('App\Tagrh', 'candidates_tagsrh', 'candidate_id', 'tag_id');
+    }
+
     protected $casts = [
         'last_seen' => 'datetime:d/m/Y',
         'mother_dob' => 'date:d/m/Y',
