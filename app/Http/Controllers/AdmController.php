@@ -591,7 +591,7 @@ class AdmController extends Controller
         $data['date_filter_start']=$date_filter_start;
         $data['date_filter_end']=$date_filter_end;
 
-        return base64_encode(json_encode($data));
+        return urlencode(base64_encode(urlencode(json_encode($data))));
     }
 
     public function bannersList (Request $request){
