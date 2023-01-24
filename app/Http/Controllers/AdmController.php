@@ -434,7 +434,7 @@ class AdmController extends Controller
     }
 
     public function recruitingData (Request $request){
-		ini_set('memory_limit', '2048M');
+		ini_set('memory_limit', '4096M');
 
        /* $data['candidates']=Candidate::orderBy('updated_at','desc')
         ->when(!empty($request->filters['direct']['candidates']), function ($query) use ($request) {
@@ -584,13 +584,14 @@ class AdmController extends Controller
         ->orderByRaw('subscription_amount desc')
         ->get()->toArray();
 
+
         $data['states'] = State::all()->toArray();
         $data['units']  = Unit::all()->toArray();
         $data['fields'] = Field::all()->toArray();
         $data['date_filter_start']=$date_filter_start;
         $data['date_filter_end']=$date_filter_end;
 
-        return json_encode($data);
+        return base64_encode(json_encode($data));
     }
 
     public function bannersList (Request $request){
