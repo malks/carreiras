@@ -590,7 +590,7 @@ function recruiting(){
                     type:'POST',
                     data:pushData,
                     success:function (data){
-                        let jdata = window.atob(decodeURIComponent(data));
+                        let jdata = decodeURIComponent(window.atob(decodeURIComponent(data))).replace(/\+/g," ");
                         let objData=JSON.parse(jdata);
                         for (let i in objData){
                             that.runData[i]=objData[i];
