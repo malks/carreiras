@@ -435,6 +435,7 @@ class AdmController extends Controller
 
     public function recruitingData (Request $request){
 		ini_set('memory_limit', '4096M');
+        set_time_limit(300);
 
        /* $data['candidates']=Candidate::orderBy('updated_at','desc')
         ->when(!empty($request->filters['direct']['candidates']), function ($query) use ($request) {
