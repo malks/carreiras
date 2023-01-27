@@ -681,7 +681,7 @@
                                                         <div class=" col-sm-12 col-lg-6">
                                                             <label for="experience-job">{{ __('profile.job') }}</label>
                                                             <input type='text' class='w-input text-field white-background' id='experience-job' v-model='experience.job'/>
-                                                        </div>                                
+                                                        </div>
                                                     </div>
                                                     <div class="row margin-top-10">
                                                         <div class=" col-sm-12 col-lg">

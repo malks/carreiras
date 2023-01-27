@@ -381,7 +381,11 @@ class LandingController extends Controller
                 'admission'=>'', 
                 'demission'=>'', 
             ];
-            $data->experience=[$experience,$experience,$experience];
+            $arrexp=[$experience,$experience,$experience];
+            for ($i=0;$i<count($arrexp);$i++){
+                $arrexp[$i]['hash']=substr(hash('sha256',date('U').rand(0,250)),0,15);
+            }
+            $data->experience=$arrexp;
         }
         $data['prefered_work_period']=explode(",",$data['prefered_work_period']);
         

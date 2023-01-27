@@ -896,21 +896,27 @@ function startProfile(screenNameHelper='',firstTab=''){
                             let handler = null;
                             let temp_schoolings={...that.schoolings};
                             let temp_experiences={...that.experiences};
+                            console.log(temp_experiences);
                             if (data){
                                 handler=JSON.parse(data);
                                 for (let i in temp_schoolings){
-                                    if( that.schoolings[i].hash!=undefined && that.schoolings[i].hash!="" && that.schoolings[i].hash!=null && (that.schoolings[i].id==undefined || that.schoolings[i].id==null)){
+                                    if( that.schoolings[i]!=undefined && that.schoolings[i].hash!=undefined && that.schoolings[i].hash!="" && that.schoolings[i].hash!=null && (that.schoolings[i].id==undefined || that.schoolings[i].id==null)){
                                         that.schoolings.splice(i,1);
-                                        that.schoolings.unshift(handler.schoolings.find(obj => { return obj.hash==temp_schoolings[i].hash}));
+                                        let tempschool=handler.schoolings.find(obj => { return obj.hash==temp_schoolings[i].hash});
+                                        if (tempschool!=undefined)
+                                            that.schoolings.unshift(tempschool);
                                     }
                                 }
                                 for (let i in temp_experiences){
-                                    if( that.experiences[i].hash!=undefined && that.experiences[i].hash!="" && that.experiences[i].hash!=null && (that.experiences[i].id==undefined || that.experiences[i].id==null)){
+                                    if( that.experiences[i]!=undefined && that.experiences[i].hash!=undefined && that.experiences[i].hash!="" && that.experiences[i].hash!=null && (that.experiences[i].id==undefined || that.experiences[i].id==null)){
                                         that.experiences.splice(i,1);
-                                        that.experiences.unshift(handler.experiences.find(obj => { return obj.hash==temp_experiences[i].hash}));
+                                        let tempexp=handler.experiences.find(obj => { return obj.hash==temp_experiences[i].hash});
+                                        if (tempexp!=undefined)
+                                            that.experiences.unshift(tempexp);
                                     }
                                 }
                             }
+                            console.log(that.experiences);
                             that.saving=false;
                             that.currentTab=jumpTab(that.currentTab);
                         }
@@ -950,11 +956,11 @@ function startProfile(screenNameHelper='',firstTab=''){
             },
             uncheckOtherExperiences: function (index){
                 for (i in this.experiences){
-                    if (i!=index)
+                    if (i!=index && this.experiences[i]!==undefined)
                         this.experiences[i].current_job=false;
                 }
             },
-            validDate: function (val){
+            validDate: function (val){//sfsdfd
                 if (val=="")
                     return true;
                 let pattern=/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
