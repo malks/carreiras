@@ -82,7 +82,7 @@ return [
     'institution'=>'Institución',
     'currentjob'=>'Mi trabajo actual',
     'business'=>'Empresa',
-    'job'=>'Oficina',
+    'job'=>'Cargo',
     'jobs'=>'vacantes',
     'activities'=>'Actividades',
     'admission'=>'Admisión',
