@@ -950,7 +950,11 @@ class AdmController extends Controller
             '4'=>'Horário comercial',
         ];
 
+        if(!empty($data['dob']) && is_object($data['dob']))
+            $dobtmp=explode(" ",$data['dob'])[0];
+
         return view('adm.candidates.print')->with([
+            'datebirth'=>$dobtmp,
             'data'=>$data,
             'civil_states'=>$civil_states,
             'course_status'=>$course_status,

@@ -28,7 +28,7 @@
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <p>Nascimento: @php echo (!empty($data->dob)) ? implode("/",array_reverse(explode("-",$data->dob))) : '' @endphp</p>
+                                    <p>Nascimento: @php echo (!empty($datebirth)) ? implode("/",array_reverse(explode("-",$datebirth))) : '' @endphp</p>
                                 </div>
                             </div>
                             <div class="row" style='margin-top:-10px;'>
