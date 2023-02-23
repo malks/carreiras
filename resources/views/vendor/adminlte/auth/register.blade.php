@@ -21,7 +21,7 @@
                             {{-- Name field --}}
                             <div class="input-group mb-3">
                                 <input type="text" name="name" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
-                                    value="{{ old('name') }}" placeholder="Nome Completo" autofocus>
+                                    value="{{ old('name') }}" placeholder="{{ __ ('register.fullname')}}" autofocus>
                                 @if($errors->has('name'))
                                     <div class="invalid-feedback">
                                         <strong>{{ __('register.requiredfield') }}</strong>
@@ -32,7 +32,7 @@
                             {{-- Email field --}}
                             <div class="input-group mb-3">
                                 <input type="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                                    value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}">
+                                    value="{{ old('email') }}" placeholder="{{ __('register.email') }}">
                                 @if($errors->has('email'))
                                     <div class="invalid-feedback">
                                         <strong>{{ __('register.invalidemail') }}</strong>
@@ -44,7 +44,7 @@
                             <div class="input-group mb-3">
                                 <input type="password" name="password"
                                     class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
-                                    placeholder="Senha">
+                                    placeholder="{{ __("register.password")}}">
                                 @if($errors->has('password'))
                                     <div class="invalid-feedback">
                                         <strong>{{ __('register.8charpassword') }}</strong>
@@ -56,7 +56,7 @@
                             <div class="input-group mb-3">
                                 <input type="password" name="password_confirmation"
                                     class="form-control {{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}"
-                                    placeholder="Confirme a senha">
+                                    placeholder="{{ __('register.confirmpassword')}}">
                                 @if($errors->has('password_confirmation'))
                                     <div class="invalid-feedback">
                                         <strong>{{ __('register.unmatchedpasswords') }}</strong>

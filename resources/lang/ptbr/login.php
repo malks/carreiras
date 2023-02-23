@@ -2,6 +2,7 @@
 
 return [
     'login'=>'LOGIN',
+    'email'=>'Email',
     'access'=>'acesso',
     'password'=>'Senha',
     'enter'=>'Entrar',

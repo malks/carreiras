@@ -2,6 +2,11 @@
 
 return [
     'register'=>'REGISTRO',
+    'login'=>'Login',
+    'password'=>'Senha',
+    'confirmpassword'=>'Confirme a senha',
+    'fullname'=>'Nome Completo',
+    'email'=>'Email',
     'firststep'=>'seu primeiro passo',
     'requiredfield'=>'Campo obrigatório',
     'invalidemail'=>'Precisa ser um e-mail válido',

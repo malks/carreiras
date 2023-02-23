@@ -6,6 +6,7 @@
 @section('content')
     <div class='row'>
         <div class="col-12">
+            <input type='hidden' id='current-language' value='{{$curlang}}'/>
             <form method='GET' id='app' class='margin-top-20' action='/adm/candidates/save'>
                 @csrf
                 <input type="hidden" class="hide" id='schooling-data'           value='{{ json_encode($data->schooling) }}'>
@@ -96,16 +97,30 @@
                                         </div>
                                         <div class="row margin-top-10">
                                             <div class=" col-sm-12 col-lg-6">
-                                                <label for="data-ddd-phone">{{ __('profile.phone') }}</label>
-                                                <input type='text'  v-mask="'###'"  placeholder='DDI' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddi-phone' v-model='holdingData.ddi_phone' name='ddi_phone' value='{{$data->ddi_phone}}'/>
-                                                <input type='text'  v-mask="'###'"  placeholder='DDD' style='width:10%;float:left;margin-left:5px;' class='w-input text-field white-background' id='data-ddd-phone' v-model='holdingData.ddd_phone' name='ddd_phone' value='{{$data->ddd_phone}}'/>
-                                                <input type='text'  v-mask="'####-####'" v-model="holdingData.phone"  placeholder='3370-0000' style='margin-left:5px;width:70%;float:left;' class='w-input text-field white-background' id='data-phone' name='phone' value='{{$data->phone}}'/>
+                                                @if($curlang=='ptbr')
+                                                    <label for="data-ddd-phone">{{ __('profile.phone') }}</label>
+                                                    <input type='text'  v-mask="'###'"  placeholder='DDI' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddi-phone' v-model='holdingData.ddi_phone' name='ddi_phone' value='{{$data->ddi_phone}}'/>
+                                                    <input type='text'  v-mask="'###'"  placeholder='DDD' style='width:10%;float:left;margin-left:5px;' class='w-input text-field white-background' id='data-ddd-phone' v-model='holdingData.ddd_phone' name='ddd_phone' value='{{$data->ddd_phone}}'/>
+                                                    <input type='text'  v-mask="'####-####'" v-model="holdingData.phone"  placeholder='3370-0000' style='margin-left:5px;width:70%;float:left;' class='w-input text-field white-background' id='data-phone' name='phone' value='{{$data->phone}}'/>
+                                                @else
+                                                    <label for="data-ddd-phone">{{ __('profile.phone') }}</label>
+                                                    <input type='text'  v-mask="'###'"  placeholder='595' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddi-phone' v-model='holdingData.ddi_phone' name='ddi_phone' value='{{$data->ddi_phone}}'/>
+                                                    <input type='text'  v-mask="'####'"  placeholder='AREA' style='width:10%;float:left;margin-left:5px;' class='w-input text-field white-background' id='data-ddd-phone' v-model='holdingData.ddd_phone' name='ddd_phone' value='{{$data->ddd_phone}}'/>
+                                                    <input type='text'  v-mask="'###-###'" v-model="holdingData.phone"  placeholder='610-290' style='margin-left:5px;width:70%;float:left;' class='w-input text-field white-background' id='data-phone' name='phone' value='{{$data->phone}}'/>
+                                                @endif
                                             </div>
                                             <div class=" col-sm-12 col-lg-6">
-                                                <label for="data-ddd-mobile">{{ __('profile.mobile') }}</label>
-                                                <input type='text'  v-mask="'###'"  placeholder='DDI' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddi-mobile' v-model='holdingData.ddi_mobile' name='ddi_mobile' value='{{$data->ddi_mobile}}'/>
-                                                <input type='text'  v-mask="'###'" placeholder='DDD' style='width:10%;float:left;margin-left:5px;'  class='w-input text-field white-background' id='data-ddd-mobile' v-model='holdingData.ddd_mobile' name='ddd_mobile' value='{{$data->ddd_mobile}}'/>
-                                                <input type='text' placeholder='9-9999-9999' v-model='holdingData.mobile'  v-mask="'#-####-####'" style='margin-left:5px;width:70%;float:left;'  class='w-input text-field white-background' id='data-mobile' name='mobile' value='{{$data->mobile}}'/>
+                                                @if($curlang=='ptbr')
+                                                    <label for="data-ddd-mobile">{{ __('profile.mobile') }}</label>
+                                                    <input type='text'  v-mask="'###'"  placeholder='DDI' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddi-mobile' v-model='holdingData.ddi_mobile' name='ddi_mobile' value='{{$data->ddi_mobile}}'/>
+                                                    <input type='text'  v-mask="'####'" placeholder='DDD' style='width:10%;float:left;margin-left:5px;'  class='w-input text-field white-background' id='data-ddd-mobile' v-model='holdingData.ddd_mobile' name='ddd_mobile' value='{{$data->ddd_mobile}}'/>
+                                                    <input type='text' placeholder='9-9999-9999' v-model='holdingData.mobile'  v-mask="'#-####-####'" style='margin-left:5px;width:70%;float:left;'  class='w-input text-field white-background' id='data-mobile' name='mobile' value='{{$data->mobile}}'/>
+                                                @else
+                                                    <label for="data-ddd-mobile">{{ __('profile.mobile') }}</label>
+                                                    <input type='text'  v-mask="'###'"  placeholder='595' style='width:10%;float:left;' class='w-input text-field white-background' id='data-ddi-mobile' v-model='holdingData.ddi_mobile' name='ddi_mobile' value='{{$data->ddi_mobile}}'/>
+                                                    <input type='text'  v-mask="'####'" placeholder='AREA' style='width:10%;float:left;margin-left:5px;'  class='w-input text-field white-background' id='data-ddd-mobile' v-model='holdingData.ddd_mobile' name='ddd_mobile' value='{{$data->ddd_mobile}}'/>
+                                                    <input type='text' placeholder='9-310-280' v-model='holdingData.mobile'  v-mask="'#-###-###'" style='margin-left:5px;width:70%;float:left;'  class='w-input text-field white-background' id='data-mobile' name='mobile' value='{{$data->mobile}}'/>
+                                                @endif
                                             </div>
                                         </div>
         
@@ -116,10 +131,13 @@
                                     <h5>{{ __('profile.residenceaddress') }}</h5>
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-address-zip">{{ __('profile.requiredcep') }}</label>
-                                                <input type='text' v-mask="'##.###-###'" v-model="holdingData.zip" placeholder="89.250-000" class='w-input text-field white-background' v-on:blur='getCep()' name='zip' id='data-address-zip' value='{{$data->zip}}'/>
-                                            </div>
+
+                                            @if($curlang=="ptbr")
+                                                <div class=" col-sm-12 col-lg-4">
+                                                    <label for="data-address-zip">{{ __('profile.requiredcep') }}</label>
+                                                    <input type='text' v-mask="'##.###-###'" v-model="holdingData.zip" placeholder="89.250-000" class='w-input text-field white-background' v-on:blur='getCep()' name='zip' id='data-address-zip' value='{{$data->zip}}'/>
+                                                </div>
+                                            @endif
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-address-state">{{ __('profile.requiredstate') }}</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_state" id='data-address-state' name='address_state' value='{{$data->address_state}}'/>
@@ -172,10 +190,17 @@
                                     <div class="card-body">
 
                                         <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-cpf">{{ __('profile.documentcpf') }}</label>
-                                                <input type='text' v-mask="'###.###.###-##'" v-model="holdingData.cpf" placeholder="111.111.111-11" class='w-input text-field white-background' id='data-cpf' name='cpf' value='{{$data->cpf}}'/>
-                                            </div>
+                                            @if ($curlang=='ptbr')
+                                                <div class=" col-sm-12 col-lg-4">
+                                                    <label for="data-cpf">{{ __('profile.documentcpf') }}</label>
+                                                    <input type='text' v-mask="'###.###.###-##'" v-model="holdingData.cpf" placeholder="111.111.111-11" class='w-input text-field white-background' id='data-cpf' name='cpf' value='{{$data->cpf}}'/>
+                                                </div>
+                                            @else
+                                                <div class=" col-sm-12 col-lg-4">
+                                                    <label for="data-cpf">{{ __('profile.documentcpf') }}</label>
+                                                    <input type='text' v-mask="'###.####'" v-model="holdingData.cpf" placeholder="111.1111" class='w-input text-field white-background' id='data-cpf' name='cpf' value='{{$data->cpf}}'/>
+                                                </div>
+                                            @endif
                                             <!--div class=" col-sm-12 col-lg-4">
                                                 <label for="data-work-card">Carteira de Trabalho</label>
                                                 <input type='text'  v-mask="'#######'" v-model="holdingData.work_card" placeholder="1234567" class='w-input text-field white-background' id='data-work-card' name='work_card' value='{{$data->work_card}}'/>
@@ -199,10 +224,12 @@
 
                                         </div>
                                         <div class="row margin-top-10">
-                                            <div class=" col-sm-12 col-lg-3">
-                                                <label for="data-pis">{{ __('profile.documentpis') }}</label>
-                                                <input type='text'   v-mask="'###.#####.##-#'" v-model="holdingData.pis" placeholder="123.12345.12-1" class='w-input text-field white-background' id='data-pis' name='pis' value='{{$data->pis}}'/>
-                                            </div>
+                                            @if ($curlang=="ptbr")
+                                                <div class=" col-sm-12 col-lg-3">
+                                                    <label for="data-pis">{{ __('profile.documentpis') }}</label>
+                                                    <input type='text'   v-mask="'###.#####.##-#'" v-model="holdingData.pis" placeholder="123.12345.12-1" class='w-input text-field white-background' id='data-pis' name='pis' value='{{$data->pis}}'/>
+                                                </div>
+                                            @endif
                                             <div class=" col-sm-12 col-lg-3">
                                                 <label for="data-drivers-license">{{ __('profile.documentcnh') }}</label>
                                                 <select name="drivers_license" id="data-drivers-license" class='w-input text-field white-background' v-model="holdingData.drivers_license">
@@ -211,14 +238,16 @@
                                                 </select>
                                                 <!--input type='text'  v-mask="'#### #### ####'" v-model="holdingData.drivers_license" placeholder="12345678901" class='w-input text-field white-background' id='data-drivers-license' name='drivers_license' value='{{$data->drivers_license}}'/-->
                                             </div>
-                                            <div class=" col-sm-12 col-lg-3">
-                                                <label for="data-elector-card">{{ __('profile.documentelector') }}</label>
-                                                <input type='text'  v-mask="'#### #### #### #'" v-model="holdingData.elector_card" placeholder="1234 1234 1234 1" class='w-input text-field white-background' id='data-elector-card' name='elector_card' value='{{$data->elector_card}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-3">
-                                                <label for="data-veteran-card">{{ __('profile.documentreserve') }}</label>
-                                                <input type='text'   v-mask="'##.###.#####-#'" v-model="holdingData.veteran_card" placeholder="12.123.12345-1" class='w-input text-field white-background' id='data-veteran-card' name='veteran_card' value='{{$data->veteran_card}}'/>
-                                            </div>
+                                            @if($curlang=="ptbr")
+                                                <div class=" col-sm-12 col-lg-3">
+                                                    <label for="data-elector-card">{{ __('profile.documentelector') }}</label>
+                                                    <input type='text'  v-mask="'#### #### #### #'" v-model="holdingData.elector_card" placeholder="1234 1234 1234 1" class='w-input text-field white-background' id='data-elector-card' name='elector_card' value='{{$data->elector_card}}'/>
+                                                </div>
+                                                <div class=" col-sm-12 col-lg-3">
+                                                    <label for="data-veteran-card">{{ __('profile.documentreserve') }}</label>
+                                                    <input type='text'   v-mask="'##.###.#####-#'" v-model="holdingData.veteran_card" placeholder="12.123.12345-1" class='w-input text-field white-background' id='data-veteran-card' name='veteran_card' value='{{$data->veteran_card}}'/>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

@@ -22,7 +22,7 @@
                         {{-- Email field --}}
                         <div class="input-group mb-3">
                             <input type="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                                value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}">
+                                value="{{ old('email') }}" placeholder="{{ __('login.email') }}">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span style='height:30px;line-height:30px;' class="far  fa-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>

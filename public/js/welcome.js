@@ -631,7 +631,7 @@ function validate(whichTab){
             if ($('#data-address-street').val().length<2 || $('#data-address-city').val().length<2 || $('#data-address-district').val().length<2 || $('#data-address-state').val().length<2 || $('#data-address-country').val().length<2 ){
                 ret.push({'candidate-data': 'Endereço residencial é obrigatório'});
             }
-            if ($('#data-cpf').val().length!=14){
+            if ($('#data-cpf').val().length!=14 && $('#data-cpf').val().length!=8){
                 ret.push({'candidate-data': 'Documentos são obrigatórios'});
             }
             if ( $('#data-natural-city').val().length<2 || $('#data-natural-state').val().length<2 || $('#data-natural-country').val().length<2 ){

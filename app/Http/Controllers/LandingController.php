@@ -390,6 +390,7 @@ class LandingController extends Controller
         $data['prefered_work_period']=explode(",",$data['prefered_work_period']);
         
         return view('profile')->with([
+            'curlang'=>$lang,
             'tags'=>$tags,
             'role'=>$role,
             'data'=>$data,
@@ -476,7 +477,8 @@ $arr['what_irritates_you']="20. O que o irrita?";
         unset($dados['selected_languages']);
 
         $dados['cpf'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['cpf']),0,11);
-        $dados['pis'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['pis']),0,11);
+        if(!empty($dados['pis']))
+            $dados['pis'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['pis']),0,11);
         $dados['rg'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['rg']),0,16);
         if (!empty($dados['weight']))
             $dados['weight'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['weight']),0,6);
