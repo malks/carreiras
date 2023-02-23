@@ -14,7 +14,7 @@ return [
     'phone'=>'Teléfono',
     'mobile'=>'Celular',
     'requiredcep'=>'*CÓDIGO POSTAL',
-    'requiredstate'=>'*Estado',
+    'requiredstate'=>'*Departamento',
     'requiredcountry'=>'*País',
     'requiredcity'=>'*Ciudad',
     'requireddistrict'=>'*Barrio',
