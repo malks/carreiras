@@ -479,7 +479,8 @@ $arr['what_irritates_you']="20. O que o irrita?";
         $dados['cpf'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['cpf']),0,11);
         if(!empty($dados['pis']))
             $dados['pis'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['pis']),0,11);
-        $dados['rg'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['rg']),0,16);
+        if(!empty($dados['rg']))
+            $dados['rg'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['rg']),0,16);
         if (!empty($dados['weight']))
             $dados['weight'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['weight']),0,6);
         if (!empty($dados['height']))
