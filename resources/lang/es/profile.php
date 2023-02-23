@@ -21,7 +21,7 @@ return [
     'requiredaddress'=>'*Referencia',
     'typeaddress'=>'*Tipo de registro.',
     'addressnum'=>'No.',
-    'addresscomplement'=>'Complementar',
+    'addresscomplement'=>'Dirección',
     'residenceaddress'=>'Direccion de casa',
     'documents'=>'Documentos',
     'documentcpf'=>'*Cédula de Identidad Civil',

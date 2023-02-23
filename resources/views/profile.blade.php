@@ -173,10 +173,12 @@
                                                 <label for="data-address-street">{{ __('profile.requiredaddress') }}</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_street" name='address_street' id='data-address-street' value='{{$data->address_street}}'/>
                                             </div>
-                                            <div class=" col-sm-12 col-lg-1">
-                                                <label for="data-address-number">{{ __('profile.addressnum') }}</label>
-                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_number" name='address_number' id='data-address-number' value='{{$data->address_number}}'/>
-                                            </div>
+                                            @if($curlang=="ptbr")
+                                                <div class=" col-sm-12 col-lg-1">
+                                                    <label for="data-address-number">{{ __('profile.addressnum') }}</label>
+                                                    <input type='text' class='w-input text-field white-background' v-model="holdingData.address_number" name='address_number' id='data-address-number' value='{{$data->address_number}}'/>
+                                                </div>
+                                            @endif
                                             <div class=" col-sm-12 col-lg-2">
                                                 <label for="data-address-complement">{{ __('profile.addresscomplement') }}</label>
                                                 <input type='text' class='w-input text-field white-background' v-model="holdingData.address_complement" name='address_complement' id='data-address-complement' value='{{$data->address_complement}}'/>
@@ -213,17 +215,18 @@
                                                 <label for="data-work-card-digit">Digito</label>
                                                 <input type='text'   v-mask="'##'" v-model="holdingData.work_card_digit" placeholder="12" class='w-input text-field white-background' id='data-work-card-digit' name='work_card_digit' value='{{$data->work_card_digit}}'/>
                                             </div-->
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-rg">{{ __('profile.documentrg') }}</label>
-                                                <input type='text'  v-mask="'##.###.###-#####'" v-model="holdingData.rg" placeholder="12.123.123-12345" class='w-input text-field white-background' id='data-rg' name='rg' value='{{$data->rg}}'/>
-                                            </div>
-                                            <div class=" col-sm-12 col-lg-4">
-                                                <label for="data-rg-emitter">{{ __('profile.documentrgorgan') }}</label>
-                                                <input type='text' class='w-input text-field white-background' id='data-rg-emitter' name='rg_emitter' value='{{$data->rg_emitter}}'/>
-                                            </div>
-
+                                            @if($curlang=="ptbr")
+                                                <div class=" col-sm-12 col-lg-4">
+                                                    <label for="data-rg">{{ __('profile.documentrg') }}</label>
+                                                    <input type='text'  v-mask="'##.###.###-#####'" v-model="holdingData.rg" placeholder="12.123.123-12345" class='w-input text-field white-background' id='data-rg' name='rg' value='{{$data->rg}}'/>
+                                                </div>
+                                                <div class=" col-sm-12 col-lg-4">
+                                                    <label for="data-rg-emitter">{{ __('profile.documentrgorgan') }}</label>
+                                                    <input type='text' class='w-input text-field white-background' id='data-rg-emitter' name='rg_emitter' value='{{$data->rg_emitter}}'/>
+                                                </div>
                                         </div>
                                         <div class="row margin-top-10">
+                                            @endif <!--  FECHA O IF DOS DOCUMENTOS PORQUE SENÃO QUEBRA LINHA EM ESPANHOL-->
                                             @if ($curlang=="ptbr")
                                                 <div class=" col-sm-12 col-lg-3">
                                                     <label for="data-pis">{{ __('profile.documentpis') }}</label>
