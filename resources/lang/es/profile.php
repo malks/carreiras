@@ -86,7 +86,7 @@ return [
     'jobs'=>'vacantes',
     'activities'=>'Actividades',
     'admission'=>'Admisión',
-    'demission'=>'Resignación',
+    'demission'=>'Saída',
     'invaliddate'=>'fecha invalida',
     'successregistered'=>'¡Registro completado con éxito!',
     'seeour'=>'Vea nuestro',
