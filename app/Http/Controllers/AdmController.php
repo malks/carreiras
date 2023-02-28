@@ -950,6 +950,7 @@ class AdmController extends Controller
             '4'=>'Horário comercial',
         ];
 
+        $dobtmp=Carbon::now()->format('Y-m-d');
         if(!empty($data['dob']) && is_object($data['dob']))
             $dobtmp=explode(" ",$data['dob'])[0];
 
