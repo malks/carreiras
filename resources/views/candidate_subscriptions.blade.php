@@ -9,6 +9,7 @@
             <input type="hidden" class="hide" id='units-data' value='{{ urlencode(json_encode($units)) }}'>    
             <input type="hidden" class="hide" id='jobs-data' value='{{ urlencode(json_encode($jobs)) }}'>
             <input type="hidden" class="hide" id='candidate-id' value='{{ $candidate_id }}'>
+            <input type="hidden" class="hide" id='cur-country' value='@if ($curlang=='ptbr') 1 @else 4 @endif'>
         
             <div class="card elegant">
                 <div id='job-modal' class="modal" :class="{ 'hide':viewingJob.id==null }" tabindex="-1">

@@ -596,6 +596,9 @@ $arr['what_irritates_you']="20. O que o irrita?";
     }
 
     public function jobsList(){
+        $lang='ptbr';
+        if (!empty($_COOKIE['lang']))
+            $lang=$_COOKIE['lang'];
         $logged_in=Auth::user();
         $role="";
         if (!empty($logged_in)){
@@ -626,6 +629,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
         if ($logged_in)
             $user_id=$logged_in->id;
         return view('candidate_jobs')->with([
+            'curlang'=>$lang,
             'jobs'=>$jobs,
             'role'=>$role,
             'fields'=>$fields,
@@ -638,6 +642,9 @@ $arr['what_irritates_you']="20. O que o irrita?";
     }
 
     public function candidateSubscriptions() {
+        $lang='ptbr';
+        if (!empty($_COOKIE['lang']))
+            $lang=$_COOKIE['lang'];
         $logged_in=Auth::user();
         $role="";
         if (!empty($logged_in)){
@@ -669,6 +676,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
             $user_id=$logged_in->id;
 
         return view('candidate_subscriptions')->with([
+            'curlang'=>$lang,
             'jobs'=>$jobs,
             'role'=>$role,
             'subscriptions'=>$subscriptions,
