@@ -172,7 +172,7 @@ function candidateSubscription(){
             countryFilter:function(job){
                 let tempJob={...job};
                 let contain = false;
-                let countries={'1':'Brasil','4':'Paraguai'};
+                let countries={'1':'Brasil','4':'Paraguay'};
 
                 if (this.filterCountry.length>0)
                     activeFilters = countries[this.filterCountry];
@@ -384,13 +384,13 @@ function candidateJobs(){
             countryFilter:function(job){
                 let tempJob={...job};
                 let contain = false;
-                let countries={'1':'Brasil','4':'Paraguai'};
+                let countries={'1':'Brasil','4':'Paraguay'};
 
                 if (this.filterCountry.length>0)
                     activeFilters = countries[this.filterCountry];
 
                 if (activeFilters.length>0){
-                    if (tempJob.unit.country==activeFilters)
+                    if (tempJob.unit.country.toLowerCase()==activeFilters.toLowerCase())
                         contain=true;
                 }
                 return contain;
