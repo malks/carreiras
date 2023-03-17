@@ -2,6 +2,9 @@
 
 return [
     'seuperfil'=>'SEU PERFIL',
+    'picture'=>'Foto de Perfil',
+    'add'=>'Adicionar',
+    'change'=>'Trocar',
     'aboutyou'=>'fale sobre você',
     'people'=>'Pessoal',
     'formation'=>'Formação',

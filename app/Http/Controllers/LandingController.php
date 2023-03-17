@@ -450,11 +450,23 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
 */
 
-
         if (!empty($dados['id']))
             $candidate=Candidate::where('id','=',$dados['id'])->first();
         else
             $candidate=new Candidate;
+
+        $filename=date('U');
+
+        if ($request->hasFile('picture')){
+            if (!empty($candidate->picture) && file_exists($_SERVER['DOCUMENT_ROOT'].$candidate->picture)){
+                unlink($_SERVER['DOCUMENT_ROOT'].$candidate->picture);
+            }
+            $extension=$request->picture->extension();
+            $candidate->picture='/avatars/'.$filename.'.'.$extension;
+
+            $tmp=$request->picture->path();
+            copy($tmp, $_SERVER['DOCUMENT_ROOT'].$candidate->picture);
+        }
 
         $selected_languages=json_decode($dados['selected_languages'],true);
         $schoolings=json_decode($dados['schoolings'],true);
@@ -475,6 +487,8 @@ $arr['what_irritates_you']="20. O que o irrita?";
         unset($dados['experience']);
         unset($dados['interests']);
         unset($dados['selected_languages']);
+        if(!empty($dados['picture']))
+            unset($dados['picture']);
 
         $dados['cpf'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['cpf']),0,11);
         if(!empty($dados['pis']))
@@ -565,8 +579,16 @@ $arr['what_irritates_you']="20. O que o irrita?";
             }
             $schooling->save();
 
-            $schooling->start=$schooling_data['start'];
-            $schooling->end=$schooling_data['end'];
+            if(!empty($schooling_data['start']))
+                $schooling->start=$schooling_data['start'];
+            else
+                $schooling->start='1900-01-01';
+
+            if(!empty($schooling_data['end']))
+                $schooling->end=$schooling_data['end'];
+            else
+                $schooling->end='1900-02-01';
+
             array_push($new_schoolings,$schooling->toArray());
         }
 
@@ -586,9 +608,19 @@ $arr['what_irritates_you']="20. O que o irrita?";
             }
             if (empty($experience->business) && empty($experience->job) && empty($experience->activities))
                 continue;
+
+            if(!empty($experience_data['admission']))
+                $experience->admission=$experience_data['admission'];
+            else
+                $experience->admission='1900-01-01';
+
+            if(!empty($experience_data['demission']))
+                $experience->demission=$experience_data['demission'];
+            else
+                $experience->demission='1900-02-01';
+
             $experience->save();
-            $experience->admission=$experience_data['admission'];
-            $experience->demission=$experience_data['demission'];
+
             array_push($new_experiences,$experience->toArray());
         }
 

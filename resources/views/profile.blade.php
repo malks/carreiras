@@ -58,7 +58,30 @@
                             <li class="nav-item"></li-->
                         </ul>
                         <hr>
-                        <small style='margin-left:40px;'>{{ __('profile.requireddata') }}</small>
+                        <div v-show="!isItMe('success')">
+                            <div class="row" v-if="!gotAvatar">
+                                <div class="col" style='margin-bottom:20px;margin-left:40px;'>
+                                    <span id='pic-auxer' class='text-center avatar-empty' v-on:click="changeAvatar()">
+                                        <i class="fas fa-user avatar-face"></i>
+                                        <i class="fas fa-upload avatar-upload"></i>
+                                        <span class='avatar-face-text'>{{ __('profile.picture') }}</span>
+                                        <span class='avatar-upload-text'>{{ __('profile.add') }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row" v-else>
+                                <div class="col" style='margin-bottom:20px;margin-left:40px;'>
+                                    <span id='pic-auxer' class='text-center avatar-empty' v-on:click="changeAvatar()">
+                                        <img v-bind:src="holdingData.picture" style='width:145px;height:150px;'>
+                                        <span class='avatar-face-text'>{{ __('profile.picture') }}</span>
+                                        <span class='avatar-upload-text'>{{ __('profile.change') }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <small style='margin-left:40px;'>{{ __('profile.requireddata') }}</small>
+                        </div>
+                        <input type="file" style='display:none;' name='picture' id='pic-picker' v-on:change="setAvatar()">
+
                         <div v-if='errors.length>0' class="row">
                             <div class="col-lg-6 col-12">
                                 <ul class='errors' v-on:click='errors=[]'>
@@ -77,8 +100,6 @@
                         </div>
 
                         <div class="tab-content">
-        
-
                             <div class='tab-pane fade padding-top-10'  v-bind:class="{ active: isItMe('candidate-data'), show: isItMe('candidate-data') }" id="candidate-data">
         
                                 <div class="card elegant large-header shadow">

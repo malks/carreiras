@@ -733,7 +733,7 @@ function profile(){
 
 function startProfile(screenNameHelper='',firstTab=''){
     Vue.use(VueMask.VueMaskPlugin);
-    
+
     edit = new Vue({
         el:'#app',
         data: getCustomData(screenNameHelper,firstTab),
@@ -764,6 +764,12 @@ function startProfile(screenNameHelper='',firstTab=''){
                     len=10;
                 return "width:"+len+"0px;";
             },
+            gotAvatar:function (){
+                let ret = false;
+                if (this.holdingData.picture!=undefined && this.holdingData.picture!=null && this.holdingData.picture!="")
+                    ret=true;
+                return ret;
+            },
         },
         methods:{
             tabTo:function (trialTab){
@@ -782,6 +788,28 @@ function startProfile(screenNameHelper='',firstTab=''){
                     that.currentTab=trialTab;
                 }
                 return;
+            },
+            changeAvatar:function(){
+                var simulateClick = function (elem) {
+                    // Create our event (with options)
+                    var evt = new MouseEvent('click', {
+                        bubbles: true,
+                        cancelable: true,
+                        view: window
+                    });
+                    // If cancelled, don't dispatch our event
+                    var canceled = !elem.dispatchEvent(evt);
+                };
+                var someLink = document.querySelector('#pic-picker');
+                simulateClick(someLink);
+
+                //document.getElementById('pic-picker').dispatchEvent('click');
+            },
+            setAvatar:function (){
+                console.log("lalala");
+                let file=document.querySelector('#pic-picker').files[0];
+                this.holdingData.picture = URL.createObjectURL(file);
+                console.log(this.holdingData.picture);
             },
             addLang:function () {
                 this.selected_languages.push({id:"",pivot:{id:null,level:'basic'}})
@@ -884,12 +912,15 @@ function startProfile(screenNameHelper='',firstTab=''){
                 that=this;
                 let interests=JSON.stringify(that.selectedTags);
                 $('#data-interests').val(interests);
-                data=$('form').serialize();
+                data=new FormData(document.querySelector('form'));
+                data.append('picture',document.querySelector('#pic-picker').files[0]);
                 that.errors=validate(that.currentTab);
                 if (that.errors.length==0){
                     that.saving=true;
                     $.ajax({
                         url:'/save-profile',
+                        processData: false,
+                        contentType: false,            
                         type:'POST',
                         data:data,
                         success:function (data){

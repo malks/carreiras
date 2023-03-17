@@ -21,26 +21,37 @@
                                     </span-->
                                 </div>
                             </div>
-                            <div class="row margin-top-10">
+
+                            <div class="row margin-top-20">
+                                @if(!empty($data->picture))
+                                    <div class="col-sm-2">
+                                        <img src="{{$data->picture}}" alt="" style='width:145px;height:150px;'>
+                                    </div>
+                                @endif
                                 <div class="col">
-                                    <h3 style='text-transform:capitalize'>{{$data->name}}</h3>
+                                    <div class="row margin-top-10">
+                                        <div class="col">
+                                            <h3 style='text-transform:capitalize'>{{$data->name}}</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p>Nascimento: @php echo (!empty($datebirth)) ? implode("/",array_reverse(explode("-",$datebirth))) : '' @endphp</p>
+                                        </div>
+                                    </div>
+                                    <div class="row" style='margin-top:-10px;'>
+                                        <div class="col">
+                                            <p>@php echo (!empty($data->dob)) ? (idate('Y')-explode("-",$data->dob)[0]) : ''; @endphp anos - {{(!empty($data->civil_state) && is_numeric($data->civil_state)) ? $civil_states[$data->civil_state-1 | 0] : ''}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row" style='margin-top:-10px;'>
+                                        <div class="col">
+                                            CPF: &nbsp {{$mask($data->cpf,'###.###.###-##')}}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <p>Nascimento: @php echo (!empty($datebirth)) ? implode("/",array_reverse(explode("-",$datebirth))) : '' @endphp</p>
-                                </div>
-                            </div>
-                            <div class="row" style='margin-top:-10px;'>
-                                <div class="col">
-                                    <p>@php echo (!empty($data->dob)) ? (idate('Y')-explode("-",$data->dob)[0]) : ''; @endphp anos - {{(!empty($data->civil_state) && is_numeric($data->civil_state)) ? $civil_states[$data->civil_state-1 | 0] : ''}}</p>
-                                </div>
-                            </div>
-                            <div class="row" style='margin-top:-10px;'>
-                                <div class="col">
-                                    CPF: &nbsp {{$mask($data->cpf,'###.###.###-##')}}
-                                </div>
-                            </div>
+
                             @if ($data->deficiency && !empty($data->defici))
                                 <div class="row">
                                     <div class="col">

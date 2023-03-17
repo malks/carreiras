@@ -363,6 +363,69 @@ input#interests-input.interests-input, input#interests-input.interests-input:foc
     overflow-x: hidden!important;
 }
 
+.avatar-empty{
+    border:1px dashed #ddd;
+    display:block;
+    width:145px;
+    height:150px;
+}
+
+.avatar-empty:hover{
+    background:#eee;
+    cursor:pointer;
+}
+
+.avatar-empty  .avatar-face{
+    font-size:70pt;
+    margin-top:10px;
+    color:#ddd;
+    float:left;
+    margin-left:30px;
+}
+
+.avatar-empty  .avatar-upload{
+    font-size:65pt;
+    margin-top:10px;
+    color:#ddd;
+    float:left;
+    margin-left:30px;
+    display:none;
+}
+
+.avatar-empty:hover  .avatar-face{
+    display:none;
+}
+
+.avatar-empty:hover  .avatar-upload{
+    color:#fff;
+    display:inline-block;
+}
+
+.avatar-empty  .avatar-face-text, .avatar-empty  .avatar-upload-text{
+    font-size:8pt;
+    float:left;
+    width:100%;
+    text-align:center;
+    margin-top:5px;
+}
+
+.avatar-empty .avatar-face-text{
+    display:inline-block;
+}
+
+.avatar-empty .avatar-upload-text{
+    display:none;
+}
+
+.avatar-empty:hover .avatar-face-text{
+    display:none;
+}
+
+.avatar-empty:hover .avatar-upload-text{
+    display:inline-block;
+}
+
+
 ul.errors{
     margin-left:40px;
     list-style:none;
