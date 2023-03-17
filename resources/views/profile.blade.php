@@ -80,7 +80,7 @@
                             </div>
                             <small style='margin-left:40px;'>{{ __('profile.requireddata') }}</small>
                         </div>
-                        <input type="file" style='display:none;' name='picture' id='pic-picker' v-on:change="setAvatar()">
+                        <input type="file" style='display:none;' name='picture' id='pic-picker' accept="image/*" v-on:change="setAvatar()">
 
                         <div v-if='errors.length>0' class="row">
                             <div class="col-lg-6 col-12">
