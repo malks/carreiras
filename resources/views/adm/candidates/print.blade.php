@@ -25,7 +25,10 @@
                             <div class="row margin-top-20">
                                 @if(!empty($data->picture))
                                     <div class="col-sm-2">
-                                        <img src="{{$data->picture}}" alt="" style='width:145px;height:150px;'>
+                                        <picture>
+                                            <source media="(min-width:50px,max-width:150px;)" srcset="{{$data->picture}}">
+                                            <img src="{{$data->picture}}" style='width:auto;max-width:150px;'>
+                                        </picture>
                                     </div>
                                 @endif
                                 <div class="col">

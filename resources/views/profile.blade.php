@@ -72,7 +72,10 @@
                             <div class="row" v-else>
                                 <div class="col" style='margin-bottom:20px;margin-left:40px;'>
                                     <span id='pic-auxer' class='text-center avatar-empty' v-on:click="changeAvatar()">
-                                        <img v-bind:src="holdingData.picture" style='width:145px;height:150px;'>
+                                        <picture>
+                                            <source media="(min-width:50px,max-width:150px;)" v-bind:srcset="holdingData.picture">
+                                            <img v-bind:src="holdingData.picture" style='width:auto;max-width:150px;'>
+                                        </picture>
                                         <span class='avatar-face-text'>{{ __('profile.picture') }}</span>
                                         <span class='avatar-upload-text'>{{ __('profile.change') }}</span>
                                     </span>
