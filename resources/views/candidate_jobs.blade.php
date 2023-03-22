@@ -137,6 +137,7 @@
                                 <div class="card elegant-mini" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                     <div class="card-header" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                         <h5>@{{job.name}}</h5>
+                                        <small style='text-transform:uppercase'>@{{getUnit(job.unit_id).city}}</small>
                                     </div>
                                     <div class="card-body" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                         <div class="row" v-show="isSubscribed(job.id)">
