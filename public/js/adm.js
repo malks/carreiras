@@ -592,6 +592,7 @@ function recruiting(){
                     success:function (data){
                         let jdata = decodeURIComponent(window.atob(decodeURIComponent(data))).replace(/\+/g," ");
                         let objData=JSON.parse(jdata);
+                        console.log(objData);
                         for (let i in objData){
                             that.runData[i]=objData[i];
                         }
@@ -677,7 +678,7 @@ function recruiting(){
                         }
                     }
                 }
-                if (candidate.id==1091)
+                if (candidate!=undefined && candidate!=null && candidate.id==1091)
                     console.log(this.otherData.tagFiltersExcept,activeFilters.length,contain,dudeTags);
                 if (activeFilters.length>0 && this.otherData.tagFiltersExcept=="true")
                     contain=!contain;

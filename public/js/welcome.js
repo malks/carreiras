@@ -173,12 +173,27 @@ function candidateSubscription(){
                 let tempJob={...job};
                 let contain = false;
                 let countries={'1':'Brasil','4':'Paraguay'};
+                let activeFilters="";
 
                 if (this.filterCountry.length>0)
                     activeFilters = countries[this.filterCountry];
 
                 if (activeFilters.length>0){
                     if (tempJob.unit.country==activeFilters)
+                        contain=true;
+                }
+                return contain;
+            },
+            cityFilter:function(job){
+                let tempJob={...job};
+                let contain = false;
+                let activeFilters="";
+
+                if (this.filterCity.length>0)
+                    activeFilters = this.filterCity;
+
+                if (activeFilters.length>0){
+                    if (tempJob.unit.city.strToLower()==activeFilters.strToLower())
                         contain=true;
                 }
                 return contain;
@@ -261,9 +276,28 @@ function candidateJobs(){
                 if (this.viewingJob.id!=null && this.viewingJob.desirable!=null)
                     return this.viewingJob.desirable.split("\r\n").join("<br>");
                 return "";
-            }
+            },
+            retTalentBank:function (){
+                let ret = false;
+                console.log("TALENTBANK");
+                console.log(this.talentBank);
+                if (this.talentBank==0)
+                    ret=true;
+                return ret;
+            },
         },
         methods:{
+            changeTalentBank:function (){
+                let candidate_id=this.candidate_id;
+                let that=this;
+                $.ajax({
+                    url:'/change-talent-bank/'+candidate_id,
+                    type:'GET',
+                    success:function (data){
+                        that.talentBank=data;   
+                    }
+                })
+            },
             getField:function (field_id){
                 let ret = this.fields.find(obj=>{
                     return obj.id==field_id;
@@ -299,6 +333,21 @@ function candidateJobs(){
                     }
                 }
                 return ret;
+            },
+            cityFilter:function(job){
+                let tempJob={...job};
+                let contain = false;
+                let activeFilters="";
+
+                if (this.filterCity.length>0)
+                    activeFilters = this.filterCity;
+                else
+                    contain=true;
+
+                if (activeFilters.length>0){
+                    contain=tempJob.unit.city.toLowerCase().includes(activeFilters.toLowerCase());
+                }
+                return contain;
             },
             cancelApplication:function (job){
                 let that = this;
@@ -827,7 +876,7 @@ function startProfile(screenNameHelper='',firstTab=''){
             filterTags:function(){
                 let ctag=this.currentInterest;
                 if (ctag.length==0)
-                    this.filteredTags=[{id:null,name:""}];
+                    this.filteredTags=[];
                 else
                     this.filteredTags=this.tags.filter(obj=>{
                         return obj.name.toLowerCase().startsWith(ctag.toLowerCase())==true;
@@ -1041,12 +1090,14 @@ function getCustomData(screenNameHelper,firstTab){
 function getJobsData(){
     let customData={};
     customData.candidate_id=document.getElementById('candidate-id').value;
+    customData.talentBank=document.getElementById('talent-bank').value;
     customData.jobs=JSON.parse(decodeURIComponent(document.getElementById('jobs-data').value).replace(/\+/g," "));
     customData.fields=JSON.parse(decodeURIComponent(document.getElementById('fields-data').value).replace(/\+/g," "));
     customData.units=JSON.parse(decodeURIComponent(document.getElementById('units-data').value).replace(/\+/g," "));
     customData.subscriptions=JSON.parse(decodeURIComponent(document.getElementById('subscriptions-data').value));
     customData.filters='';
     customData.filterCountry=$('#cur-country').val().trim();
+    customData.filterCity='';
     customData.observation='';
     customData.user_id=document.getElementById('user-id').value;
     customData.saving=false;
@@ -1069,6 +1120,7 @@ function getSubscriptionsData(){
     customData.units=JSON.parse(decodeURIComponent(document.getElementById('units-data').value).replace(/\+/g," "));
     customData.filters='';
     customData.filterCountry=$('#cur-country').val().trim();
+    customData.filterCity='';
     customData.viewingJob={
         id:null,
         field_id:1,

@@ -54,7 +54,18 @@ class AdmController extends Controller
         return Validator::make($data, [
             'field_id' => ['required', 'integer', 'gte:1'],
             'unit_id' => ['required', 'integer', 'gte:1'],
+            'description' => ['required','not_regex:/^[A-Z\W]+$/'],
+            'activities' => ['required','not_regex:/^[A-Z\W]+$/'],
+            'required' => ['not_regex:/^[A-Z\W]+$/','nullable'],
+            'desirable' => ['not_regex:/^[A-Z\W]+$$/','nullable'],
         ],[
+            'description.not_regex'=>'Descrição não pode ser completamente maiúscula.',
+            'activities.not_regex'=>'Atividades não podem ser completamente maiúsculas.',
+            'required.not_regex'=>'Requisitos não podem ser completamente maiúsculos.',
+            'desirable.not_regex'=>'Desejável não pode ser completamente maiúsculo.',
+            'description.required'=>'É necessário preencher a descrição da vaga.',
+            'activities.required'=>'É necessário preencher as atividades da vaga.',
+            'required.required'=>'É necessário preencher os requisitos da vaga.',
             'field_id.required'=>'É necessário selecionar uma área para a vaga.',
             'field_id.integer'=>'É necessário selecionar uma área para a vaga.',
             'field_id.gte'=>'É necessário selecionar uma área para a vaga.',
@@ -583,8 +594,8 @@ class AdmController extends Controller
         ->withCount(['subscriptions as subscription_amount'=>function ($query) {$query->where('active','=',1);}])
         ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])
         ->orderByRaw('subscription_amount desc')
-        ->get()->toArray();
-
+        ->get()
+        ->toArray();
 
         $data['states'] = State::all()->toArray();
         $data['units']  = Unit::all()->toArray();
@@ -1829,9 +1840,9 @@ class AdmController extends Controller
         $tags=json_decode($arr['tags'],true);
         $validator = $this->jobValidator($request->all())->validate();
            
-        if(!is_array($validator) && $validator->fails())
+        if (!is_array($validator) && $validator->fails())
             return Redirect::back()->withErrors($validator)->withInput($request->all());
-        
+
         if ($request->hasFile('picture')){
             $extension=$request->picture->extension();
             $picture_filename=date('U').".".$extension;

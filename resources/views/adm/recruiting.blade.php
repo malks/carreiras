@@ -61,7 +61,7 @@
 
                             <div class="col-xs-12 col-lg-6">
                                 <h6 class='margin-top-10'>Filtrar por Nome</h6>
-                                <input type="text" placeholder="Buscar vaga por nome" class='form-control' id='job-search' v-model='otherData.jobNameSearch'>
+                                <input type="text" placeholder="Buscar vaga por nome" class='form-control' id='job-search' v-model='otherData.jobSearch' v-on:keyUp.13="updateData">
                             </div>
                             <div class="col-xs-12 col-lg-6">
                                 <h6 class='margin-top-10'>Filtrar por Tags</h6>
@@ -350,3 +350,4 @@
 @stop
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+<script src="https://unpkg.com/zlibjs@0.3.1/bin/zlib.min.js"></script>

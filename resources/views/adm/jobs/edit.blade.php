@@ -12,6 +12,18 @@
     @if ($errors->has('unit_id'))
         <div class="alert alert-danger alert-dismissible">{{ $errors->first('unit_id') }}</div>
     @endif
+    @if ($errors->has('description'))
+        <div class="alert alert-danger alert-dismissible">{{ $errors->first('description') }}</div>
+    @endif
+    @if ($errors->has('activities'))
+        <div class="alert alert-danger alert-dismissible">{{ $errors->first('activities') }}</div>
+    @endif
+    @if ($errors->has('required'))
+        <div class="alert alert-danger alert-dismissible">{{ $errors->first('required') }}</div>
+    @endif
+    @if ($errors->has('desirable'))
+        <div class="alert alert-danger alert-dismissible">{{ $errors->first('desirable') }}</div>
+    @endif
 	<form method='POST' action='/adm/jobs/save' enctype='multipart/form-data'>
 		@csrf
 	    <div class="card" check-jobs-edit>

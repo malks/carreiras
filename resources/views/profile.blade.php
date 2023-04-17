@@ -526,15 +526,12 @@
                                             <div class="col-sm-12">
                                                 <template v-for='(tag,tagIdx) in filteredTags'>
                                                     <template v-if="tagIdx<8">
-                                                        <b v-if="tagIdx==0">
-                                                            @{{tag.name}} &nbsp
+                                                        <b style='cursor:pointer;' v-on:click="pickMe(tagIdx)"  class='interestag'>
+                                                            <i class="fas fa-plus-square" style='margin-left:6px;margin-top:6px;margin-right:3px;'></i>
+                                                            @{{tag.name}} 
                                                         </b>
-                                                        <span style='cursor:pointer;' v-on:click="pickMe(tagIdx)" v-else>
-                                                            @{{tag.name}} &nbsp
-                                                        </span>
                                                     </template>
                                                 </template>
-                                                &nbsp
                                             </div>
 
                                             <div class=" col-sm-12 margin-top-10">

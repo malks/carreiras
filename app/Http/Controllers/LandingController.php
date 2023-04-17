@@ -653,7 +653,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
         $today=Carbon::now('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
 
-        $jobs = Job::where('status','=',1)->with(['tags','field','unit'])->orderBy('created_at','desc')->get();
+        $jobs = Job::select('*')->addSelect(DB::Raw('(select city from units where units.id=jobs.unit_id) as unitcity'))->where('status','=',1)->with(['tags','field','unit'])->orderBy('unitcity','asc')->orderBy('name','asc')->get();
         //$jobs = Job::where('status','=',1)->where('start','<=',$today)->where('end','>=',$today)->with(['tags','field'])->orderBy('created_at','desc')->get();
         $fields = Field::get();
         $units = Unit::get();
@@ -670,6 +670,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
             'user_id'=>$user_id,
             'subscriptions'=>$subscriptions,
             'candidate_id'=>$candidate_id,
+            'talent_bank'=>$candidate->talent_bank,
         ]);
     }
 
@@ -718,6 +719,13 @@ $arr['what_irritates_you']="20. O que o irrita?";
             'units'=>$units,
             'candidate_id'=>$candidate_id,
         ]);
+    }
+
+    public function changeTalentBank($id){
+        $candidate=Candidate::find($id);
+        $candidate->talent_bank=!$candidate->talent_bank;
+        $candidate->save();
+        return $candidate->talent_bank;
     }
 
     public function applyForJob(Request $request){

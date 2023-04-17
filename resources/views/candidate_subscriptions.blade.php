@@ -93,16 +93,16 @@
                 </div>
 
                 <div class="card-body">
-                    <div class="col-md-3 col">
-                        <label for="country-filter">{{ __('candidatesjobs.countries') }}</label>
-                        <select id="country-filter"  class='w-input text-field white-background' v-model='filterCountry'>
-                            <option value='1'>{{ __('candidatesjobs.brazil') }}</option>
-                            <option value='4'>{{ __('candidatesjobs.paraguay') }}</option>
-                        </select>
-                    </div>
-
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-3 col-xs-12">
+                            <label for="country-filter">{{ __('candidatesjobs.countries') }}</label>
+                            <select id="country-filter"  class='w-input text-field white-background' v-model='filterCountry'>
+                                <option value='1'>{{ __('candidatesjobs.brazil') }}</option>
+                                <option value='4'>{{ __('candidatesjobs.paraguay') }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-9  col-xs-12">
                             <label for="job-filters">{{ __('candidatesjobs.search') }}</label>
                             <input placeholder="vendas marketing comercial...." id='job-filters' type="text" class='w-input text-field white-background' v-model='filters'>
                         </div>

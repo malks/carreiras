@@ -10,6 +10,7 @@
             <input type="hidden" class="hide" id='units-data' value='{{ urlencode(json_encode($units)) }}'>
             <input type="hidden" class="hide" id='user-id' value='{{ $user_id }}'>
             <input type="hidden" class="hide" id='candidate-id' value='{{ $candidate_id }}'>
+            <input type="hidden" class="hide" id='talent-bank' value='{{ $talent_bank }}'>
             <input type="hidden" class="hide" id='cur-country' value='@if ($curlang=='ptbr') 1 @else 4 @endif'>
 
             <div class="card elegant">
@@ -23,16 +24,35 @@
                 
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 col">
+                        <div class="col-md-3 col-xs-12">
                             <label for="country-filter">{{ __('candidatesjobs.countries') }}</label>
                             <select id="country-filter"  class='w-input text-field white-background' v-model='filterCountry'>
                                 <option value='1'>{{ __('candidatesjobs.brazil') }}</option>
                                 <option value='4'>{{ __('candidatesjobs.paraguay') }}</option>
                             </select>
                         </div>
-                        <div class="col-md-9 col">
+                        <div class="col-md-3 col-xs-12">
+                            <label for="city-filter">{{ __('candidatesjobs.city') }}</label>
+                            <input id="city-filter"  class='w-input text-field white-background' v-model='filterCity' placeholder="Jaragua do sul..."/>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
                             <label for="job-filters">{{ __('candidatesjobs.search') }}</label>
                             <input placeholder="vendas marketing comercial...." id='job-filters' type="text" class='w-input text-field white-background' v-model='filters'>
+                        </div>
+                    </div>
+                    <div class="row" v-show="retTalentBank">
+                        <div class="col-xs-12 col-sm-6">
+                            <small for="">Não encontrou o que procurava? </small>
+                        </div>
+                    </div>
+                    <div class="row" v-show="retTalentBank">
+                        <div class="col-xs-12 col-sm-6">
+                            <button class='btn btn-default' v-on:click="changeTalentBank()">Entre para nosso banco de talentos.</button>
+                        </div>
+                    </div>
+                    <div class="row" v-show="!retTalentBank">
+                        <div class="col-xs-12 col-sm-6">
+                            <button class='btn btn-green' v-on:click="changeTalentBank()"><i class='fa fa-check'></i> Você está em nosso banco de talentos</button>
                         </div>
                     </div>
                     <div class="row">
@@ -132,7 +152,7 @@
                         </div>
 
                         <template v-for='job in jobs'>
-                            <div class="col-lg-4 margin-top-20" v-show='inFilter(job) & countryFilter(job)'>
+                            <div class="col-lg-4 margin-top-20" v-show='inFilter(job) & countryFilter(job) & cityFilter(job)'>
 
                                 <div class="card elegant-mini" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                     <div class="card-header" :class=" { 'subscribed-job':isSubscribed(job.id) } ">

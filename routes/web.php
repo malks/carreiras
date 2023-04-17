@@ -50,6 +50,7 @@ Route::get('/resetlang', function () {
 $router->group(['middleware' => ['auth']], function() {
     Route::get('/profile', 'LandingController@profile');
     Route::get('/subscriptions', 'LandingController@candidateSubscriptions');
+    Route::get('/change-talent-bank/{id}', 'LandingController@changeTalentBank');
     Route::post('/apply-for-job', 'LandingController@applyForJob');
     Route::post('/cancel-application', 'LandingController@cancelApplication');
     Route::post('/save-profile', 'LandingController@saveProfile');
