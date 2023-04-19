@@ -670,7 +670,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
             'user_id'=>$user_id,
             'subscriptions'=>$subscriptions,
             'candidate_id'=>$candidate_id,
-            'talent_bank'=>$candidate->talent_bank,
+            'talent_bank'=>(isset($candidate->talent_bank)) ? ($candidate->talent_bank) : 0,
         ]);
     }
 
