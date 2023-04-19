@@ -26,7 +26,7 @@
         <link href="{{ asset('css/owl.carousel.custom.css') }}" rel="stylesheet" type="text/css"/>
         <link href="{{ asset('css/hedone.css') }}" rel="stylesheet" type="text/css"/>
         <link href="{{ asset('css/colors.css') }}" rel="stylesheet" type="text/css"/>
-        <link href="{{ asset('css/custom.css') }}" rel="stylesheet" type="text/css"/>
+        <link href="{{ asset('css/custom.css?v=').date('U') }}" rel="stylesheet" type="text/css"/>
         <link href="{{ asset('fonts/KaushanScript-Regular.ttf') }}" />
 
         <!--[if lte IE 9]>
@@ -215,6 +215,6 @@
         <script src="{{ asset('js/plugins.js') }}" type="text/javascript"></script>
         <script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
-        <script src="{{ asset('js/welcome.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('js/welcome.js?v=').date('U') }}" type="text/javascript"></script>
     </body>
 </html>
