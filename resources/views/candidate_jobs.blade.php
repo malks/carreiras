@@ -45,16 +45,24 @@
                             <small for="">Não encontrou o que procurava? </small>
                         </div>
                     </div>
-                    <div class="row" v-show="retTalentBank">
-                        <div class="col-xs-12 col-sm-6">
-                            <button class='btn btn-default' v-on:click="changeTalentBank()">Entre para nosso banco de talentos.</button>
+                    @if(!empty($logged_in))
+                        <div class="row" v-show="retTalentBank">
+                            <div class="col-xs-12 col-sm-6">
+                                <button class='btn btn-default' v-on:click="changeTalentBank()">Entre para nosso banco de talentos.</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row" v-show="!retTalentBank">
-                        <div class="col-xs-12 col-sm-6">
-                            <button class='btn btn-green' v-on:click="changeTalentBank()"><i class='fa fa-check'></i> Você está em nosso banco de talentos</button>
+                        <div class="row" v-show="!retTalentBank">
+                            <div class="col-xs-12 col-sm-6">
+                                <button class='btn btn-green' v-on:click="changeTalentBank()"><i class='fa fa-check'></i> Você está em nosso banco de talentos</button>
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <a href='/login' class='btn btn-default'>Faça o Login e entre para nosso banco de talentos.</a>
+                            </div>
+                        </div>
+                    @endif
                     <div class="row">
                         <div id='job-modal' class="modal" :class="{ 'hide':viewingJob.id==null }" tabindex="-1">
                             <div class="modal-dialog">
