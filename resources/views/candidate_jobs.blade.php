@@ -42,13 +42,13 @@
                     </div>
                     <div class="row" v-show="retTalentBank">
                         <div class="col-xs-12 col-sm-6">
-                            <small for="">Não encontrou o que procurava? </small>
+                            <b for="">Não encontrou o que procurava? </b>
                         </div>
                     </div>
                     @if(!empty($logged_in))
                         <div class="row" v-show="retTalentBank">
                             <div class="col-xs-12 col-sm-6">
-                                <button class='btn btn-default' v-on:click="changeTalentBank()">Entre para nosso banco de talentos.</button>
+                                <button class='btn btn-warning' v-on:click="changeTalentBank()"><b>Entre para nosso banco de talentos.</b></button>
                             </div>
                         </div>
                         <div class="row" v-show="!retTalentBank">
@@ -59,7 +59,7 @@
                     @else
                         <div class="row">
                             <div class="col-xs-12 col-sm-6">
-                                <a href='/login' class='btn btn-default'>Faça o Login e entre para nosso banco de talentos.</a>
+                                <a href='/login' class='btn btn-warning' style='padding:15px;'><b>Faça o Login e entre para nosso banco de talentos</b>.</a>
                             </div>
                         </div>
                     @endif
