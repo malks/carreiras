@@ -26,4 +26,13 @@ return [
     'countries'=>'País',
     'brazil'=>'Brasil',
     'paraguay'=>'Paraguai',
+    'foundnot'=>'Não encontrou o que procurava?',
+    'talentbank'=>'BANCO DE TALENTOS',
+    'jointalentbank'=>'Entre para nosso banco de talentos',
+    'subscribed'=>'inscrito',
+    'forgetnotinterests'=>'Não deixe de marcar suas áreas de interesse no perfil.',
+    'alwaysnewjobs'=>'Sempre temos novas vagas, lembre-se de conferi-las e atualizar o seu perfil.',
+    'participate'=>'Participar',
+    'loginparticipate'=>'Faça o Login para Participar',
+    'participating'=>'Participando',
 ];

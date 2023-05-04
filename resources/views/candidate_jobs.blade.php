@@ -40,29 +40,7 @@
                             <input placeholder="vendas marketing comercial...." id='job-filters' type="text" class='w-input text-field white-background' v-model='filters'>
                         </div>
                     </div>
-                    <div class="row" v-show="retTalentBank">
-                        <div class="col-xs-12 col-sm-6">
-                            <b for="">Não encontrou o que procurava? </b>
-                        </div>
-                    </div>
-                    @if(!empty($logged_in))
-                        <div class="row" v-show="retTalentBank">
-                            <div class="col-xs-12 col-sm-6">
-                                <button class='btn btn-warning' v-on:click="changeTalentBank()"><b>Entre para nosso banco de talentos.</b></button>
-                            </div>
-                        </div>
-                        <div class="row" v-show="!retTalentBank">
-                            <div class="col-xs-12 col-sm-6">
-                                <button class='btn btn-green' v-on:click="changeTalentBank()"><i class='fa fa-check'></i> Você está em nosso banco de talentos</button>
-                            </div>
-                        </div>
-                    @else
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-6">
-                                <a href='/login' class='btn btn-warning' style='padding:15px;'><b>Faça o Login e entre para nosso banco de talentos</b>.</a>
-                            </div>
-                        </div>
-                    @endif
+
                     <div class="row">
                         <div id='job-modal' class="modal" :class="{ 'hide':viewingJob.id==null }" tabindex="-1">
                             <div class="modal-dialog">
@@ -191,6 +169,48 @@
 
                             </div>
                         </template>
+                        <div class="col-lg-4 margin-top-20" >
+                            <div class="card elegant-mini" :class="[retTalentBank ? 'yellow' : 'green']">
+                                <div class="card-header">
+                                    <h5 v-if="retTalentBank">{{ __('candidatesjobs.foundnot') }}</h5>
+                                    <h5 v-else>{{ __('candidatesjobs.talentbank') }}</h5>
+                                    <small v-if="retTalentBank" style='text-transform:uppercase'>{{ __('candidatesjobs.jointalentbank') }}</small>
+                                    <small v-else style='text-transform:uppercase;'>{{ __('candidatesjobs.subscribed') }}</small>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row" >
+                                        <div class="col">
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-20">
+                                        <div class="col fixed-height-50" >
+                                            {{ __('candidatesjobs.forgetnotinterests') }}
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-20">
+                                        <div class="col fixed-height-50">
+                                            {{ __('candidatesjobs.alwaysnewjobs') }}
+                                        </div>
+                                    </div>
+                                    <div class="row margin-top-20" v-show="retTalentBank">
+                                        @if(!empty($logged_in))
+                                            <div class="col">
+                                                <button class="btn btn-warning" v-on:click="changeTalentBank()">{{ __('candidatesjobs.participate') }}</button>
+                                            </div>
+                                        @else
+                                            <div class="col">
+                                                <a href='/login' class="btn btn-warning" v-on:click="changeTalentBank()">{{ __('candidatesjobs.participate') }}</a>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="row margin-top-20" v-show="!retTalentBank">
+                                        <div class="col">
+                                            <button class='btn btn-green' v-on:click="changeTalentBank()"><i class='fa fa-check'></i> {{ __('candidatesjobs.participating') }}</button>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

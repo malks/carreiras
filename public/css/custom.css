@@ -266,6 +266,26 @@ input[type=checkbox]
     border-bottom:1px solid #ddd;
 }
 
+.card.elegant-mini.yellow{
+    color:#745b00;
+}
+
+.card.elegant-mini.yellow > .card-header{
+    color:#745b00;
+    border-top:3px solid #af8900;
+}
+
+
+.card.elegant-mini.green{
+    color:#0b6a01;
+}
+
+.card.elegant-mini.green > .card-header{
+    color:#0b6a01;
+    border-top:3px solid #0d7b01;
+}
+
+
 .card.elegant-mini > .card-header > h5{
     margin-top:5px;
 }
