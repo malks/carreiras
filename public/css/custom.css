@@ -271,8 +271,9 @@ input[type=checkbox]
 }
 
 .card.elegant-mini.yellow > .card-header{
-    color:#745b00;
+    color:#fff;
     border-top:3px solid #af8900;
+    background-color: #f0ad4e;
 }
 
 

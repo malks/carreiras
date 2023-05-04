@@ -172,9 +172,9 @@
                         <div class="col-lg-4 margin-top-20" >
                             <div class="card elegant-mini" :class="[retTalentBank ? 'yellow' : 'green']">
                                 <div class="card-header">
-                                    <h5 v-if="retTalentBank">{{ __('candidatesjobs.foundnot') }}</h5>
+                                    <h5 v-if="retTalentBank" style='font-weight:bold;'>{{ __('candidatesjobs.foundnot') }}</h5>
                                     <h5 v-else>{{ __('candidatesjobs.talentbank') }}</h5>
-                                    <small v-if="retTalentBank" style='text-transform:uppercase'>{{ __('candidatesjobs.jointalentbank') }}</small>
+                                    <small v-if="retTalentBank" style='text-transform:uppercase;font-weight:bold;'>{{ __('candidatesjobs.jointalentbank') }}</small>
                                     <small v-else style='text-transform:uppercase;'>{{ __('candidatesjobs.subscribed') }}</small>
                                 </div>
                                 <div class="card-body">
