@@ -199,7 +199,7 @@
                                             </div>
                                         @else
                                             <div class="col">
-                                                <a href='/login' class="btn btn-warning" v-on:click="changeTalentBank()">{{ __('candidatesjobs.participate') }}</a>
+                                                <a href='/login' class="btn btn-warning" style='padding:15px;' v-on:click="changeTalentBank()">{{ __('candidatesjobs.participate') }}</a>
                                             </div>
                                         @endif
                                     </div>
