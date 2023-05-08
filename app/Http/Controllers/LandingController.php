@@ -186,6 +186,7 @@ class LandingController extends Controller
     }
 
     public function sendHelp(Request $request){
+        return false;
         $logged_in=Auth::user();
         $data=$request->all();
         if ($request->hasFile('contact_file')){
