@@ -187,6 +187,17 @@ class LandingController extends Controller
 
     public function sendHelp(Request $request){
         $logged_in=Auth::user();
+
+        $user_ip=str_replace("'","",$request->ip());
+        
+        $quota_expired=DB::table('mail_control')->where('ip','=',$user_ip)->where('last_sent','=',date("Y-m-d"))->first();
+
+        if (!empty($quota_expired)){
+            return redirect('/');
+        }
+
+        DB::table('mail_control')->updateOrInsert(['ip'=>$user_ip],['ip'=>$user_ip,'last_sent'=>date("Y-m-d")]);
+
         $data=$request->all();
         if ($request->hasFile('contact_file')){
             $extension=$request->contact_file->extension();
