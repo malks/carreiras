@@ -470,6 +470,10 @@ class AdmController extends Controller
         $date_filter_start=Carbon::now('America/Sao_Paulo')->subMonths(2)->startOfDay()->format('Y-m-d');
         $date_filter_end=Carbon::tomorrow('America/Sao_Paulo')->startOfDay()->format('Y-m-d');
 
+        $curpage=0;
+        if (!empty($request->curpage))
+            $curpage=$request->curpage-1;
+
         $data['jobs']=Job::orderBy('updated_at','desc')
         ->when(!empty($request->filters['jobs']['direct']), function ($query) use ($request,$directLikeDone) {
             foreach($request->filters['jobs']['direct'] as $type_filter=>$filter_data){
@@ -594,12 +598,15 @@ class AdmController extends Controller
         ->withCount(['subscriptions as subscription_amount'=>function ($query) {$query->where('active','=',1);}])
         ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])
         ->orderByRaw('subscription_amount desc')
+//        ->skip($curpage*20)
+  //      ->take(20)
         ->get()
         ->toArray();
 
         $data['states'] = State::all()->toArray();
         $data['units']  = Unit::all()->toArray();
         $data['fields'] = Field::all()->toArray();
+        $data['curpage'] = $curpage;
         $data['date_filter_start']=$date_filter_start;
         $data['date_filter_end']=$date_filter_end;
 
@@ -1023,6 +1030,9 @@ class AdmController extends Controller
 
     public function candidatesList (Request $request){
 
+        $logged_in=Auth::user();
+        $usermail=$logged_in->email;
+
         $tagsrh=DB::table('candidates_tagsrh')
         ->select('candidate_id','tag_id')
         ->when(!empty($request->filter_tagrh), function ($query) use ($request){
@@ -1043,6 +1053,11 @@ class AdmController extends Controller
             'candidates.viewed',
             'candidates.address_city',
             'candidates.senior_num_can',
+            'candidates.previous_lunelli_cad',
+            'candidates.previous_lunelli_unit',
+            'candidates.previous_lunelli_job',
+            'candidates.previous_lunelli_date',
+            'candidates.duplicate_cpf',
             'candidates.address_state'
         )
         ->selectRaw(DB::Raw('ANY_VALUE(subscribed.created_at) as data_candidatura'))
@@ -1155,6 +1170,7 @@ class AdmController extends Controller
 
         return view('adm.candidates.list')->with(
             [
+                'usermail'=>$usermail,
                 'data'=>$data,
                 'data_list'=>$data_list,
                 'tagsrh'=>$tagsrh,

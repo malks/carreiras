@@ -5,6 +5,7 @@ let fullData=null;
 let selectedIds=Array();
 let ajaxUrl="";
 let form = new FormData();
+let usermail='';
 
 
 $(document).ready(function () {
@@ -277,6 +278,7 @@ function recruiting(){
                 id:null,
                 notes:null,
             },
+            curpage:0,
             notepad:false,
             saving:false,
             updating:false,
@@ -845,6 +847,7 @@ function subscribersList(){
 function candidatesList(){
     startData();
     ajaxUrl=$('#app').attr('action');
+    usermail = $('#usermail').val();
     startList();
     $('#search').focus();
 }
@@ -904,6 +907,11 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
         el:'#app',
         data:{
             selectedIds:new Array(),
+            selectedSeniorIds: new Array(),
+            duplicateCpfIds: new Array(),
+            duplicateCpfData: new Array(),
+            previousLunelliCadIds: new Array(),
+            previousLunelliCadData: new Array(),
             blockEditIds:blockEditIds,
             blockDeleteIds:blockDeleteIds,
             logged_id:logged_id,
@@ -927,6 +935,8 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             selectedJob:null,
             selectedCandidateName:'',
             selectedCandidateId:'',
+            exporterEmail:'',
+            exportChecking:false,
             viewedItem:[],
             saving:false,
         },
@@ -947,6 +957,20 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                     return this.selectedIds[0];
                 return '';
             },
+            exportCheckPrevCad: function (){
+                let ret = false;
+                let that = this;
+                if (that.previousLunelliCadIds.length>0)
+                    ret=true;
+                return ret;
+            },
+            exportCheckDuplicateCpf: function (){
+                let ret = false;
+                let that = this;
+                if (that.duplicateCpfIds.length>0)
+                    ret=true;
+                return ret;
+            },
             canEdit:function(){
                 let that = this;
                 if (that.blockEditIds.length>0){
@@ -958,6 +982,22 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                 if (that.selectedIds.length==1)
                     return false;
                 return true;
+            },
+            canExport:function(){
+                let that = this;
+                let ret = true;
+                if (that.selectedIds.length>0)
+                    ret = false;
+                if (that.selectedSeniorIds.length>0)
+                    ret = true;
+                return ret;
+            },
+            validateExport:function (){
+                let that = this;
+                let ret = true;
+                if (that.exporterEmail!="" && that.exporterEmail==usermail)
+                    ret =false;
+                return ret;
             },
             canDestroy:function(){
                 let that = this;
@@ -988,6 +1028,12 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             },
         },
         methods:{
+            printDate:function(val){
+                let ret = "";
+                if (val!=undefined && val!=null && val.indexOf("\ ")>=0)
+                    ret = val.split(" ")[0].split("-").reverse().join("/");
+                return ret;
+            },
             filterAvailableJobs: function (currentJob){
                 let ret = true;
                 let that = this;
@@ -1183,6 +1229,19 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                 }
                 that.openTags();
             },
+            openCheckExportCandidates:function (){
+                this.exporterEmail="";
+                if(this.exportCheckPrevCad){
+                    this.exportChecking=!this.exportChecking;
+                    if(this.exportChecking)
+                        $('#check-before-export').show();
+                    else
+                        $('#check-before-export').hide();
+                }
+                else {
+                    this.exportCandidates();
+                }
+            },
             exportCandidates:function (){
                 let that=this;
                 if(confirm('Tem certeza que deseja exportar os candidatos selecionados?')){
@@ -1237,12 +1296,63 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
                 else
                     $('#subscribe-tagrh-modal').hide();
             },
-            addItem:function(id){
+            addItem:function(data){
+                let id = data.id;
+                let seniorId = data.senior_num_can;
+
+                let duplicateCpf = data.duplicate_cpf;
+                let duplicateCpfData = {
+                    name:data.name,
+                    cpf:data.cpf,
+                    email:data.email,
+                };
+
+                let previousLunelliCad = data.previous_lunelli_cad;
+                let prevLunelliData={
+                    nome:data.name,
+                    cadastro:data.previous_lunelli_cad,
+                    unidade:data.previous_lunelli_unit,
+                    vaga:data.previous_lunelli_job,
+                    data:data.previous_lunelli_date,
+                };
+
+                if (seniorId!=null){
+                    let seniorIdx=this.selectedSeniorIds.findIndex(el => el == seniorId);
+                    if (seniorIdx>=0)
+                        this.selectedSeniorIds.splice(seniorIdx,1);
+                    else
+                        this.selectedSeniorIds.push(seniorId);
+                }
+
+                if (duplicateCpf==1){
+                    let duplicateCpfIdIdx=this.duplicateCpfIds.findIndex(el => el == id);
+                    if (duplicateCpfIdIdx>=0){
+                        this.duplicateCpfIds.splice(duplicateCpfIdIdx,1);
+                        this.duplicateCpfData.splice(duplicateCpfIdIdx,1);
+                    }
+                    else{
+                        this.duplicateCpfIds.push(id);
+                        this.duplicateCpfData.push(duplicateCpfData);
+                    }
+                }
+
+                if (previousLunelliCad!=null){
+                    let previousLunelliCadIdx=this.previousLunelliCadIds.findIndex(el => el == previousLunelliCad);
+                    if (previousLunelliCadIdx>=0){
+                        this.previousLunelliCadIds.splice(previousLunelliCadIdx,1);
+                        this.previousLunelliCadData.splice(previousLunelliCadIdx,1);
+                    }
+                    else{
+                        this.previousLunelliCadIds.push(previousLunelliCad);
+                        this.previousLunelliCadData.push(prevLunelliData);
+                    }
+                }
+
                 let idx=this.selectedIds.findIndex(el=>el == id);
                 if(idx>=0)
                     this.selectedIds.splice(idx,1);
                 else
-                    this.selectedIds.push(id);
+                    this.selectedIds.push(id);                
             },
             addViewed:function(id){
                 let idx=this.viewedItem.findIndex(el=>el == id);

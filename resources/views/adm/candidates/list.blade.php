@@ -8,6 +8,7 @@
 <input type='hidden' id='full-data' value='@php echo json_encode($data_list);@endphp'/>
 <input type='hidden' id='filtered-tagsrh' value='@php echo json_encode($tagsrh_filters);@endphp'/>
 <input type='hidden' id='viewed-data' value='{{$viewed_list}}'/>
+<input type='hidden' id='usermail' value='{{$usermail}}'/>
 
 @section('content')
 	<div id="app" action='/adm/candidates'>
@@ -127,6 +128,53 @@
 				</div>
 			</form>
 		</div>
+		<div id="check-before-export" class="modal">
+			<div class="modal-dialog" style='width:820px;max-width:820px;'>
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Verifique antes de exportar:</h5>
+						<button type="button" class="btn-close"  v-on:click="openCheckExportCandidates" data-bs-dismiss="modal" aria-label="Close">X</button>
+					</div>
+					<div class="modal-body">
+						<div class="card" >
+							<div class="card-header">
+								<h5 v-if="exportCheckPrevCad">Alguns <b>candidatos selecionados</b> para exportação <b>SÃO EX COLABORADORES</b></h5>
+							</div>
+							<div class="card-body">
+								<div class="row" style='max-height:300px;overflow:auto;'>
+									<template v-for="prevData in previousLunelliCadData">
+										<div class="col-lg-6 col-xs-12">
+											<div class="card">
+												<div class="card-header">
+													<h6>@{{prevData.nome}}</h6>
+												</div>
+												<div class="card-body">
+													<p><b style='margin-right:5px;'>Cadastro:</b> @{{prevData.cadastro}}</p>
+													<p><b style='margin-right:5px;'>Unidade:</b> @{{prevData.unidade}}</p>
+													<p><b style='margin-right:5px;'>Cargo:</b> @{{prevData.vaga}}</p>
+													<p><b style='margin-right:5px;'>Data:</b> @{{printDate(prevData.data)}}</p>
+												</div>
+											</div>
+										</div>
+									</template>
+								</div>
+								<div class="row margin-top-20">
+									<h5>Tem certeza de que deseja realizar a exportação?</h5>
+									<br>
+									<p>Caso realmente queira continuar com a exportação desses usuários, mesmo <b>estando ciente dessas informações</b>, preencha <b>seu email</b> de usuário do sistema no campo abaixo:</p>
+									<br>
+									<input type="text" name='exporter_email' class='form-control' v-model='exporterEmail' autocomplete="off">
+								</div>
+							</div>
+							<div class="card-footer">
+								<button v-bind:disabled="validateExport" type='button' v-on:click="exportCandidates" class='btn btn-primary'>Exportar</button>
+								<button v-if="!saving" type='button' class="btn btn-danger"  v-on:click="openCheckExportCandidates" >Sair</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<form method='GET' action='/adm/candidates' >
 			@csrf
@@ -149,7 +197,7 @@
 							<button class="btn btn-success" v-on:click='openJobs' type='button' v-bind:disabled='canDestroy'>Inscrever em vaga</button>
 						</div>
 						<div class="col-3 col-xl-2">
-							<button class="btn btn-primary" v-on:click='exportCandidates' type='button' v-bind:disabled='canDestroy'>Exportar para Senior</button>
+							<button class="btn btn-primary" v-on:click='openCheckExportCandidates' type='button' v-bind:disabled='canExport'>Exportar para Senior</button>
 						</div>
 						<div class="col-3 col-xl-2">
 							<button class="btn btn-warning" v-on:click='tagsRh(false)' type='button' v-bind:disabled='canEdit'>Tags RH</button>
@@ -264,10 +312,16 @@
 										<tr><td colspan='3'>Nenhum registro encontrado</td></tr>
 									@endif
 									@foreach($data as $d)
-										<tr class='hoverable' v-on:click='addItem({{$d->id}})' > 
+										<tr @if($d->duplicate_cpf) title='CPF do Candidato está Duplicado no Sistema' @endif class='hoverable @if($d->duplicate_cpf) duplicate-cpf @endif' v-on:click="addItem({{$d}})" > 
 											<td style='width:40px;' for='data-check-{{$d->id}}' class='checker'>
-												<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
-											<td>{{$d->name}}</td>
+												<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'>
+											</td>
+											<td>
+												@if($d->duplicate_cpf)
+													<i style='float:left;font-size:8pt;color:rgb(112, 2, 2)'  class="fas fa-exclamation-circle"></i>
+												@endif
+												{{$d->name}}
+											</td>
 											<td> <button v-on:click.prevent="tagsRh({{$d->id}})" type='button' style='z-index:9999999;width:100%;font-weight:bold;@if(!empty($d->Tagsrh[0])) background-color:{{$d->Tagsrh[0]->color}};color:{{$d->Tagsrh[0]->fontcolor}} @endif' class="btn btn-secondary" >{{$d->tagsrhcount}}</button></td>
 											<td>@php echo ($d->deficiency) ? '<span style="color:green">Sim<span>' : '<span style="color:red">Não</span>' @endphp</td>
 											<td>{{$d->address_city}}</td>
