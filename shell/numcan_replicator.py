@@ -6,7 +6,7 @@ if __name__ == "__main__":
     #Instancia Conexões Principais
     main_sql_conn=sql_conn()
 
-    candidates=sql_select("SELECT candidates.*  FROM candidates WHERE candidates.senior_num_can IS NOT NULL AND cpf!=''",main_sql_conn)
+    candidates=sql_select("SELECT candidates.*  FROM candidates WHERE candidates.senior_num_can IS NOT NULL AND cpf!='' AND cpf IS NOT NULL",main_sql_conn)
     
     for cnd in candidates:
         sql="UPDATE candidates SET senior_num_can='"+str(cnd["senior_num_can"])+"',updated_at=updated_at WHERE senior_num_can IS NULL AND cpf='"+str(cnd["cpf"])+"'"
