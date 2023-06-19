@@ -12,7 +12,7 @@ if __name__ == "__main__":
         sql="UPDATE candidates SET senior_num_can='"+str(cnd["senior_num_can"])+"',updated_at=updated_at WHERE senior_num_can IS NULL AND cpf='"+str(cnd["cpf"])+"'"
         run_sql(sql,main_sql_conn)
 
-    duplicandidates=sql_select("SELECT cpf,COUNT(DISTINCT id) AS amt FROM candidates WHERE cpf IS NOT NULL AND cpf!='' GROUP BY cpf HAVING amt>1")
+    duplicandidates=sql_select("SELECT cpf,COUNT(DISTINCT id) AS amt FROM candidates WHERE cpf IS NOT NULL AND cpf!='' GROUP BY cpf HAVING amt>1",main_sql_conn)
 
     for dcnd in duplicandidates:
         sql="UPDATE candidates SET duplicate_cpf=1,updated_at=updated_at WHERE cpf='"+str(dcnd["cpf"])+"'"
