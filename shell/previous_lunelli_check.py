@@ -11,7 +11,7 @@ if __name__ == "__main__":
     for cnd in candidates:
         sql="UPDATE lunellicarreiras.candidates SET previous_lunelli_cad='"+str(cnd["cadastro"])+"',previous_lunelli_unit='"+str(cnd["nomeFilial"])+"',previous_lunelli_job='"+str(cnd["cargo"])+"',previous_lunelli_date='"+str(cnd["createdAt"])+"',updated_at=updated_at WHERE id='"+str(cnd["id"])+"'"
         run_sql(sql,main_sql_conn)
-        addtagsql="INSERT IGNORE INTO lunellicarreiras.candidates_tagsrh (candidate_id,tag_id,created_at,_updated_at) VALUES('"+str(cnd["id"])+"',5,now(),now())"
+        addtagsql="INSERT IGNORE INTO lunellicarreiras.candidates_tagsrh (candidate_id,tag_id,created_at,updated_at) VALUES('"+str(cnd["id"])+"',5,now(),now())"
         run_sql(addtagsql,main_sql_conn)
 
     #Fecha as conexões principais
