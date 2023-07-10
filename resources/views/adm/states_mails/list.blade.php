@@ -47,7 +47,7 @@
 									<tr><td colspan='3'>Nenhum registro encontrado</td></tr>
 								@endif
 								@foreach($data as $d)
-									<tr class='hoverable' v-on:click='addItem({{$d->id}})' > 
+									<tr class='hoverable' v-on:click='addItem({{$d}})' > 
 										<td style='width:40px;' for='data-check-{{$d->id}}' class='checker'>
 											<input type='checkbox' v-model='selectedIds' class='selected-ids' id='data-check-{{$d->id}}' value='{{$d->id}}' name='ids[]'> </td>
 										<td>{{$d->id}}</td>
