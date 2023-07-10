@@ -1510,8 +1510,10 @@ class AdmController extends Controller
             }
         }
 
+        $marketlink="https://".$_SERVER['SERVER_NAME']."/detalhe-vaga/".$data->id; 
         return view('adm.jobs.edit')->with(
             [
+                'marketlink'=>$marketlink,
                 'data'=>$data,
                 'units'=>$units,
                 'fields'=>$fields,

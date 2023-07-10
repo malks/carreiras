@@ -95,7 +95,13 @@ class LandingController extends Controller
     }
 
     public function access(Request $request){
-        return view('access');
+        $redirectback="";
+        if (!empty($request->query()['afterlogin'])){
+            $redirectback=$request->query()['afterlogin'];
+        }
+        return view('access')->with([
+            'redirectback'=>$redirectback
+        ]);
     }
 
     public function buscaCep(Request $request) {
@@ -636,6 +642,34 @@ $arr['what_irritates_you']="20. O que o irrita?";
         }
 
         return json_encode(['experiences'=>$new_experiences,'schoolings'=>$new_schoolings],true);
+    }
+
+    public function jobDetail($id){
+        $lang='ptbr';
+        if (!empty($_COOKIE['lang']))
+            $lang=$_COOKIE['lang'];
+        $logged_in=Auth::user();
+        $user_id=0;
+        $role="";
+        $candidate=null;
+        $subscribed=null;
+        if (!empty($logged_in)){
+            $role=User::where('id','=',$logged_in->id)->with('roles')->first()->roles[0]->name;
+            $user_id=$logged_in->id;
+            $candidate = Candidate::where('user_id','=',$logged_in->id)->first();
+            $subscribed = Subscribed::where('candidate_id','=',$candidate->id)->where('job_id','=',$id)->first();
+        }
+        $job = Job::select('*')
+        ->with(['tags','field','unit'])
+        ->find($id);
+
+        return view('job_detail')->with([
+            'data'=>$job,
+            'logged_in'=>$logged_in,
+            'candidate'=>$candidate,
+            'role'=>$role,
+            'subscribed'=>$subscribed,
+        ]);
     }
 
     public function jobsList(){

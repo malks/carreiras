@@ -18,7 +18,7 @@
                     <form action="/login" method="post">
                         {{ csrf_field() }}
 
-
+                        <input type="hidden" name='redirectback' value={{$redirectback}}>
                         {{-- Email field --}}
                         <div class="input-group mb-3">
                             <input type="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"

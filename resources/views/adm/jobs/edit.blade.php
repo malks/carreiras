@@ -40,6 +40,13 @@
 	        		</div>
 	        	</div>
                 <div class="row margin-top-10">
+                    <div class="col">
+                        <label for="">Link para divulgação</label>
+                        <br>
+                        <a href="{{$marketlink}}" target="_blank" >{{$marketlink}}</a>
+                    </div>
+                </div>
+                <div class="row margin-top-10">
                     <div class="col-lg-6">
                         <label for="">Imagem para o Cargo</label><br>
                         <input type="file" name='picture' id='selected-picture' onchange="changedPicture()"><br><br>

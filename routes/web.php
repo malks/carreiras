@@ -35,6 +35,7 @@ Route::get('/landing-data', 'LandingController@landingData');
 Route::get('/view-mail/{id}', 'AdmController@viewMail')->name('view-mail');
 Route::post('/busca-cep', 'LandingController@buscaCep')->name('busca-cep');
 Route::get('/help', 'LandingController@help')->name('help');
+Route::get('/detalhe-vaga/{id}', 'LandingController@jobDetail')->name('job-detail');
 Route::post('/send-help', 'LandingController@sendHelp')->name('send-help');
 Route::get('/forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password-forgot');
 
