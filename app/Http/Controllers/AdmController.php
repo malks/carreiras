@@ -598,8 +598,8 @@ class AdmController extends Controller
         ->withCount(['subscriptions as subscription_amount'=>function ($query) {$query->where('active','=',1);}])
         ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])
         ->orderByRaw('subscription_amount desc')
-//        ->skip($curpage*20)
-  //      ->take(20)
+        /*->skip($curpage*20)
+        ->take(20)*/
         ->get()
         ->toArray();
 
@@ -1331,8 +1331,11 @@ class AdmController extends Controller
             }
         }
 
+        $marketlink=""; 
+
         return view('adm.jobs.edit')->with(
             [
+                'marketlink'=>$marketlink,
                 'data'=>$data,
                 'fields'=>$fields,
                 'units'=>$units,

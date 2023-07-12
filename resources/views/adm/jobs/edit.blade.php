@@ -43,7 +43,11 @@
                     <div class="col">
                         <label for="">Link para divulgação</label>
                         <br>
-                        <a href="{{$marketlink}}" target="_blank" >{{$marketlink}}</a>
+                        @if (!empty($marketlink))
+                            <a href="{{$marketlink}}" target="_blank" >{{$marketlink}}</a>
+                        @else
+                            <p>Salve e edite novamente para ver o link</p>
+                        @endif
                     </div>
                 </div>
                 <div class="row margin-top-10">
