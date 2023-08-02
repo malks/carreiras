@@ -475,6 +475,13 @@ class AdmController extends Controller
             $curpage=$request->curpage-1;
 
         $data['jobs']=Job::orderBy('updated_at','desc')
+        ->when(!empty($request->filters['tags']['like']['name']), function($query) use ($request) {
+            $query->whereHas('tags',function ($inquery) use ($request){
+                $inquery->where("name","like","%".$request->filters['tags']['like']['name']."%");
+                return $inquery;
+            });
+            return $query;
+        })
         ->when(!empty($request->filters['jobs']['direct']), function ($query) use ($request,$directLikeDone) {
             foreach($request->filters['jobs']['direct'] as $type_filter=>$filter_data){
                 if ($type_filter=='like'){
@@ -599,8 +606,9 @@ class AdmController extends Controller
         ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])
         ->orderByRaw('subscription_amount desc')
         /*->skip($curpage*20)
-        ->take(20)*/
-        ->get()
+        ->take(20)
+        ->get()*/
+        ->paginate(15)
         ->toArray();
 
         $data['states'] = State::all()->toArray();

@@ -61,20 +61,29 @@
 
                             <div class="col-xs-12 col-lg-6">
                                 <h6 class='margin-top-10'>Filtrar por Nome</h6>
-                                <input type="text" placeholder="Buscar vaga por nome" class='form-control' id='job-search' v-model='otherData.jobSearch' v-on:keyUp.13="updateData">
+                                <input type="text" placeholder="Buscar vaga por nome" class='form-control' id='job-search' v-model='pushData.filters.jobs.direct.like.name' v-on:keyUp.13="updateData">
                             </div>
                             <div class="col-xs-12 col-lg-6">
                                 <h6 class='margin-top-10'>Filtrar por Tags</h6>
-                                <input type="text" placeholder="Buscar vaga por tags ex: vendas comercial" class='form-control' id='job-tag-search' v-model='otherData.tagFilters'>
+                                <input type="text" placeholder="Buscar vaga por tags ex: vendas comercial" class='form-control' id='job-tag-search' v-model='pushData.filters.tags.like.name'  v-on:keyUp.13="updateData">
                             </div>
                         </div>
                         <div class="row margin-top-10">
-                            <div class="col">
+                            <div class="col-lg-2 col-xs-12">
                                 <h6 >Filtrar por Status:&nbsp</h6>
                                 <input style='margin-left:10px' type="checkbox" id='active-status-filter' v-model='pushData.filters.jobs.direct.in.status' value='1' v-on:change='updateData'>
                                 <label class='control-label' style='margin-left:3px' for="active-status-filter">Ativas</label>
                                 <input type="checkbox" style='margin-left:10px' id='inactive-status-filter' v-model='pushData.filters.jobs.direct.in.status' value='0'  v-on:change='updateData'>
                                 <label class='control-label'  style='margin-left:3px' for="inactive-status-filter">Inativas</label>
+                            </div>
+                            <div class="col-lg-2 col-xs-12 margin-top-10">
+                                <button v-show='runData.updating' type='button' class='btn btn-primary'>
+                                    <i  class="fas fa-spinner fa-spin"></i>
+                                    Buscando
+                                </button>
+                                <button v-show="!runData.updating" type='button' class='btn btn-primary' v-on:click="updateData">
+                                    Buscar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -144,6 +153,32 @@
                         </div>
                     </div>
                 </div>
+
+				<div class='row'>
+					<div class='col-lg-12'>
+						<div style='float:left;line-height:35px;'>
+							Exibindo @{{runData.paginate.from}} a @{{runData.paginate.to}} de @{{runData.paginate.total}}
+						</div>
+						<div style='float:right;'>
+                            <button type='button' v-bind:disabled="(runData.paginate.current_page<2)||runData.updating" style='float:left;margin-right:5px;' class='btn btn-default' v-on:click="firstPage()">
+                                Primeira
+                            </button>
+                            <button type='button' v-bind:disabled="(runData.paginate.current_page<2)||runData.updating" style='float:left;' class='btn btn-default' v-on:click="prevPage()">
+                                Anterior
+                            </button>
+                            <span style='width:130px;display:block;float:left;margin-left:10px;margin-top:5px;'>
+                                Página @{{runData.paginate.current_page}} de @{{runData.paginate.last_page}}
+                                <i v-show="runData.updating"  class="fas fa-spinner fa-spin"></i>
+                            </span>
+                            <button type='button' v-bind:disabled="(runData.paginate.current_page>runData.paginate.last_page-1)||runData.updating" class='btn btn-default' v-on:click="nextPage()">
+                                Próxima
+                            </button>
+                            <button type='button' v-bind:disabled="(runData.paginate.current_page>runData.paginate.last_page-1)||runData.updating" style='float:right;margin-left:5px;' class='btn btn-default' v-on:click="lastPage()">
+                                Última
+                            </button>
+						</div>
+					</div>
+				</div>
 
             </div>
 

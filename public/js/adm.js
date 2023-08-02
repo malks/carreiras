@@ -283,9 +283,24 @@ function recruiting(){
             saving:false,
             updating:false,
             specificFilter:false,
+            paginate:{
+                firstItem:0,
+                total:0,
+                currentPage:0,
+                last_page:0,
+                withQueryStrings:{
+                    links:"",
+                },
+            },
         },
         pushData: {
+            page:1,
             filters: {
+                tags:{
+                    like:{
+                        name:''
+                    }
+                },
                 jobs: {
                     direct:{
                         like:{
@@ -320,6 +335,11 @@ function recruiting(){
                             },
                         },
                         tags:{
+                            mustHave:{
+                                like:{
+                                    name:''
+                                }
+                            },
                             like:{
                                 name:''
                             }
@@ -527,6 +547,9 @@ function recruiting(){
             },
             uninspectJob:function (){
                 let that = this;
+                console.log(bootstrapData.pushData);
+                that.pushData={...bootstrapData.pushData};
+                that.pushData.filters.jobs.direct.in.id=null;
                 that.runData.selectedJob={...bootstrapData.selectedJob};
                 that.runData.subscriptions={...bootstrapData.subscriptions};
             },
@@ -543,13 +566,15 @@ function recruiting(){
                     type:'POST',
                     data:pushData,
                     success:function (data){
-                        let objData=JSON.parse(data);
+                        let jdata = decodeURIComponent(window.atob(decodeURIComponent(data))).replace(/\+/g," ");
+                        let objData=JSON.parse(jdata);
+                        console.log(that.runData.jobs);
                         let theJobIdx=that.runData.jobs.findIndex(obj=>{
-                            return obj.id===objData.jobs[0].id;
+                            return obj.id===objData.jobs.data[0].id;
                         })
-                        that.runData.jobs[theJobIdx]=objData.jobs[0];
-                        that.runData.selectedJob=objData.jobs[0];
-                        that.runData.subscriptions=objData.jobs[0].subscriptions;
+                        that.runData.jobs[theJobIdx]=objData.jobs.data[0];
+                        that.runData.selectedJob=objData.jobs.data[0];
+                        that.runData.subscriptions=objData.jobs.data[0].subscriptions;
                         for (let i in that.runData.selectedJob.subscriptions){
                             that.runData.selectedJob.subscriptions[i].current_state=that.runData.selectedJob.subscriptions[i].states[that.runData.selectedJob.subscriptions[i].states.length-1].id;
                         }
@@ -574,10 +599,34 @@ function recruiting(){
                     that.runData.subscriptions=that.runData.selectedJob.subscriptions;
                 }
             },
+            nextPage:function (){
+                let that = this;
+                that.pushData.page+=1;
+                console.log(that.pushData.page);
+                that.updateData();
+            },
+            prevPage:function (){
+                let that = this;
+                that.pushData.page-=1;
+                console.log(that.pushData.page);
+                that.updateData();
+            },
+            firstPage:function (){
+                let that = this;
+                that.pushData.page=1;
+                console.log(that.pushData.page);
+                that.updateData();
+            },
+            lastPage:function (){
+                let that = this;
+                that.pushData.page=that.runData.paginate.last_page;
+                console.log(that.pushData.page);
+                that.updateData();
+            },
             updateData:function (){
                 let that = this;
-                let pushData=that.pushData;
-                pushData.filters.jobs.direct.like.name="";
+                let pushData={...that.pushData};
+                //pushData.filters.jobs.direct.like.name="";
               //  pushData.filters.jobs.mustHave.tags.name="";
                 if(that.otherData.jobSearch!=""){
                     pushData.filters.jobs.direct.like.name=that.otherData.jobSearch;
@@ -596,7 +645,14 @@ function recruiting(){
                         let objData=JSON.parse(jdata);
                         console.log(objData);
                         for (let i in objData){
-                            that.runData[i]=objData[i];
+                            if (i=="jobs"){
+                                that.runData.paginate={...objData[i]};
+                                console.log(that.runData.paginate);
+                                delete that.runData.paginate.data;
+                                that.runData[i]=objData[i].data;
+                            }
+                            else
+                                that.runData[i]=objData[i];
                         }
                         that.updateSelectedJob();
                         that.runData.updating=false;
@@ -1299,22 +1355,30 @@ function startList(blockEditIds=[],blockDeleteIds=[]){
             addItem:function(data){
                 let id = data.id;
                 let seniorId = data.senior_num_can;
-
-                let duplicateCpf = data.duplicate_cpf;
-                let duplicateCpfData = {
-                    name:data.name,
-                    cpf:data.cpf,
-                    email:data.email,
-                };
-
-                let previousLunelliCad = data.previous_lunelli_cad;
-                let prevLunelliData={
-                    nome:data.name,
-                    cadastro:data.previous_lunelli_cad,
-                    unidade:data.previous_lunelli_unit,
-                    vaga:data.previous_lunelli_job,
-                    data:data.previous_lunelli_date,
-                };
+                let duplicateCpf = null;
+                let duplicateCpfData={name:'',cpf:'',email:''};
+                let previousLunelliCad = null;
+                let prevLunelliData={nome:'',cadastro:'',unidade:'',vaga:'',data:''};
+                
+                if (data.duplicate_cpf != undefined){
+                    duplicateCpf = data.duplicate_cpf;
+                    duplicateCpfData = {
+                        name:data.name,
+                        cpf:data.cpf,
+                        email:data.email,
+                    };    
+                }
+                
+                if (data.previous_lunelli_cad!=undefined){
+                    previousLunelliCad = data.previous_lunelli_cad;
+                    prevLunelliData={
+                        nome:data.name,
+                        cadastro:data.previous_lunelli_cad,
+                        unidade:data.previous_lunelli_unit,
+                        vaga:data.previous_lunelli_job,
+                        data:data.previous_lunelli_date,
+                    };    
+                }
 
                 if (seniorId!=null){
                     let seniorIdx=this.selectedSeniorIds.findIndex(el => el == seniorId);
