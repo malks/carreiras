@@ -207,8 +207,9 @@
 						<div class="col-sm-12 col-lg-3">
 							<label for="dob-start">País:</label>
 							<select name="country_filter" id="filter-country" class='form-control'>
+								<option value="" @if(empty($country_filter)) selected @endif>Todos</option>
 								<option value="brasil" @if(!empty($country_filter) && $country_filter=="brasil") selected @endif>Brasil</option>
-								<option value="paraguai"  @if(!empty($country_filter) && $country_filter=="paraguai") selected @endif>Paraguai</option>
+								<option value="paraguay"  @if(!empty($country_filter) && $country_filter=="paraguay") selected @endif>Paraguai</option>
 							</select>
 						</div>
 					</div>
