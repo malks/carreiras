@@ -168,7 +168,10 @@
                                             </div>
                                             <div class=" col-sm-12 col-lg-4">
                                                 <label for="data-address-country">{{ __('profile.requiredcountry') }}</label>
-                                                <input type='text' class='w-input text-field white-background' v-model="holdingData.address_country" id='data-address-country' name='address_country' value='{{$data->address_country}}'/>
+                                                <select class='w-input text-field white-background' v-model="holdingData.address_country" id='data-address-country' name='address_country'>
+                                                    <option value="Brasil" @if($data->address_country=='Brasil') selected @endif>Brasil</option>
+                                                    <option value="Paraguay"  @if($data->address_country=='Paraguay') selected @endif>Paraguay</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="row margin-top-10">
