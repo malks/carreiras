@@ -358,6 +358,11 @@ input#interests-input.interests-input, input#interests-input.interests-input:foc
     overflow-y: hidden;
 }
 
+.fixed-height-180{
+    height: 180px;
+    overflow-y: hidden;
+}
+
 .fixed-height-120{
     height: 120px;
     overflow-y: hidden;

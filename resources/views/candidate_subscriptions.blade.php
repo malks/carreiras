@@ -133,7 +133,7 @@
                                                     </div>
 
                                                     <div class="row margin-top-20">
-                                                        <div class="col fixed-height-100" v-html='(getSubscriptionsJob(job).description !=null) ? getSubscriptionsJob(job).description.split("\r\n").join("<br>") : ""'>
+                                                        <div class="col fixed-height-180" v-html='(getSubscriptionsJob(job).description !=null) ? getSubscriptionsJob(job).description.split("\r\n").join("<br>") : ""'>
                                                         </div>
                                                     </div>
                                                     <div class="row margin-top-10">
