@@ -1066,6 +1066,7 @@ class AdmController extends Controller
             'candidates.previous_lunelli_job',
             'candidates.previous_lunelli_date',
             'candidates.duplicate_cpf',
+            'candidates.uploaded_cv',
             'candidates.address_state'
         )
         ->selectRaw(DB::Raw('ANY_VALUE(subscribed.created_at) as data_candidatura'))

@@ -81,6 +81,16 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col" v-if="!gotCv"  style='margin-bottom:20px;margin-left:40px;'>
+                                    <button type='button' v-on:click="changeCv()" class="btn btn-green">Adicionar Arquivo de Currículo</button>
+                                </div>
+                                <div class="col" v-else  style='margin-bottom:20px;margin-left:40px;'>
+                                    <small><a v-bind:href="holdingData.uploaded_cv">Seu currículo </a></small><br>
+                                    <button type='button'  v-on:click="changeCv()"  class="btn btn-blue">Atualizar Arquivo de Currículo</button>
+                                </div>
+                                <input v-on:change="setCv()" type="file" name='uploaded_cv' style='display:none' id='cv-picker' accept=".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                            </div>
                             <small style='margin-left:40px;'>{{ __('profile.requireddata') }}</small>
                         </div>
                         <input type="file" style='display:none;' name='picture' id='pic-picker' accept="image/*" v-on:change="setAvatar()">

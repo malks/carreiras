@@ -306,6 +306,7 @@
 										<th></th>
 										<th></th>
 										<th></th>
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -341,6 +342,13 @@
 												<a href="/adm/candidates/print/{{$d->id}}" target='_blank' v-on:click="addViewed({{$d->id}})" > 
 													<i class="fas fa-clipboard-list action-icon" title="Visualizar Curriculum do Candidato"></i> 
 												</a>
+											</td>
+											<td class='text-center'>
+												@if (!empty($d->uploaded_cv))
+													<a href="{{$d->uploaded_cv}}" target='_blank' v-on:click="addViewed({{$d->id}})" > 
+														<i class="fas fa-download action-icon" title="Arquivo de Curriculum do Candidato"></i> 
+													</a>
+												@endif
 											</td>
 										</tr>
 									@endforeach

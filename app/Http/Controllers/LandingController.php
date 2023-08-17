@@ -485,6 +485,17 @@ $arr['what_irritates_you']="20. O que o irrita?";
             copy($tmp, $_SERVER['DOCUMENT_ROOT'].$candidate->picture);
         }
 
+        if ($request->hasFile('uploaded_cv')){
+            if (!empty($candidate->uploaded_cv) && file_exists($_SERVER['DOCUMENT_ROOT'].$candidate->uploaded_cv)){
+                unlink($_SERVER['DOCUMENT_ROOT'].$candidate->uploaded_cv);
+            }
+            $extension=$request->uploaded_cv->extension();
+            $candidate->uploaded_cv='/cvs/'.$filename.'.'.$extension;
+
+            $tmp=$request->uploaded_cv->path();
+            copy($tmp, $_SERVER['DOCUMENT_ROOT'].$candidate->uploaded_cv);
+        }
+
         $selected_languages=json_decode($dados['selected_languages'],true);
         $schoolings=json_decode($dados['schoolings'],true);
         $excluded_schoolings=json_decode($dados['excluded_schoolings'],true);
@@ -506,6 +517,8 @@ $arr['what_irritates_you']="20. O que o irrita?";
         unset($dados['selected_languages']);
         if(!empty($dados['picture']))
             unset($dados['picture']);
+        if(!empty($dados['uploaded_cv']))
+            unset($dados['uploaded_cv']);
 
         $dados['cpf'] = substr(str_replace(['.','-',',','_','!',';'],'',$dados['cpf']),0,11);
         if(!empty($dados['pis']))

@@ -672,7 +672,7 @@ function validate(whichTab){
                 ret.push({'candidate-data': 'E-mail precisa ser válido'});
             }
             if (($('#data-ddd-phone').val().length<2 || $('#data-phone').val().length<6) && ($('#data-ddd-mobile').val().length<2 || $('#data-mobile').val().length<8 ) ){
-                ret.push({'candidate-data': 'Telefone ou Celular são necessários'});
+                ret.push({'candidate-data': 'Telefone ou Celular com DDD são necessários'});
             }
             if ($('#data-dob').val().length<10){
                 ret.push({'candidate-data': 'Data de nascimento é obrigatório'});
@@ -819,6 +819,12 @@ function startProfile(screenNameHelper='',firstTab=''){
                     ret=true;
                 return ret;
             },
+            gotCv:function (){
+                let ret = false;
+                if (this.holdingData.uploaded_cv!=undefined && this.holdingData.uploaded_cv!=null && this.holdingData.uploaded_cv!="")
+                    ret=true;
+                return ret;
+            },
         },
         methods:{
             tabTo:function (trialTab){
@@ -853,6 +859,25 @@ function startProfile(screenNameHelper='',firstTab=''){
                 simulateClick(someLink);
 
                 //document.getElementById('pic-picker').dispatchEvent('click');
+            },
+            changeCv:function(){
+                var simulateClick = function (elem) {
+                    // Create our event (with options)
+                    var evt = new MouseEvent('click', {
+                        bubbles: true,
+                        cancelable: true,
+                        view: window
+                    });
+                    // If cancelled, don't dispatch our event
+                    var canceled = !elem.dispatchEvent(evt);
+                };
+                var someLink = document.querySelector('#cv-picker');
+                simulateClick(someLink);
+                //document.getElementById('pic-picker').dispatchEvent('click');
+            },
+            setCv:function (){
+                let file=document.querySelector('#cv-picker').files[0];
+                this.holdingData.uploaded_cv=URL.createObjectURL(file);
             },
             setAvatar:function (){
                 console.log("lalala");
@@ -963,6 +988,7 @@ function startProfile(screenNameHelper='',firstTab=''){
                 $('#data-interests').val(interests);
                 data=new FormData(document.querySelector('form'));
                 data.append('picture',document.querySelector('#pic-picker').files[0]);
+                data.append('uploaded_cv',document.querySelector('#cv-picker').files[0]);
                 that.errors=validate(that.currentTab);
                 if (that.errors.length==0){
                     that.saving=true;
