@@ -113,27 +113,60 @@
                             {{ __('candidatesjobs.nocandidacies') }}
                         </div>
                         <template v-for='job in subscriptions'>
-                            <div class="col-lg-4 margin-top-20"  v-show='inFilter(getSubscriptionsJob(job)) & countryFilter(getSubscriptionsJob(job))'>
+                            <div class="col-lg-6 margin-top-20"  v-show='inFilter(getSubscriptionsJob(job)) & countryFilter(getSubscriptionsJob(job))'>
 
                                 <div class="card elegant-mini">
                                     <div class="card-header  info">
                                         <h5>@{{getSubscriptionsJob(job).name}}</h5>
-                                        <small style='text-transform:uppercase'>@{{getUnit(job.unit_id).city}}</small>
+                                        <small style='text-transform:uppercase'>@{{getUnit(getSubscriptionsJob(job).unit_id).city}}</small>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row" v-show="isSubscribed(getSubscriptionsJob(job).id)">
-                                            <div class="col">
-                                                <b>{{ __('candidatesjobs.status') }}:</b>
-                                                <b :class='getStatusClass(getSubscriptionsJob(job).id)'>@{{getSubscriptionState(getSubscriptionsJob(job).id)}}</b>
-                                            </div>
-                                        </div>
+                                        <!--- SOMENTE IPAD ++  --->
+                                        <div class="d-none d-lg-block">
+                                            <div class="row">
+                                                <div :class="{ 'col-6':gotImage(getSubscriptionsJob(job))|'col' }">
+                                                    <div class="row" v-show="isSubscribed(getSubscriptionsJob(job).id)">
+                                                        <div class="col">
+                                                            <b>{{ __('candidatesjobs.status') }}:</b>
+                                                            <b :class='getStatusClass(getSubscriptionsJob(job).id)'>@{{getSubscriptionState(getSubscriptionsJob(job).id)}}</b>
+                                                        </div>
+                                                    </div>
 
-                                        <div class="row margin-top-20">
-                                            <div class="col fixed-height-50" v-html='(getSubscriptionsJob(job).description !=null) ? getSubscriptionsJob(job).description.split("\r\n").join("<br>") : ""'>
+                                                    <div class="row margin-top-20">
+                                                        <div class="col fixed-height-100" v-html='(getSubscriptionsJob(job).description !=null) ? getSubscriptionsJob(job).description.split("\r\n").join("<br>") : ""'>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row margin-top-10">
+                                                        <div class="col fixed-height-120" v-html='(getSubscriptionsJob(job).required!=null) ? getSubscriptionsJob(job).required.split("\r\n").join("<br>") : ""'>
+                                                        </div>
+                                                    </div>    
+                                                </div>
+                                                <div v-if="gotImage(getSubscriptionsJob(job))" class="col-6" style='overflow:hidden;'>
+                                                    <img :src="getSubscriptionsJob(job).picture" class='prog-image'>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="row margin-top-10">
-                                            <div class="col fixed-height-50" v-html='(getSubscriptionsJob(job).required!=null) ? getSubscriptionsJob(job).required.split("\r\n").join("<br>") : ""'>
+                                        <!--- SOMENTE MOBILE --->
+                                        <div class="d-block d-lg-none">
+                                            <div class="row">
+                                                <div v-if="gotImage(getSubscriptionsJob(job))" class="col" style='overflow:hidden;text-align:center;'>
+                                                    <img :src="getSubscriptionsJob(job).picture" style='width:340px;'>
+                                                </div>
+                                            </div>
+                                            <div class="row" v-show="isSubscribed(getSubscriptionsJob(job).id)">
+                                                <div class="col">
+                                                    <b>{{ __('candidatesjobs.status') }}:</b>
+                                                    <b :class='getStatusClass(getSubscriptionsJob(job).id)'>@{{getSubscriptionState(getSubscriptionsJob(job).id)}}</b>
+                                                </div>
+                                            </div>
+
+                                            <div class="row margin-top-20">
+                                                <div class="col fixed-height-50" v-html='(getSubscriptionsJob(job).description !=null) ? getSubscriptionsJob(job).description.split("\r\n").join("<br>") : ""'>
+                                                </div>
+                                            </div>
+                                            <div class="row margin-top-10">
+                                                <div class="col fixed-height-50" v-html='(getSubscriptionsJob(job).required!=null) ? getSubscriptionsJob(job).required.split("\r\n").join("<br>") : ""'>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row margin-top-20">

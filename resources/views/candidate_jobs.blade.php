@@ -138,7 +138,7 @@
                         </div>
 
                         <template v-for='job in jobs'>
-                            <div class="col-lg-4 margin-top-20" v-show='inFilter(job) & countryFilter(job) & cityFilter(job)'>
+                            <div class="col-lg-6 margin-top-20" v-show='inFilter(job) & countryFilter(job) & cityFilter(job)'>
 
                                 <div class="card elegant-mini" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                     <div class="card-header" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
@@ -146,22 +146,58 @@
                                         <small style='text-transform:uppercase'>@{{getUnit(job.unit_id).city}}</small>
                                     </div>
                                     <div class="card-body" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
-                                        <div class="row" v-show="isSubscribed(job.id)">
-                                            <div class="col">
-                                                <b>@{{getSubscriptionState(job.id)}}</b>
+                                        <!--- SOMENTE IPAD ++  --->
+                                        <div class="d-none d-lg-block">
+                                            <div class="row">
+                                                <div :class="{ 'col-6':gotImage(job)|'col' }">
+                                                    <div class="row" v-show="isSubscribed(job.id)">
+                                                        <div class="col">
+                                                            <b>@{{getSubscriptionState(job.id)}}</b>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row margin-top-20">
+                                                        <div class="col fixed-height-100"  v-html='(job.description!=null) ? job.description.split("\r\n").join("<br>") : ""'>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row margin-top-10">
+                                                        <div class="col fixed-height-120" v-html='(job.required!=null) ? job.required.split("\r\n").join("<br>") : ""'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div v-if="gotImage(job)" class="col-6" style='overflow:hidden;'>
+                                                    <img :src="job.picture" class='prog-image'>
+                                                </div>
+                                            </div>
+                                            <div class="row margin-top-20">
+                                                <div class="col">
+                                                    <button class="btn btn-default" v-on:click="viewJob(job)">{{ __('candidatesjobs.view') }}</button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="row margin-top-20">
-                                            <div class="col fixed-height-50"  v-html='(job.description!=null) ? job.description.split("\r\n").join("<br>") : ""'>
+                                        <!--- SOMENTE MOBILE --->
+                                        <div class="d-block d-lg-none">
+                                            <div class="row">
+                                                <div v-if="gotImage(job)" class="col" style='overflow:hidden;text-align:center;'>
+                                                    <img :src="job.picture" style='width:340px;'>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row margin-top-10">
-                                            <div class="col fixed-height-50" v-html='(job.required!=null) ? job.required.split("\r\n").join("<br>") : ""'>
+                                            <div class="row" v-show="isSubscribed(job.id)">
+                                                <div class="col">
+                                                    <b>@{{getSubscriptionState(job.id)}}</b>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row margin-top-20">
-                                            <div class="col">
-                                                <button class="btn btn-default" v-on:click="viewJob(job)">{{ __('candidatesjobs.view') }}</button>
+                                            <div class="row margin-top-20">
+                                                <div class="col fixed-height-50"  v-html='(job.description!=null) ? job.description.split("\r\n").join("<br>") : ""'>
+                                                </div>
+                                            </div>
+                                            <div class="row margin-top-10">
+                                                <div class="col fixed-height-50" v-html='(job.required!=null) ? job.required.split("\r\n").join("<br>") : ""'>
+                                                </div>
+                                            </div>
+                                            <div class="row margin-top-20">
+                                                <div class="col">
+                                                    <button class="btn btn-default" v-on:click="viewJob(job)">{{ __('candidatesjobs.view') }}</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

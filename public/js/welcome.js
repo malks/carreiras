@@ -94,6 +94,13 @@ function candidateSubscription(){
                     ret={name:''};
                 return ret;
             },
+            gotImage: function (job){
+                console.log(job);
+                let ret = true;
+                    if (job.picture=="/img/gallery.png")
+                        ret = false;
+                return ret;
+            },
             getSubscriptionState:function (job){
                 let that = this;
                 for (let i in that.subscriptions){
@@ -312,6 +319,12 @@ function candidateJobs(){
                 });
                 if (ret==undefined)
                     ret={name:''};
+                return ret;
+            },
+            gotImage: function (job){
+                let ret = true;
+                    if (job.picture=="/img/gallery.png")
+                        ret = false;
                 return ret;
             },
             getSubscriptionState:function (job){
