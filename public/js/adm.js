@@ -383,9 +383,12 @@ function recruiting(){
             },
             notingObservation:function () {
                 let obs = "";
+                let ret = "";
                 if (this.runData.notingSubscription.obs!==undefined)
                     obs=this.runData.notingSubscription.obs;
-                return obs.split("\n");
+                if (obs!="" && obs!=null)
+                    ret=obs.split("\n");
+                return ret;
             },
         },
         mounted:function () {
