@@ -996,8 +996,9 @@ class AdmController extends Controller
     }
 
     public function candidateView ($id){
-        $data=['viewed'=>1];
-        DB::table('candidates')->where('id','=',$id)->update($data);
+        $user=Auth::user();
+        $data=['candidate_id'=>$id,'user_id'=>$user->id];
+        DB::table('candidates_seenby_user')->insert($data);
     }
 
     public function summary(Request $request) {
@@ -1058,7 +1059,6 @@ class AdmController extends Controller
             'candidates.updated_at',
             'candidates.dob',
             'candidates.deficiency',
-            'candidates.viewed',
             'candidates.address_city',
             'candidates.senior_num_can',
             'candidates.previous_lunelli_cad',
@@ -1069,6 +1069,7 @@ class AdmController extends Controller
             'candidates.uploaded_cv',
             'candidates.address_state'
         )
+        ->selectRaw(DB::Raw('IF(candidates_seenby_user.user_id IS NULL,0,1) as viewed'))
         ->selectRaw(DB::Raw('ANY_VALUE(subscribed.created_at) as data_candidatura'))
         ->selectRaw(DB::Raw('ANY_VALUE(exportables.status)  as exportado'))
         ->when(!empty($request->search),function($query) use ($request) {
@@ -1125,10 +1126,15 @@ class AdmController extends Controller
                 $join->on('cdttagsrh.candidate_id','=','candidates.id');
             })->whereNull('cdttagsrh.tag_id'); 
         })
+
         ->with(['Schooling','Experience','Tagsrh'])
         ->withCount('subscriptions as subscription_amount','tagsrh as tagsrhcount')
         ->leftJoin('subscribed','subscribed.candidate_id','=','candidates.id')
         ->leftJoin('exportables','exportables.candidate_id','=','candidates.id')
+        ->leftJoin('candidates_seenby_user', function ($join) {
+            $join->on('candidates_seenby_user.candidate_id','=','candidates.id');
+            $join->on('candidates_seenby_user.user_id','=',DB::Raw("'".Auth::user()->id."'"));
+        })
         ->orderBy('candidates.updated_at','desc')
         ->orderBy('data_candidatura','desc')
         ->groupBy('candidates.id')
