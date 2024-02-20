@@ -678,41 +678,41 @@ function validate(whichTab){
     };
     switch(whichTab){
         case 'candidate-data':
-            if ($('#data-name').val().length<3){
+            if ($('#data-name').val()!=null && $('#data-name').val().length<3){
                 ret.push({'candidate-data': 'Nome completo é necessário'});
             }
             if ($('#data-email').val().match(/^[a-z0-9._+]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)==null){
                 ret.push({'candidate-data': 'E-mail precisa ser válido'});
             }
-            if (($('#data-ddd-phone').val().length<2 || $('#data-phone').val().length<6) && ($('#data-ddd-mobile').val().length<2 || $('#data-mobile').val().length<8 ) ){
+            if ((($('#data-ddd-phone').val()!= null && $('#data-ddd-phone').val().length<2) || ($('#data-phone').val()!=null && $('#data-phone').val().length<6)) && (($('#data-ddd-mobile').val()!=null && $('#data-ddd-mobile').val().length<2) || ($('#data-mobile').val() !=null && $('#data-mobile').val().length<8)) ){
                 ret.push({'candidate-data': 'Telefone ou Celular com DDD são necessários'});
             }
-            if ($('#data-dob').val().length<10){
+            if ($('#data-dob').val()!=null && $('#data-dob').val().length<10){
                 ret.push({'candidate-data': 'Data de nascimento é obrigatório'});
             }
-            if ($('#data-address-street').val().length<2 || $('#data-address-city').val().length<2 || $('#data-address-district').val().length<2 || $('#data-address-state').val().length<2 || $('#data-address-country').val().length<2 ){
+            if (($('#data-address-street').val()!=null && $('#data-address-street').val().length<2) || ($('#data-address-city').val()!=null && $('#data-address-city').val().length<2) || ($('#data-address-district').val()!=null && $('#data-address-district').val().length<2) || ($('#data-address-state').val()!=null && $('#data-address-state').val().length<2) || ($('#data-address-country').val()!=null && $('#data-address-country').val().length<2) ){
                 ret.push({'candidate-data': 'Endereço residencial é obrigatório'});
             }
-            if ($('#data-cpf').val().length!=14 && $('#data-cpf').val().length!=8 && $('#data-cpf').val().length!=7){
+            if ($('#data-cpf').val()!=null && $('#data-cpf').val().length!=14 && $('#data-cpf').val().length!=8 && $('#data-cpf').val().length!=7){
                 ret.push({'candidate-data': 'Documentos são obrigatórios'});
             }
-            if ( $('#data-natural-city').val().length<2 || $('#data-natural-state').val().length<2 || $('#data-natural-country').val().length<2 ){
+            if ( ($('#data-natural-city').val()!=null && $('#data-natural-city').val().length<2) || ($('#data-natural-state').val()!=null && $('#data-natural-state').val().length<2) || ($('#data-natural-country').val()!=null && $('#data-natural-country').val().length<2) ){
                 ret.push({'candidate-data': 'Naturalidade é obrigatória'});
             }
-            if ( $('#data-foreigner').val()==1){
-                if ($('#data-data-arrival-date').val().length<10 || $('#data-foreign-register').val().length<5 || $('#data-foreign-emitter').val().length<3 || $    ('#data-visa-expiration').val()<10 ){
+            if ( $('#data-foreigner').val()!=null && $('#data-foreigner').val()==1 ){
+                if (($('#data-data-arrival-date').val()!=null && $('#data-data-arrival-date').val().length<10) || ($('#data-foreign-register').val()!=null && $('#data-foreign-register').val().length<5) || ($('#data-foreign-emitter').val()!=null && $('#data-foreign-emitter').val().length<3) || ($    ('#data-visa-expiration').val()!=null && $('#data-visa-expiration').val()<10) ){
                     ret.push({'candidate-data': 'Se você é estrangeiro, os dados relacionados são obrigatórios'});
                 }
             }
-            if ( $('#data-deficiency').val()==1){
-                if ($('#data-deficiency-type').val()==0 || $('#data-cid').val().length==0 ){
+            if ( $('#data-deficiency').val()!=null && $('#data-deficiency').val()==1){
+                if (($('#data-deficiency-type').val() && $('#data-deficiency-type').val()==0) || ($('#data-cid').val() && $('#data-cid').val().length==0) ){
                     ret.push({'candidate-data': 'Se você tem alguma deficiência, os dados relacionados são obrigatórios'});
                 }
             }
-            if ( $('#data-mother-name').val().length<3){
+            if ( ($('#data-mother-name').val()!=null && $('#data-mother-name').val().length<3)){
                 ret.push({'candidate-data': 'Nome da mãe obrigatório'});
             }
-            if ($('#data-pretended-salary').val().length<2 ){
+            if ($('#data-pretended-salary').val()!=null && $('#data-pretended-salary').val().length<2 ){
                 ret.push({'candidate-data': 'Pretensão salarial obrigatória'});
             }
             break;
