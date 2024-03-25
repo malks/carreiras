@@ -556,6 +556,8 @@ $arr['what_irritates_you']="20. O que o irrita?";
             $dados['mother_dob']='01/01/1900';
         if (empty($dados['dob']))
             $dados['dob']='01/01/1900';
+        if (strtotime(implode("-",array_reverse(explode("/",$dados['dob']))))>=3484695600)
+            $dados['dob']='04/06/2080';
         if (empty($dados['lunelli_earlier_work_period_start']))
             $dados['lunelli_earlier_work_period_start']='01/01/1900';
         if (empty($dados['lunelli_earlier_work_period_end']))

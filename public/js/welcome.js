@@ -687,8 +687,15 @@ function validate(whichTab){
             if ((($('#data-ddd-phone').val()!= null && $('#data-ddd-phone').val().length<2) || ($('#data-phone').val()!=null && $('#data-phone').val().length<6)) && (($('#data-ddd-mobile').val()!=null && $('#data-ddd-mobile').val().length<2) || ($('#data-mobile').val() !=null && $('#data-mobile').val().length<8)) ){
                 ret.push({'candidate-data': 'Telefone ou Celular com DDD são necessários'});
             }
-            if ($('#data-dob').val()!=null && $('#data-dob').val().length<10){
+            let tempdate=null;
+            if ($('#data-dob').val()!=null && $('#data-dob').val().length<10 ){
                 ret.push({'candidate-data': 'Data de nascimento é obrigatório'});
+            }
+            else if ($('#data-dob').val()!=null){
+                tempdate=new Date($('#data-dob').val().split("/").reverse().join("-"));
+            }
+            if ($('#data-dob').val()!=null && tempdate!=null && tempdate.getTime()>=3484684800000){
+                ret.push({'candidate-data': 'Limite da data de nascimento: 04/06/2080'});
             }
             if (($('#data-address-street').val()!=null && $('#data-address-street').val().length<2) || ($('#data-address-city').val()!=null && $('#data-address-city').val().length<2) || ($('#data-address-district').val()!=null && $('#data-address-district').val().length<2) || ($('#data-address-state').val()!=null && $('#data-address-state').val().length<2) || ($('#data-address-country').val()!=null && $('#data-address-country').val().length<2) ){
                 ret.push({'candidate-data': 'Endereço residencial é obrigatório'});
