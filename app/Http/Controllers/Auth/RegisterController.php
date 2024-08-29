@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use DB;
 
 
 class RegisterController extends Controller
@@ -51,8 +52,10 @@ class RegisterController extends Controller
     {
         $curl = curl_init();
 
+        $captcha=DB::table('captcha')->first();
+
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://www.google.com/recaptcha/api/siteverify?secret=6LfI3jEqAAAAACCiQl9QIs6PgmdpADt2UftYI5Wx&response=$response",
+            CURLOPT_URL => "https://www.google.com/recaptcha/api/siteverify?secret=$captcha->key&response=$response",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
