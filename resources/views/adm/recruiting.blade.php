@@ -322,6 +322,7 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -347,6 +348,11 @@
                                                             </option>
                                                         </template>
                                                     </select>
+                                                </td>
+                                                <td class='text-right'>
+                                                    <a target='_blank' v-if="getCandidate(subscription).uploaded_cv" :href="getCandidate(subscription).uploaded_cv"> 
+                                                        <i class="fas fa-download action-icon" title="Visualizar CV Adicionado"></i> 
+                                                    </a>
                                                 </td>
                                                 <td class='text-right'>
                                                     <a :href="'/adm/candidates/edit/'+getCandidate(subscription).id" target='_blank' v-on:click="viewCandidate(subscription)"> 
