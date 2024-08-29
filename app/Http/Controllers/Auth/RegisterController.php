@@ -47,6 +47,35 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    private function validCaptcha($response)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://www.google.com/recaptcha/api/siteverify?secret=6LfI3jEqAAAAACCiQl9QIs6PgmdpADt2UftYI5Wx&response=$response",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+    "secret":"6LeDKVMmAAAAAF1ZAASR79OFby6iqi0yZDnnM4i1",
+    "response":"'.$response.'"
+}',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return $response;
+    }
+
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -60,6 +89,7 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'policy_accept' =>['required', 'min:1'],
+            'g-recaptcha-response' => 'required',
         ]);
     }
 
@@ -71,6 +101,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $response="-";
+        if (!empty($data['g-recaptcha-response']))
+            $response = $data['g-recaptcha-response'];
+        
+        $response_validated = $this->validCaptcha($response);
+
+        if (!empty($response_validated)) {
+            $json = json_decode($response_validated);
+            if (!isset($json->success) || $json->success != true) {
+                return Redirect::to(url('/register'))->with('error', "Necessário fazer a validação do Captcha.")
+                    ->withInput();
+            }
+        }
+
         $role=Role::where('name','=','candidate')->first();
         if (empty($role))
             $role = Role::create(['name' => 'candidate']);

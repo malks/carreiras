@@ -15,7 +15,7 @@
 
                 <div class="card-body">
                     <div class="col-8 offset-2">
-                        <form action="/register" method="post" class='margin-top-30'>
+                        <form action="/register" id='registro-form' method="post" class='margin-top-30'>
                             {{ csrf_field() }}
 
                             {{-- Name field --}}
@@ -74,7 +74,12 @@
                             </div>
                     
                             {{-- Register button --}}
-                            <button type="submit" class="btn btn-block btn-default">
+                            <button 
+                                data-sitekey="6LfI3jEqAAAAAJ55EuMFV190WAZsmA_T1C_UEswM"
+                                data-callback='onSubmit' 
+                                data-action='submit'                
+                                type="submit"
+                                class="g-recaptcha btn btn-block btn-default">
                                 {{ __('register.accountcreate') }}
                             </button>
 
@@ -96,3 +101,11 @@
     </div>
 
 @stop
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+    function onSubmit(token) {
+        document.getElementById("registro-form").submit();
+    }
+</script>
+ 
