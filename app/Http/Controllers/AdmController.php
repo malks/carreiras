@@ -1220,7 +1220,7 @@ class AdmController extends Controller
                 'filter_updated_at_start'=>$request->filter_updated_at_start,
                 'filter_dob_start'=>$request->filter_dob_start,
                 'filter_dob_end'=>$request->filter_dob_end,
-                'filter_prefered_work_period'=>$request->filter_prefered_work_period,
+                'filter_prefered_work_period'=>$filter_prefered_work_period,
                 'viewed_list'=>$viewed_list,
                 'country_filter'=>$request->country_filter,
             ]
