@@ -1196,6 +1196,11 @@ class AdmController extends Controller
         if (!empty($request->filter_tagrh))
             $tagsrh_filters=$request->filter_tagrh;
 
+
+        $filter_prefered_work_period=[];
+        if (!empty($request->filter_prefered_work_period))
+            $filter_prefered_work_period=$request->filter_prefered_work_period;
+
         return view('adm.candidates.list')->with(
             [
                 'usermail'=>$usermail,
