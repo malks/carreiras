@@ -706,7 +706,7 @@ function recruiting(){
                 for (let i in this.otherData.candidateWorkPeriodSearch){
                     if(this.otherData.candidateWorkPeriodSearch[i]){
                         contain=false;
-                        if (candidate.prefered_work_period.split(",").indexOf(i)!==-1){
+                        if (candidate.prefered_work_period!=null && candidate.prefered_work_period.split(",").indexOf(i)!==-1){
                             contain=true;
                             break;
                         }

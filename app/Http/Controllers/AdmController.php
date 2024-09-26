@@ -1087,6 +1087,19 @@ class AdmController extends Controller
                 $query->orWhere('address_state','like',"%$request->searchAddress%");
             });
         })
+        ->when(!empty($request->filter_prefered_work_period) && is_array($request->filter_prefered_work_period) && count($request->filter_prefered_work_period)>0,function($query) use ($request) {
+            return $query->where(function ($inquery) use ($request) {
+                $inquery->where('prefered_work_period','like',DB::Raw("'%".$request->filter_prefered_work_period[0]."%'"));
+                if (count($request->filter_prefered_work_period)>1){
+                    foreach($request->filter_prefered_work_period as $k=>$work_period){
+                        if ($k==0)
+                            continue;
+                        $inquery->orWhere('prefered_work_period','like',DB::Raw("'%".$work_period."%'"));
+                    }
+                }
+                return $inquery;
+            });
+        })
         ->when(!empty($request->country_filter),function($query) use ($request) {
             $query->where('address_country','=',"$request->country_filter");
         })
@@ -1202,6 +1215,7 @@ class AdmController extends Controller
                 'filter_updated_at_start'=>$request->filter_updated_at_start,
                 'filter_dob_start'=>$request->filter_dob_start,
                 'filter_dob_end'=>$request->filter_dob_end,
+                'filter_prefered_work_period'=>$request->filter_prefered_work_period,
                 'viewed_list'=>$viewed_list,
                 'country_filter'=>$request->country_filter,
             ]

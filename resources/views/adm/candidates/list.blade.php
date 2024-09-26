@@ -257,6 +257,31 @@
 							<label for="data-end">Fim Última Atualização:</label>
 							<input type="date" class="form-control" id='data-end' name='filter_updated_at_end' value='{{$filter_updated_at_end}}'>
 						</div>
+						<div class="col-sm12 col-lg-6">
+							<div class="row">
+								<div class="col-lg-12">
+									<label >Filtrar Turnos:</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-2">
+									<input type="checkbox" class='form-control' @if(in_array(1,$filter_prefered_work_period)) checked @endif value='1' name='filter_prefered_work_period[]' id='data-prefered-work-period1' style='float:left;width:15px;'>
+									<label for="data-prefered-work-period1" style="float: left; font-weight: normal; font-size: 10pt;margin-left:15px;margin-top:9px;">1º Turno</label>
+								</div>
+								<div class="col-lg-2">
+									<input type="checkbox" class='form-control' @if(in_array(2,$filter_prefered_work_period)) checked @endif value='2' name='filter_prefered_work_period[]' id='data-prefered-work-period2' style='float:left;width:15px;'>
+									<label for="data-prefered-work-period2" style="float: left; font-weight: normal; font-size: 10pt;margin-left:15px;margin-top:9px;">2º Turno</label>
+								</div>
+								<div class="col-lg-2">
+									<input type="checkbox" class='form-control' @if(in_array(3,$filter_prefered_work_period)) checked @endif value='3' name='filter_prefered_work_period[]' id='data-prefered-work-period3' style='float:left;width:15px;'>
+									<label for="data-prefered-work-period3" style="float: left; font-weight: normal; font-size: 10pt;margin-left:15px;margin-top:9px;">3º Turno</label>
+								</div>
+								<div class="col-lg-2">
+									<input type="checkbox" class='form-control' @if(in_array(4,$filter_prefered_work_period)) checked @endif value='4' name='filter_prefered_work_period[]' id='data-prefered-work-period4' style='float:left;width:15px;'>
+									<label for="data-prefered-work-period4" style="float: left; font-weight: normal; font-size: 10pt;margin-left:15px;margin-top:9px;">Horário Comercial</label>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="row margin-top-10">
 						<div class="col-sm-12 col-lg-3">
