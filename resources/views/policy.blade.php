@@ -252,6 +252,15 @@
                 </li>
                 </ol>
                 <p align="justify"><span style="font-size: medium;"><span style="color: #333333;"><span style="font-family: Calibri, serif;"><span>Essa política de privacidade poderá ser atualizada a qualquer momento, sempre que necessário para informar adequadamente aos titulares de dados pessoais, em função de alterações nos dados tratados, nas normas regulamentadoras ou nas condições de tratamento aqui explicitadas. </span></span></span></span></p>
+
+                <p align="justify">&nbsp;</p>
+                <ol start="14">
+                <li>
+                <p align="justify"><span style="color: #333333;"> <span style="font-size: medium;"><strong><span style="font-family: Calibri, serif;"><span style="font-size: large;">Uso de Inteligência Artificial (IA)</span></span></strong></span></span></p>
+                </li>
+                </ol>
+                <p align="justify"><span style="font-size: medium;"><span style="color: #333333;"><span style="font-family: Calibri, serif;"><span>A Lunelli poderá utilizar ferramentas de Inteligência Artificial (IA) para processar e analisar os dados pessoais coletados, sempre em conformidade com as bases legais previstas pela LGPD e demais legislações aplicáveis. O uso de IA será aplicado com o objetivo de melhorar os nossos serviços, personalizar as interações com nossos clientes, otimizar processos internos e realizar análises preditivas de consumos, tendências e comportamentos. Os dados tratados por IA serão utilizados de forma ética, segura e transparente, garantindo a proteção e privacidade dos titulares. Além disso, asseguramos que qualquer decisão automatizada envolvendo os dados dos titulares, realizada por meio de IA, poderá ser revisada por um colaborador humano, caso solicitado. </span></span></span></span></p>
+
                 <p align="justify">&nbsp;</p>
                 <p align="center"><span style="font-size: medium;"><span style="color: #333333;"><span style="font-family: Calibri, serif;"><span style="font-size: large;"><span>Guaramirim, SC, novembro de 2020.</span></span></span></span></span></p>
                 <p align="center"><span style="font-size: medium;"><strong><span style="color: #333333;"><span style="font-family: Calibri, serif;"><span style="font-size: large;">Lunelli</span></span></span></strong></span></p>
