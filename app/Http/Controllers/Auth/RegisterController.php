@@ -64,9 +64,9 @@ class RegisterController extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-    "secret":"6LeDKVMmAAAAAF1ZAASR79OFby6iqi0yZDnnM4i1",
-    "response":"'.$response.'"
-}',
+                "secret":"6LeDKVMmAAAAAF1ZAASR79OFby6iqi0yZDnnM4i1",
+                "response":"'.$response.'"
+            }',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json'
             ),
@@ -141,8 +141,8 @@ class RegisterController extends Controller
         $candidate->email=$data['email'];
         $candidate->save();
 
-        Mail::to($candidate->email,$candidate->name)->send(new Register($candidate));
         $user->assignRole('candidate');
+        Mail::to($candidate->email,$candidate->name)->send(new Register($candidate));
         return $user;
     }
 }
