@@ -37,7 +37,7 @@ class StateChange extends Mailable
         $data=StateMail::join('states_mails_states','states_mails_states.mail_id','=','states_mails.id')->where('states_mails_states.state_id','=',$this->state->id)->orderBy('states_mails_states.updated_at','desc')->first();
         if (!empty($data)){
             return $this
-            ->from('recrutamento@lunelli.com.br','Lunelli Carreiras')
+            ->from('servicos.email2@lunelli.com.br','Lunelli Carreiras')
             ->subject($data->subject.' | Lunelli Carreiras')
             ->view('adm.states_mails.mail')->with([
                 'candidate'=>$this->candidate,
