@@ -74,6 +74,13 @@
                         <label for="">Código Hierarquia do Cargo Senior</label>
                         <input type="text" class='form-control text-right' name='cod_hie_senior' value='{{$data->cod_hie_senior}}'>
                     </div>
+                    <div class="col-lg-1">
+                        <label for="">Disponivel a PCDs?</label><br>
+                        <select name="pcd" class='form-control'>
+                            <option @if ($data->pcd==0) selected @endif value="0">Não</option>
+                            <option @if ($data->pcd==1) selected @endif value="1">Sim</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="row margin-top-10">
                     <input type='hidden' name='id' value='{{$data->id}}'>
