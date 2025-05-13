@@ -93,6 +93,12 @@
                                                     <span> @{{viewingJob.name}}</span>
                                                 </div>
                                             </div>
+                                            <div v-show="viewingJob.pcd" class="row margin-top-30">
+                                                <div class="col-lg-12">
+                                                    <label for="" class="control-label">PCD:</label>
+                                                    <span>Esta vaga também é destinada a <b>Pessoas com Deficiência</b></span>
+                                                </div>
+                                            </div>
                                             <div class="row margin-top-30">
                                                 <div class="col-lg-12">
                                                     <label for="" class="control-label">{{ __('candidatesjobs.description') }}:</label>
