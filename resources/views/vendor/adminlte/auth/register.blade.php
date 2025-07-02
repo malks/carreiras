@@ -35,7 +35,7 @@
                                     value="{{ old('email') }}" placeholder="{{ __('register.email') }}">
                                 @if($errors->has('email'))
                                     <div class="invalid-feedback">
-                                        <strong>{{ __('register.invalidemail') }}</strong>
+                                        <strong>{{ $errors->first('email') }}</strong>
                                     </div>
                                 @endif
                             </div>

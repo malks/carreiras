@@ -93,6 +93,10 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'policy_accept' =>['required', 'min:1'],
             'g-recaptcha-response' => 'required',
+        ],
+        [
+            'email.unique' => 'Já existe um cadastro com este e-mail em nosso sistema.',
+            'email.email' => 'Email inválido.',
         ]);
     }
 
