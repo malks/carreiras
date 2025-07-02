@@ -35,4 +35,6 @@ return [
     'participate'=>'Participar',
     'loginparticipate'=>'Faça o Login para Participar',
     'participating'=>'Participando',
+    'inclusao1'=>'Na Lunelli, valorizamos a diversidade em todas as suas formas. Incentivamos a candidatura de pessoas negras, indígenas, com deficiência, LGBTQIAP+, mulheres, pessoas 50+ e de todas as etnias, culturas e origens.',
+    'inclusao2'=>'Buscamos um ambiente de trabalho cada vez mais respeitoso, colaborativo e aberto à diversidade, com profissionais com diferentes experiências de vida, habilidades e perspectivas. Acreditamos que um ambiente diverso é essencial para a inovação, o respeito e o crescimento coletivo.',
 ];

@@ -24,6 +24,14 @@
                 
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-md-12">
+                            <small>
+                                <p>{{__('candidatesjobs.inclusao1')}}</p>
+                                <p>{{__('candidatesjobs.inclusao2')}}</p>
+                             </small><br>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-3 col-xs-12">
                             <label for="country-filter">{{ __('candidatesjobs.countries') }}</label>
                             <select id="country-filter"  class='w-input text-field white-background' v-model='filterCountry'>

@@ -26,4 +26,6 @@ return [
     'countries'=>'País',
     'brazil'=>'Brasil',
     'paraguay'=>'Paraguay',
+    'inclusao1' => 'En Lunelli, valoramos la diversidad en todas sus formas. Incentivamos la postulación de personas negras, indígenas, con discapacidad, LGBTQIAP+, mujeres, personas mayores de 50 años y de todas las etnias, culturas y orígenes.',
+    'inclusao2' => 'Buscamos crear un ambiente de trabajo cada vez más respetuoso, colaborativo y abierto a la diversidad, con profesionales que aporten diferentes experiencias de vida, habilidades y perspectivas. Creemos que un entorno diverso es esencial para la innovación, el respeto y el crecimiento colectivo.',
 ];
