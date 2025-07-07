@@ -4,6 +4,11 @@
 @extends('layouts/public')
 
 @section('content')
+    <noscript>
+        <div style="color: red; font-weight: bold;">
+            JavaScript está desabilitado. Por favor, habilite o JavaScript para usar essa página.
+        </div>
+    </noscript>
     <div class='row'>
         <div class="col-12">
             <input type='hidden' id='current-language' value='{{$curlang}}'/>

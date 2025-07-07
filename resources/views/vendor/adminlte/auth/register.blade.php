@@ -29,6 +29,17 @@
                                 @endif
                             </div>
 
+                            {{-- CPF field --}}
+                            <div class="input-group mb-3">
+                                <input type="text" id='cpf' name="cpf" class="form-control {{ $errors->has('cpf') ? 'is-invalid' : '' }}"
+                                    value="{{ old('cpf') }}" placeholder="CPF" autofocus>
+                                @if($errors->has('cpf'))
+                                    <div class="invalid-feedback">
+                                        <strong>{{ $errors->first('cpf') }}</strong>
+                                    </div>
+                                @endif
+                            </div>
+
                             {{-- Email field --}}
                             <div class="input-group mb-3">
                                 <input type="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
@@ -99,13 +110,15 @@
         </div>
         <div class="row margin-top-50"></div>
     </div>
-
 @stop
-
-<script src="https://www.google.com/recaptcha/api.js"></script>
-<script>
-    function onSubmit(token) {
-        document.getElementById("registro-form").submit();
-    }
-</script>
- 
+@section('js')
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("registro-form").submit();
+        }
+        jQuery(document).ready(function(){
+            jQuery('#cpf').mask('000.000.000-00', {reverse: true});
+        })
+    </script>
+@endsection

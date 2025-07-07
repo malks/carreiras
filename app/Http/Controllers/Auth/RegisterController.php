@@ -90,11 +90,13 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'cpf' => ['required', 'string', 'max:20', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'policy_accept' =>['required', 'min:1'],
             'g-recaptcha-response' => 'required',
         ],
         [
+            'cpf.unique' => 'Este CPF já existe em nosso sistema.',
             'email.unique' => 'Já existe um cadastro com este e-mail em nosso sistema.',
             'email.email' => 'Email inválido.',
         ]);
@@ -135,6 +137,7 @@ class RegisterController extends Controller
         $user= User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'cpf' => str_replace([".","-","/"],"",$data['cpf']),
             'password' => Hash::make($data['password']),
             'policy_accept' => $data['policy_accept'],
         ]);
@@ -142,6 +145,7 @@ class RegisterController extends Controller
         $candidate=new Candidate;
         $candidate->user_id=$user->id;
         $candidate->name=$data['name'];
+        $candidate->cpf = str_replace([".","-","/"],"",$data['cpf']);
         $candidate->email=$data['email'];
         $candidate->save();
 

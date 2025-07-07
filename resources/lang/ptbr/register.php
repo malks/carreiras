@@ -9,7 +9,6 @@ return [
     'email'=>'Email',
     'firststep'=>'seu primeiro passo',
     'requiredfield'=>'Campo obrigatório',
-    'invalidemail'=>'Precisa ser um e-mail válido',
     '8charpassword'=>'Senha tem que ter no mínimo 8 caracteres',
     'unmatchedpasswords'=>'Confirmação de senha tem que conferir com a senha',
     'imawareaccept'=>'Estou ciente e aceito os',

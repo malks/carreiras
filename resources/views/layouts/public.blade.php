@@ -214,7 +214,12 @@
 
         <script src="{{ asset('js/plugins.js') }}" type="text/javascript"></script>
         <script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('js/jmask.js') }}" type="text/javascript"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
         <script src="{{ asset('js/welcome.js?v=').date('U') }}" type="text/javascript"></script>
+
+        @stack('js')
+        @yield('js')
     </body>
+
 </html>

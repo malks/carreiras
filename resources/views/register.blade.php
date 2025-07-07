@@ -30,11 +30,11 @@
                     <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
                 </div>
             </div>
-            @if($errors->has('email'))
-                <div class="invalid-feedback">
-                    <strong>{{ $errors->first('email') }}</strong>
-                </div>
-            @endif
+@error('email')
+    <div class="invalid-feedback">
+        <strong>{{ $message }}</strong>
+    </div>
+@enderror
         </div>
 
         {{-- Password field --}}
