@@ -96,6 +96,7 @@
                                 </div>
                                 <input v-on:change="setCv()" type="file" name='uploaded_cv' style='display:none' id='cv-picker' accept=".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                             </div>
+                            <small style='margin-left:40px;'>*Após preencher seus dados, <b>clique no botão salvar</b> no final da página.</small><br>
                             <small style='margin-left:40px;'>{{ __('profile.requireddata') }}</small>
                         </div>
                         <input type="file" style='display:none;' name='picture' id='pic-picker' accept="image/*" v-on:change="setAvatar()">
