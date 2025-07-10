@@ -105,21 +105,23 @@ class LandingController extends Controller
     }
 
     public function buscaCep(Request $request) {
-        $req_cep=str_replace(["-","."],"",$request->cep);
+        $req_cep=str_replace(["-","."],"",$request->cep ?? "");
         $address = Address::where('zip','=',$req_cep)->first();
-        if (empty($address)){
+        if (empty($address) && $req_cep!=''){
             $response=Http::get("https://viacep.com.br/ws/{$req_cep}/json/");
             $vals=json_decode($response,true);
 
-            $address=new Address;
-            $address->zip=str_replace(["-","."],"",$vals['cep']);
-            $address->city=$vals['localidade'];
-            $address->state=$vals['uf'];
-            $address->street=$vals['logradouro'];
-            $address->district=$vals['bairro'];
-            $address->complement=$vals['complemento'];
+            if (!empty($vals['cep'])){
+                $address=new Address;
+                $address->zip=str_replace(["-","."],"",$vals['cep']);
+                $address->city=$vals['localidade'];
+                $address->state=$vals['uf'];
+                $address->street=$vals['logradouro'];
+                $address->district=$vals['bairro'];
+                $address->complement=$vals['complemento'];
 
-            $address->save();
+                $address->save();
+            }
         }
         if (!empty($address))
             $address=$address->toJson();

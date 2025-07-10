@@ -942,11 +942,13 @@ function startProfile(screenNameHelper='',firstTab=''){
                         data: form,
                         success:function (data){
                             console.log(data);
-                            jdata= JSON.parse(data);
-                            for (let i in jdata){
-                                console.log(i);
-                                if (i!='zip')
-                                    that.holdingData['address_'+i]=jdata[i];
+                            if (data && data!=null && data!=''){
+                                jdata= JSON.parse(data);
+                                for (let i in jdata){
+                                    console.log(i);
+                                    if (i!='zip')
+                                        that.holdingData['address_'+i]=jdata[i];
+                                }
                             }
                         }
                     })
