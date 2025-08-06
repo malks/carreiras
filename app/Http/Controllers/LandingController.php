@@ -498,12 +498,12 @@ $arr['what_irritates_you']="20. O que o irrita?";
             copy($tmp, $_SERVER['DOCUMENT_ROOT'].$candidate->uploaded_cv);
         }
 
-        $selected_languages=json_decode($dados['selected_languages'],true);
-        $schoolings=json_decode($dados['schoolings'],true);
-        $excluded_schoolings=json_decode($dados['excluded_schoolings'],true);
-        $experiences=json_decode($dados['experiences'],true);
-        $excluded_experiences=json_decode($dados['excluded_experiences'],true);
-        $interests=json_decode($dados['interests'],true);
+        $selected_languages=json_decode($dados['selected_languages'] ?? [],true);
+        $schoolings=json_decode($dados['schoolings'] ?? [],true);
+        $excluded_schoolings=json_decode($dados['excluded_schoolings'] ?? [],true);
+        $experiences=json_decode($dados['experiences'] ?? [],true);
+        $excluded_experiences=json_decode($dados['excluded_experiences'] ?? [],true);
+        $interests=json_decode($dados['interests'] ?? [],true);
 
         Schooling::whereIn('id',$excluded_schoolings)->delete();
         Experience::whereIn('id',$excluded_experiences)->delete();
@@ -594,7 +594,8 @@ $arr['what_irritates_you']="20. O que o irrita?";
 
         DB::table('candidate_languages')->where(['candidate_id'=>$candidate->id])->delete();
         foreach ($selected_languages as $lang){
-            DB::table('candidate_languages')->insert(['candidate_id'=>$candidate->id,'language_id'=>$lang['id'],'level'=>$lang['pivot']['level']]);
+            if (!empty($lang['id']) && !empty($candidate->id))
+                DB::table('candidate_languages')->insert(['candidate_id'=>$candidate->id,'language_id'=>$lang['id'],'level'=>$lang['pivot']['level'] ?? 'basic']);
         }
 
         $new_schoolings=[];
@@ -611,7 +612,6 @@ $arr['what_irritates_you']="20. O que o irrita?";
             foreach($schooling_data as $k=>$d){
                 $schooling->{$k}=$d;
             }
-            $schooling->save();
 
             if(!empty($schooling_data['start']))
                 $schooling->start=$schooling_data['start'];
@@ -623,6 +623,7 @@ $arr['what_irritates_you']="20. O que o irrita?";
             else
                 $schooling->end='1900-02-01';
 
+            $schooling->save();
             array_push($new_schoolings,$schooling->toArray());
         }
 
