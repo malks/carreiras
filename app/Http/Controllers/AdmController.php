@@ -601,8 +601,75 @@ class AdmController extends Controller
                 return $subquery;
             });
         })*/
-        ->with(['tags','subscribers','subscribers.interests','subscribers.experience','subscribers.tagsrh','field','unit'])
-        ->withCount(['subscriptions as subscription_amount'=>function ($query) {$query->where('active','=',1);}])
+        ->with(['tags','subscribers'=>function($query) {
+            $query->where(function ($where) {
+                $where->whereNotNull('candidates.name')
+                    ->whereNotNull('candidates.cpf')
+                    ->whereNotNull('candidates.address_street')
+                    ->whereNotNull('candidates.address_city')
+                    ->whereNotNull('candidates.address_country')
+                    ->whereNotNull('candidates.address_state')
+                    ->whereNotNull('candidates.dob')
+                    ->where('candidates.address_street',"!=","")
+                    ->where('candidates.address_city',"!=","")
+                    ->where('candidates.address_country',"!=","")
+                    ->where('candidates.address_state',"!=","")
+                    ->where('candidates.dob',"!=","1900-01-01")
+                    ->where('candidates.cpf',"!=","")
+                    ->where('candidates.name',"!=","");
+            })->where(function($where){
+                $where->where(function ($phone_where) {
+                    $phone_where->whereNotNull('candidates.ddi_phone')
+                        ->whereNotNull('candidates.ddd_phone')
+                        ->whereNotNull('candidates.phone')
+                        ->where('candidates.ddi_phone',"!=","")
+                        ->where('candidates.ddd_phone',"!=","")
+                        ->where('candidates.phone',"!=","");
+                })->orWhere(function($mobile_where) {
+                    $mobile_where->whereNotNull('candidates.ddi_mobile')
+                        ->whereNotNull('candidates.ddd_mobile')
+                        ->whereNotNull('candidates.mobile')
+                        ->where('candidates.ddi_mobile',"!=","")
+                        ->where('candidates.ddd_mobile',"!=","")
+                        ->where('candidates.mobile',"!=","");
+                });
+            });
+        },'subscribers.interests','subscribers.experience','subscribers.tagsrh','field','unit'])
+        ->withCount(['subscribers as subscription_amount'=>function ($query) {
+            $query->where('active','=',1)
+                ->where(function ($where) {
+                    $where->whereNotNull('candidates.name')
+                        ->whereNotNull('candidates.cpf')
+                        ->whereNotNull('candidates.address_street')
+                        ->whereNotNull('candidates.address_city')
+                        ->whereNotNull('candidates.address_country')
+                        ->whereNotNull('candidates.address_state')
+                        ->whereNotNull('candidates.dob')
+                        ->where('candidates.address_street',"!=","")
+                        ->where('candidates.address_city',"!=","")
+                        ->where('candidates.address_country',"!=","")
+                        ->where('candidates.address_state',"!=","")
+                        ->where('candidates.dob',"!=","1900-01-01")
+                        ->where('candidates.cpf',"!=","")
+                        ->where('candidates.name',"!=","");
+                })->where(function($where){
+                    $where->where(function ($phone_where) {
+                        $phone_where->whereNotNull('candidates.ddi_phone')
+                            ->whereNotNull('candidates.ddd_phone')
+                            ->whereNotNull('candidates.phone')
+                            ->where('candidates.ddi_phone',"!=","")
+                            ->where('candidates.ddd_phone',"!=","")
+                            ->where('candidates.phone',"!=","");
+                    })->orWhere(function($mobile_where) {
+                        $mobile_where->whereNotNull('candidates.ddi_mobile')
+                            ->whereNotNull('candidates.ddd_mobile')
+                            ->whereNotNull('candidates.mobile')
+                            ->where('candidates.ddi_mobile',"!=","")
+                            ->where('candidates.ddd_mobile',"!=","")
+                            ->where('candidates.mobile',"!=","");
+                    });
+                });
+        }])
         ->withCount(['requisitions as requisition_amount'=>function ($query) {$query->where('status','=',1);}])
         ->orderByRaw('subscription_amount desc')
         /*->skip($curpage*20)

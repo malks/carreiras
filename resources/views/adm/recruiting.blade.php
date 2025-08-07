@@ -333,7 +333,7 @@
                                         <tr v-if="runData.updating && (runData.subscriptions==null || runData.subscriptions.length==0)"><td>Carregando...</td></tr>
                                         <tr v-else-if="!runData.updating && (runData.subscriptions==null || runData.subscriptions.length==0)"><td>Nenhum resultado encontrado.</td></tr>
                                         <template v-else v-for="(subscription,subx) in runData.subscriptions">
-                                            <tr v-if="candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagrhFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription) && candidateWokrPeriodFilter(getCandidate(subscription))" class='select-sized'>
+                                            <tr v-if="getCandidate(subscription)!=undefined && candidateNameFilter(getCandidate(subscription)) && candidateLocFilter(getCandidate(subscription)) && candidateExpFilter(getCandidate(subscription)) && candidateTagrhFilter(getCandidate(subscription)) && candidateTagFilter(getCandidate(subscription)) && specificFilter(subscription) && candidateWokrPeriodFilter(getCandidate(subscription))" class='select-sized'>
                                                 <td>@{{ getCandidate(subscription).senior_num_can }}</td>
                                                 <td>@{{ getCandidate(subscription).name }}</td>
                                                 <td>@{{ getCandidate(subscription).address_city }}</td>
