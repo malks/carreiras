@@ -1048,6 +1048,8 @@ class AdmController extends Controller
             $query->whereIn('tag_id',$request->filter_tagrh);
         });
 
+        $minimum_requirements=$request->minimum_requirements ?? 1;
+
         $data=Candidate::
         distinct()
         ->select(
@@ -1072,6 +1074,40 @@ class AdmController extends Controller
         ->selectRaw(DB::Raw('IF(candidates_seenby_user.user_id IS NULL,0,1) as viewed'))
         ->selectRaw(DB::Raw('ANY_VALUE(subscribed.created_at) as data_candidatura'))
         ->selectRaw(DB::Raw('ANY_VALUE(exportables.status)  as exportado'))
+        ->when(!empty($minimum_requirements), function ($query) {
+            $query->where(function ($where) {
+                $where->whereNotNull('candidates.name')
+                    ->whereNotNull('candidates.cpf')
+                    ->whereNotNull('candidates.address_street')
+                    ->whereNotNull('candidates.address_city')
+                    ->whereNotNull('candidates.address_country')
+                    ->whereNotNull('candidates.address_state')
+                    ->whereNotNull('candidates.dob')
+                    ->where('candidates.address_street',"!=","")
+                    ->where('candidates.address_city',"!=","")
+                    ->where('candidates.address_country',"!=","")
+                    ->where('candidates.address_state',"!=","")
+                    ->where('candidates.dob',"!=","1900-01-01")
+                    ->where('candidates.cpf',"!=","")
+                    ->where('candidates.name',"!=","");
+            })->where(function($where){
+                $where->where(function ($phone_where) {
+                    $phone_where->whereNotNull('candidates.ddi_phone')
+                        ->whereNotNull('candidates.ddd_phone')
+                        ->whereNotNull('candidates.phone')
+                        ->where('candidates.ddi_phone',"!=","")
+                        ->where('candidates.ddd_phone',"!=","")
+                        ->where('candidates.phone',"!=","");
+                })->orWhere(function($mobile_where) {
+                    $mobile_where->whereNotNull('candidates.ddi_mobile')
+                        ->whereNotNull('candidates.ddd_mobile')
+                        ->whereNotNull('candidates.mobile')
+                        ->where('candidates.ddi_mobile',"!=","")
+                        ->where('candidates.ddd_mobile',"!=","")
+                        ->where('candidates.mobile',"!=","");
+                });
+            });
+        })
         ->when(!empty($request->search),function($query) use ($request) {
             $query->where( function ($inquery) use ($request){
                 $inquery->where('candidates.name','like',"%$request->search%");
@@ -1139,7 +1175,6 @@ class AdmController extends Controller
                 $join->on('cdttagsrh.candidate_id','=','candidates.id');
             })->whereNull('cdttagsrh.tag_id'); 
         })
-
         ->with(['Schooling','Experience','Tagsrh'])
         ->withCount('subscriptions as subscription_amount','tagsrh as tagsrhcount')
         ->leftJoin('subscribed','subscribed.candidate_id','=','candidates.id')
@@ -1221,6 +1256,7 @@ class AdmController extends Controller
                 'filter_dob_start'=>$request->filter_dob_start,
                 'filter_dob_end'=>$request->filter_dob_end,
                 'filter_prefered_work_period'=>$filter_prefered_work_period,
+                'minimum_requirements'=>$minimum_requirements,
                 'viewed_list'=>$viewed_list,
                 'country_filter'=>$request->country_filter,
             ]

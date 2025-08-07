@@ -257,6 +257,8 @@
 							<label for="data-end">Fim Última Atualização:</label>
 							<input type="date" class="form-control" id='data-end' name='filter_updated_at_end' value='{{$filter_updated_at_end}}'>
 						</div>
+					</div>
+					<div class="row margin-top-10">
 						<div class="col-sm12 col-lg-6">
 							<div class="row">
 								<div class="col-lg-12">
@@ -276,11 +278,20 @@
 									<input type="checkbox" class='form-control' @if(in_array(3,$filter_prefered_work_period)) checked @endif value='3' name='filter_prefered_work_period[]' id='data-prefered-work-period3' style='float:left;width:15px;'>
 									<label for="data-prefered-work-period3" style="float: left; font-weight: normal; font-size: 10pt;margin-left:15px;margin-top:9px;">3º Turno</label>
 								</div>
-								<div class="col-lg-2">
+								<div class="col-lg-4">
 									<input type="checkbox" class='form-control' @if(in_array(4,$filter_prefered_work_period)) checked @endif value='4' name='filter_prefered_work_period[]' id='data-prefered-work-period4' style='float:left;width:15px;'>
 									<label for="data-prefered-work-period4" style="float: left; font-weight: normal; font-size: 10pt;margin-left:15px;margin-top:9px;">Horário Comercial</label>
 								</div>
 							</div>
+						</div>
+					</div>
+					<div class="row margin-top-10">
+						<div class="col-md-3">
+							<label for="data-minimum-requirements" >Listar apenas perfis com requisitos mínimos</label>
+							<select name="minimum_requirements" id="data-minimum-requirements" class='form-control'>
+								<option @if(!empty($minimum_requirements)) selected @endif value="1">Sim</option>
+								<option @if(empty($minimum_requirements)) selected @endif value="0">Não</option>
+							</select>
 						</div>
 					</div>
 					<div class="row margin-top-10">
