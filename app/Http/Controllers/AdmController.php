@@ -619,17 +619,13 @@ class AdmController extends Controller
                     ->where('candidates.name',"!=","");
             })->where(function($where){
                 $where->where(function ($phone_where) {
-                    $phone_where->whereNotNull('candidates.ddi_phone')
-                        ->whereNotNull('candidates.ddd_phone')
+                    $phone_where->whereNotNull('candidates.ddd_phone')
                         ->whereNotNull('candidates.phone')
-                        ->where('candidates.ddi_phone',"!=","")
                         ->where('candidates.ddd_phone',"!=","")
                         ->where('candidates.phone',"!=","");
                 })->orWhere(function($mobile_where) {
-                    $mobile_where->whereNotNull('candidates.ddi_mobile')
-                        ->whereNotNull('candidates.ddd_mobile')
+                    $mobile_where->whereNotNull('candidates.ddd_mobile')
                         ->whereNotNull('candidates.mobile')
-                        ->where('candidates.ddi_mobile',"!=","")
                         ->where('candidates.ddd_mobile',"!=","")
                         ->where('candidates.mobile',"!=","");
                 });
@@ -654,17 +650,13 @@ class AdmController extends Controller
                         ->where('candidates.name',"!=","");
                 })->where(function($where){
                     $where->where(function ($phone_where) {
-                        $phone_where->whereNotNull('candidates.ddi_phone')
-                            ->whereNotNull('candidates.ddd_phone')
+                        $phone_where->whereNotNull('candidates.ddd_phone')
                             ->whereNotNull('candidates.phone')
-                            ->where('candidates.ddi_phone',"!=","")
                             ->where('candidates.ddd_phone',"!=","")
                             ->where('candidates.phone',"!=","");
                     })->orWhere(function($mobile_where) {
-                        $mobile_where->whereNotNull('candidates.ddi_mobile')
-                            ->whereNotNull('candidates.ddd_mobile')
+                        $mobile_where->whereNotNull('candidates.ddd_mobile')
                             ->whereNotNull('candidates.mobile')
-                            ->where('candidates.ddi_mobile',"!=","")
                             ->where('candidates.ddd_mobile',"!=","")
                             ->where('candidates.mobile',"!=","");
                     });
@@ -1159,17 +1151,13 @@ class AdmController extends Controller
                     ->where('candidates.name',"!=","");
             })->where(function($where){
                 $where->where(function ($phone_where) {
-                    $phone_where->whereNotNull('candidates.ddi_phone')
-                        ->whereNotNull('candidates.ddd_phone')
+                    $phone_where->whereNotNull('candidates.ddd_phone')
                         ->whereNotNull('candidates.phone')
-                        ->where('candidates.ddi_phone',"!=","")
                         ->where('candidates.ddd_phone',"!=","")
                         ->where('candidates.phone',"!=","");
                 })->orWhere(function($mobile_where) {
-                    $mobile_where->whereNotNull('candidates.ddi_mobile')
-                        ->whereNotNull('candidates.ddd_mobile')
+                    $mobile_where->whereNotNull('candidates.ddd_mobile')
                         ->whereNotNull('candidates.mobile')
-                        ->where('candidates.ddi_mobile',"!=","")
                         ->where('candidates.ddd_mobile',"!=","")
                         ->where('candidates.mobile',"!=","");
                 });
