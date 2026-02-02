@@ -32,6 +32,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use DateTime;
 
 class LandingController extends Controller
 {
@@ -428,6 +429,29 @@ class LandingController extends Controller
         ]);
     }
 
+    private function validDate($value): bool
+    {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        $formats = [
+            'Y-m-d',
+            'd/m/Y',
+            'm/d/Y',
+        ];
+
+        foreach ($formats as $format) {
+            $date = DateTime::createFromFormat($format, $value);
+            if ($date && $date->format($format) === $value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     public function saveProfile(Request $request){
         $dados=$request->input();
         $logged_in=Auth::user();
@@ -550,23 +574,23 @@ $arr['what_irritates_you']="20. O que o irrita?";
         $normalize_fields=['name','address_state','address_country','address_city','addres_district','address_street','address_complement','rg_emitter','natural_city','natural_state','natural_country','spouse_name','mother_name','father_name'];
 
         //FIXME VER SE TEM COMO CORRIGIR PARA DEIXAR NULO OU EM BRANCO
-        if (empty($dados['father_dob']))
+        if (empty($dados['father_dob']) || !$this->validDate($dados['father_dob']))
             $dados['father_dob']='01/01/1900';
-        if (empty($dados['arrival_date']))
+        if (empty($dados['arrival_date']) || !$this->validDate($dados['arrival_date']))
             $dados['arrival_date']='01/01/1900';
-        if (empty($dados['mother_dob']))
+        if (empty($dados['mother_dob']) || !$this->validDate($dados['mother_dob']))
             $dados['mother_dob']='01/01/1900';
-        if (empty($dados['dob']))
+        if (empty($dados['dob']) || !$this->validDate($dados['dob']))
             $dados['dob']='01/01/1900';
         if (strtotime(implode("-",array_reverse(explode("/",$dados['dob']))))>=3484695600)
             $dados['dob']='04/06/2080';
-        if (empty($dados['lunelli_earlier_work_period_start']))
+        if (empty($dados['lunelli_earlier_work_period_start']) || !$this->validDate($dados['lunelli_earlier_work_period_start']))
             $dados['lunelli_earlier_work_period_start']='01/01/1900';
-        if (empty($dados['lunelli_earlier_work_period_end']))
+        if (empty($dados['lunelli_earlier_work_period_end']) || !$this->validDate($dados['lunelli_earlier_work_period_end']))
             $dados['lunelli_earlier_work_period_end']='01/01/1900';
-        if (empty($dados['last_time_doctor']))
+        if (empty($dados['last_time_doctor']) || !$this->validDate($dados['last_time_doctor']))
             $dados['last_time_doctor']='01/01/1900';
-        if (empty($dados['visa_expiration']))
+        if (empty($dados['visa_expiration']) || !$this->validDate($dados['visa_expiration']))
             $dados['visa_expiration']='01/01/1900';
 
 
