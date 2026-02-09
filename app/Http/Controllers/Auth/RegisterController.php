@@ -11,10 +11,13 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
-
+use Carbon\Carbon;
 
 class RegisterController extends Controller
 {
@@ -92,13 +95,15 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'cpf' => ['required', 'string', 'max:20', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'policy_accept' =>['required', 'min:1'],
+            'policy_accept' =>['required', 'accepted'],
             'g-recaptcha-response' => 'required',
         ],
         [
             'cpf.unique' => 'Este CPF já existe em nosso sistema.',
             'email.unique' => 'Já existe um cadastro com este e-mail em nosso sistema.',
             'email.email' => 'Email inválido.',
+            'policy_accept.accepted' => 'Você precisa aceitar nossa política para continuar.',
+            'policy_accept.required' => 'Você precisa aceitar nossa política para continuar.',
         ]);
     }
 
@@ -110,6 +115,48 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $role=Role::where('name','=','candidate')->first();
+        if (empty($role))
+            $role = Role::create(['name' => 'candidate']);
+
+        $permission=Permission::where('name','=','profile')->first();
+        if (empty($permission))
+            $permission = Permission::create(['name' => 'profile']);
+
+        $role->givePermissionTo($permission);
+
+        $user= new User;
+        $user->name=$data['name'];
+        $user->email=$data['email'];
+        $user->cpf=str_replace([".","-","/"],"",$data['cpf']);
+        $user->password=Hash::make($data['password']);
+        $user->policy_accept=$data['policy_accept'];
+        $user->policy_accept_date=now();
+        $user->save();
+
+        $candidate=new Candidate;
+        $candidate->user_id=$user->id;
+        $candidate->name=$data['name'];
+        $candidate->cpf = str_replace([".","-","/"],"",$data['cpf']);
+        $candidate->email=$data['email'];
+        $candidate->save();
+
+        $user->assignRole('candidate');
+        return $user;
+    }
+
+    public function register(Request $request)
+    {
+        $data=$request->all();
+        $data['cpf'] = str_replace([".","-","/"],"",$data['cpf']);
+        $validator = $this->validator($data);
+
+        if ($validator->fails()) {
+            return Redirect::to(url('/register'))
+                ->withErrors($validator)
+                ->withInput();
+        }
+
         $response="-";
         if (!empty($data['g-recaptcha-response']))
             $response = $data['g-recaptcha-response'];
@@ -124,33 +171,14 @@ class RegisterController extends Controller
             }
         }
 
-        $role=Role::where('name','=','candidate')->first();
-        if (empty($role))
-            $role = Role::create(['name' => 'candidate']);
+        // cria usuário
+        event(new \Illuminate\Auth\Events\Registered(
+            $user = $this->create($request->all())
+        ));
 
-        $permission=Permission::where('name','=','profile')->first();
-        if (empty($permission))
-            $permission = Permission::create(['name' => 'profile']);
+        // login
+        $this->guard()->login($user);
 
-        $role->givePermissionTo($permission);
-
-        $user= User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'cpf' => str_replace([".","-","/"],"",$data['cpf']),
-            'password' => Hash::make($data['password']),
-            'policy_accept' => $data['policy_accept'],
-        ]);
-
-        $candidate=new Candidate;
-        $candidate->user_id=$user->id;
-        $candidate->name=$data['name'];
-        $candidate->cpf = str_replace([".","-","/"],"",$data['cpf']);
-        $candidate->email=$data['email'];
-        $candidate->save();
-
-        $user->assignRole('candidate');
-        Mail::to($candidate->email,$candidate->name)->send(new Register($candidate));
-        return $user;
+        return redirect($this->redirectPath());
     }
 }

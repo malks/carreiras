@@ -78,8 +78,8 @@
                                 <input type="checkbox" name='policy_accept' value='1' style='margin-top:5px;'>
                                 <label for="">{{ __('register.imawareaccept') }} <a href='/policy' target='_blank'>{{ __('register.termsconditions') }}</a>{{ __('register.privacylunelli') }}</label>
                                 @if($errors->has('policy_accept'))
-                                    <div class="invalid-feedback">
-                                        <strong>{{ __('register.imawareaccept') }}</strong>
+                                    <div class="invalid-feedback" style='display:block;'>
+                                        <strong>{{ $errors->first('policy_accept') }}</strong>
                                     </div>
                                 @endif
                             </div>
