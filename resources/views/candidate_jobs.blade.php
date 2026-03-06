@@ -158,7 +158,7 @@
                                     <div class="card-header" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                         <h5>@{{job.name}}</h5>
                                         <small style='text-transform:uppercase'>@{{getUnit(job.unit_id).city}}</small><br>
-                                        <small v-show='job.pcd'>Esta vaga também é destinada a <b>Pesoas com Deficiência</b></small>
+                                        <small v-show='job.pcd'>Esta vaga também é destinada a <b>Pessoas com Deficiência</b></small>
                                     </div>
                                     <div class="card-body" :class=" { 'subscribed-job':isSubscribed(job.id) } ">
                                         <!--- SOMENTE IPAD ++  --->
