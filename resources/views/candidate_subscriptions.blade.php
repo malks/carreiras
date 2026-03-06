@@ -124,7 +124,8 @@
                                         <!--- SOMENTE IPAD ++  --->
                                         <div class="d-none d-lg-block">
                                             <div class="row">
-                                                <div :class="{ 'col-6':gotImage(getSubscriptionsJob(job))|'col' }">
+                                                <!--div :class="{ 'col-6':gotImage(getSubscriptionsJob(job))|'col' }"-->
+                                                <div class="col">
                                                     <div class="row" v-show="isSubscribed(getSubscriptionsJob(job).id)">
                                                         <div class="col">
                                                             <b>{{ __('candidatesjobs.status') }}:</b>
@@ -141,18 +142,18 @@
                                                         </div>
                                                     </div>    
                                                 </div>
-                                                <div v-if="gotImage(getSubscriptionsJob(job))" class="col-6" style='overflow:hidden;'>
+                                                <!--div v-if="gotImage(getSubscriptionsJob(job))" class="col-6" style='overflow:hidden;'>
                                                     <img :src="getSubscriptionsJob(job).picture" class='prog-image'>
-                                                </div>
+                                                </div-->
                                             </div>
                                         </div>
                                         <!--- SOMENTE MOBILE --->
                                         <div class="d-block d-lg-none">
-                                            <div class="row">
+                                            <!--div class="row">
                                                 <div v-if="gotImage(getSubscriptionsJob(job))" class="col" style='overflow:hidden;text-align:center;'>
                                                     <img :src="getSubscriptionsJob(job).picture" style='width:340px;'>
                                                 </div>
-                                            </div>
+                                            </div-->
                                             <div class="row" v-show="isSubscribed(getSubscriptionsJob(job).id)">
                                                 <div class="col">
                                                     <b>{{ __('candidatesjobs.status') }}:</b>

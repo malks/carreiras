@@ -164,7 +164,8 @@
                                         <!--- SOMENTE IPAD ++  --->
                                         <div class="d-none d-lg-block">
                                             <div class="row">
-                                                <div :class="{ 'col-6':gotImage(job)|'col' }">
+                                                <!--div :class="{ 'col-6':gotImage(job)|'col' }"-->
+                                                <div class="col">
                                                     <div class="row" v-show="isSubscribed(job.id)">
                                                         <div class="col">
                                                             <b>@{{getSubscriptionState(job.id)}}</b>
@@ -179,9 +180,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div v-if="gotImage(job)" class="col-6" style='overflow:hidden;'>
+                                                <!--div v-if="gotImage(job)" class="col-6" style='overflow:hidden;'>
                                                     <img :src="job.picture" class='prog-image'>
-                                                </div>
+                                                </div-->
                                             </div>
                                             <div class="row margin-top-20">
                                                 <div class="col">
@@ -191,11 +192,11 @@
                                         </div>
                                         <!--- SOMENTE MOBILE --->
                                         <div class="d-block d-lg-none">
-                                            <div class="row">
+                                            <!--div class="row">
                                                 <div v-if="gotImage(job)" class="col" style='overflow:hidden;text-align:center;'>
                                                     <img :src="job.picture" style='width:340px;'>
                                                 </div>
-                                            </div>
+                                            </div-->
                                             <div class="row" v-show="isSubscribed(job.id)">
                                                 <div class="col">
                                                     <b>@{{getSubscriptionState(job.id)}}</b>
