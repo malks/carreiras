@@ -13,3 +13,6 @@ if __name__ == "__main__":
         for emp in employees:
             insert_carreiras="INSERT INTO lunellicarreiras.employees (name,senior_num_cad,senior_num_emp,senior_cod_fil,senior_tip_col) VALUES('"+str(emp["NOMFUN"])+"','"+str(emp["NUMCAD"])+"','"+str(emp["NUMEMP"])+"','"+str(emp["CODFIL"])+"','"+str(emp["TIPCOL"])+"')"
             run_sql(insert_carreiras,main_sql_conn)
+
+    main_sql_conn.close()
+    main_oc_conn.close()
