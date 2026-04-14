@@ -43,7 +43,10 @@
                     </div>
                     <div class="col-lg col-sm-12">
                         <label for="data-name">País</label>
-                        <input type='text' class='form-control' name='country' value='{{$data->country}}'/>
+                        <select name="country" id="country" class='form-control'>
+                            <option @if(strtolower($data->country)=='brasil') selected @endif value="brasil">Brasil</option>
+                            <option @if(strtolower($data->country)=='paraguay') selected @endif value="paraguay">Paraguai</option>
+                        </select>
                     </div>                                 
                 </div>
 			</div>
