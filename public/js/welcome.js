@@ -667,6 +667,7 @@ function homeJobs(){
 
 function validate(whichTab){
     let ret=[];
+    let now = new Date();
     let gotProblem={
         'candidate-data':   false,
         'schooling-data':   false,
@@ -694,8 +695,8 @@ function validate(whichTab){
             else if ($('#data-dob').val()!=null){
                 tempdate=new Date($('#data-dob').val().split("/").reverse().join("-"));
             }
-            if ($('#data-dob').val()!=null && tempdate!=null && tempdate.getTime()>=3484684800000){
-                ret.push({'candidate-data': 'Limite da data de nascimento: 04/06/2080'});
+            if ($('#data-dob').val()!=null && tempdate!=null && tempdate.getTime()>=now.getTime()){
+                ret.push({'candidate-data': 'Limite da data de nascimento: '+now.toLocaleDateString()});
             }
             if (($('#data-address-street').val()!=null && $('#data-address-street').val().length<2) || ($('#data-address-city').val()!=null && $('#data-address-city').val().length<2) || ($('#data-address-district').val()!=null && $('#data-address-district').val().length<2) || ($('#data-address-state').val()!=null && $('#data-address-state').val().length<2) || ($('#data-address-country').val()!=null && $('#data-address-country').val().length<2) ){
                 ret.push({'candidate-data': 'Endereço residencial é obrigatório'});
